@@ -1,0 +1,19 @@
+upstream_branch="$1"
+branch_being_rebased="$2"
+
+# For safety, get current branch if $2 is empty
+if [ -z "$branch_being_rebased" ]; then
+  branch_being_rebased=$(git symbolic-ref --short HEAD)
+fi
+
+echo "Rebasing branch: $branch_being_rebased"
+echo "On top of base branch: $upstream_branch"
+
+# your logic here, e.g. preventing rebasing certain branches
+if [ "$upstream_branch" = "main" ] || [ "$upstream_branch" = "master" ]; then
+  echo "Rebasing onto main/master branch is not allowed!"
+  exit 1
+fi
+
+# allow rebase to continue
+echo "[REBASE READY]"

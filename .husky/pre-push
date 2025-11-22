@@ -1,0 +1,5 @@
+eslint --fix
+prettier --write "src/**/*.{js,jsx,ts,tsx,css,scss}"
+pnpm run test
+
+echo "[PUSH READY]"
