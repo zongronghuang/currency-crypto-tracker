@@ -1,3 +1,4 @@
 pnpm exec lint-staged
 
-echo "[COMMIT READY]"
+echo "✅  [COMMIT READY]"
+echo ""

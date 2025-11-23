@@ -6,14 +6,19 @@ if [ -z "$branch_being_rebased" ]; then
   branch_being_rebased=$(git symbolic-ref --short HEAD)
 fi
 
-echo "Rebasing branch: $branch_being_rebased"
-echo "On top of base branch: $upstream_branch"
+echo ""
+echo "➡️  Rebasing branch: $branch_being_rebased"
+echo "➡️  On top of base branch: $upstream_branch"
+echo ""
 
 # your logic here, e.g. preventing rebasing certain branches
 if [ "$upstream_branch" = "main" ] || [ "$upstream_branch" = "master" ]; then
-  echo "Rebasing onto main/master branch is not allowed!"
+  echo ""
+  echo "⚠️  Rebasing onto main/master branch is not allowed!"
+  echo ""
   exit 1
 fi
 
 # allow rebase to continue
-echo "[REBASE READY]"
+echo "✅  [REBASE READY]"
+echo ""
