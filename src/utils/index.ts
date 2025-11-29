@@ -1,20 +1,26 @@
-type LocaleOptions = {
-  to: string; // source locale
-  from: string; // target locale
-};
+type LocaleOption =
+  | {
+      to: string; // source locale
+      from: string; // target locale 不同幣別間轉換
+    }
+  | string; // 'de-DE' 同幣別轉換
 
 export const calibrateNumeral = (
   numeral: string,
-  locales: LocaleOptions = {
-    to: "en-US",
-    from: "en-US",
-  },
+  localeOption: LocaleOption = "en-US",
 ) => {
-  const { to: toLocale, from: fromLocale } = locales;
-  const safeNumeral = sanitizeNumeral(numeral, fromLocale);
+  if (typeof localeOption === "string") {
+    const safeNumeral = sanitizeNumeral(numeral, localeOption);
+    const localizedNumeral = localizeNumeral(safeNumeral, localeOption);
 
-  const localizedNumeral = localizeNumeral(safeNumeral, toLocale);
-  return localizedNumeral;
+    return localizedNumeral;
+  } else {
+    const { to: toLocale, from: fromLocale } = localeOption;
+    const safeNumeral = sanitizeNumeral(numeral, fromLocale);
+    const localizedNumeral = localizeNumeral(safeNumeral, toLocale);
+
+    return localizedNumeral;
+  }
 };
 
 export const __private_fns__ = {
