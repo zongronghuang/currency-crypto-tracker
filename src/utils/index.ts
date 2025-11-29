@@ -1,106 +1,57 @@
-import z from "zod";
-
-export const calibrateCurrencyInput = (value: string) => {
-  let valueInProcess = value;
-
-  // 移除無效字元
-  const invalidCharRegex = /[^0-9,.]/gi;
-  if (hasInvalidChars(valueInProcess, invalidCharRegex)) {
-    valueInProcess = removeInvalidChars(valueInProcess, invalidCharRegex);
-  }
-
-  // 取得最長的合法數字
-  valueInProcess = getLongestNumber(valueInProcess);
-
-  // 正整數 (例如 200.00)
-  if (isNaturalNumber(valueInProcess)) {
-    valueInProcess = formatToInteger(valueInProcess);
-  }
-
-  // 正小數 (例如 1.12) => 四捨五入至兩位小數
-  if (isPositiveDecimal(valueInProcess)) {
-    valueInProcess = formatToDecimal(valueInProcess);
-  }
-
-  // 移除 trailing zeros (例如 "100.20" => "100.2")
-  valueInProcess = removeTrailingZeros(valueInProcess);
-
-  // 轉換成美式寫法
-  valueInProcess = formatToUsNumber(valueInProcess);
-
-  return valueInProcess;
+type LocaleOptions = {
+  to: string; // source locale
+  from: string; // target locale
 };
 
-function hasInvalidChars(value: string, regex: RegExp) {
-  const schema = z.string().regex(regex);
-  const { success } = schema.safeParse(value);
-  return success;
+export const calibrateNumeral = (
+  numeral: string,
+  locales: LocaleOptions = {
+    to: "en-US",
+    from: "en-US",
+  },
+) => {
+  const { to: toLocale, from: fromLocale } = locales;
+  const safeNumeral = sanitizeNumeral(numeral, fromLocale);
+
+  const localizedNumeral = localizeNumeral(safeNumeral, toLocale);
+  return localizedNumeral;
+};
+
+export const __private_fns__ = {
+  sanitizeNumeral,
+  getSeparators,
+  localizeNumeral,
+};
+// 修改成程式能自由轉換成 number 型別的字串
+function sanitizeNumeral(numeral: string, fromLocale: string) {
+  // 去除不合法字元，只保留 0-9 和小數符號
+  const { decimalSign } = getSeparators(fromLocale);
+  const lastDecimalId = numeral.lastIndexOf(decimalSign);
+
+  const invalidCharRegex = /[^0-9]/g;
+  let safeNumeral = numeral.replace(invalidCharRegex, "");
+  // 沒有小數點，代表為整數
+  if (lastDecimalId === -1) return safeNumeral;
+
+  const integer = numeral.slice(0, lastDecimalId).replace(invalidCharRegex, "");
+  const float = numeral.slice(lastDecimalId).replace(invalidCharRegex, "");
+  safeNumeral = `${integer}.${float}`;
+
+  return safeNumeral;
 }
 
-function removeInvalidChars(value: string, regex: RegExp) {
-  const schema = z
-    .string()
-    .regex(regex)
-    .transform((val) => val.replace(regex, ""));
-  return schema.parse(value);
+function getSeparators(fromLocale: string) {
+  const sample = 1234.5;
+  const localized = sample.toLocaleString(fromLocale);
+  const decimalSign = localized.at(-2)!;
+  const separator = localized.at(1)!;
+  return { decimalSign, separator };
 }
 
-function getLongestNumber(value: string) {
-  let longestNumber = "";
-
-  for (let i = 0; i < value.length; i++) {
-    // 允許小數點開頭數字，例如 '.25' 或 ',25'
-    // 轉換為美式寫法
-    const decimalSigns = [".", ","];
-    const c = value[i];
-    if (i === 0 && decimalSigns.includes(c)) {
-      longestNumber = "0.";
-      continue;
-    }
-
-    const nextNumber = longestNumber + c;
-    const isValidNumber = !Number.isNaN(+nextNumber);
-    if (!isValidNumber) break; // 無法再組成更長的合格數字
-
-    longestNumber = nextNumber;
-  }
-
-  return longestNumber;
-}
-
-function isNaturalNumber(value: string) {
-  const schema = z.coerce.number().nonnegative().int();
-  const { success } = schema.safeParse(value);
-  return success;
-}
-
-function isPositiveDecimal(value: string) {
-  const schema = z.coerce.number().positive();
-  const { success } = schema.safeParse(value);
-  return success;
-}
-
-function formatToInteger(value: string) {
-  const schema = z.coerce
-    .number()
-    .int()
-    .transform((val) => val.toString());
-  return schema.parse(value);
-}
-
-function formatToDecimal(value: string) {
-  const schema = z.coerce.number().transform((val) => {
-    const num = Math.round(val * 100) / 100;
-    return num.toFixed(2);
-  });
-  return schema.parse(value);
-}
-
-function formatToUsNumber(value: string) {
-  return new Intl.NumberFormat("en-US").format(+value);
-}
-
-function removeTrailingZeros(value: string) {
-  const schema = z.coerce.number().transform((val) => val.toString());
-  return schema.parse(value);
+function localizeNumeral(amount: string, toLocale: string) {
+  return new Intl.NumberFormat(toLocale, {
+    maximumFractionDigits: 2, // 最多兩位浮點數 (自動四捨五入進位)
+    numberingSystem: "latn",
+    // trailingZeroDisplay: 'auto' // (default) 自動移除 trailing zeros
+  }).format(+amount);
 }
