@@ -41,7 +41,7 @@ function sanitizeNumeral(numeral: string, fromLocale: string) {
 
   const integer = numeral.slice(0, lastDecimalId).replace(invalidCharRegex, "");
   const float = numeral.slice(lastDecimalId).replace(invalidCharRegex, "");
-  safeNumeral = `${integer}.${float}`;
+  safeNumeral = Number(`${integer}.${float}`).toString();
 
   return safeNumeral;
 }
