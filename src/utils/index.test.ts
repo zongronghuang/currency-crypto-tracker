@@ -1,4 +1,4 @@
-import { calibrateNumeral } from ".";
+import { calibrateNumeral, __private_fns__ } from ".";
 
 describe("calibrateNumeral()", () => {
   test("remove decimals from integers", () => {
@@ -237,5 +237,92 @@ describe("calibrateNumeral()", () => {
 
     const validNumber5 = "1000000";
     expect(calibrateNumeral(validNumber5, locales)).toBe("1,000,000");
+  });
+});
+
+describe("__private_fns__", () => {
+  test("sanitizeNumeral()", () => {
+    const { sanitizeNumeral } = __private_fns__;
+    const usLocale = "en-US";
+    const euLocale = "de-DE";
+
+    // 正常數字轉換
+    const numeral1 = "1,234.567";
+    expect(sanitizeNumeral(numeral1, usLocale)).toBe("1234.567");
+
+    const numeral2 = "1.234,567";
+    expect(sanitizeNumeral(numeral2, euLocale)).toBe("1234.567");
+
+    // 移除不同位數的不合法字元
+    const numeral3 = "@,2!4.a-&";
+    expect(sanitizeNumeral(numeral3, usLocale)).toBe("24");
+
+    const numeral4 = "@.2!4,a-&";
+    expect(sanitizeNumeral(numeral4, euLocale)).toBe("24");
+
+    const numeral5 = "@,2!4.a-7";
+    expect(sanitizeNumeral(numeral5, usLocale)).toBe("24.7");
+
+    const numeral6 = "@.2!4,a-7";
+    expect(sanitizeNumeral(numeral6, euLocale)).toBe("24.7");
+
+    const numeral7 = "@,=!#.a-7";
+    expect(sanitizeNumeral(numeral7, usLocale)).toBe("0.7");
+
+    const numeral8 = "@.=!#,a-7";
+    expect(sanitizeNumeral(numeral8, euLocale)).toBe("0.7");
+  });
+
+  test("getSeparators()", () => {
+    const { getSeparators } = __private_fns__;
+
+    const usLocale = "en-US";
+    expect(getSeparators(usLocale)).toEqual({
+      decimalSign: ".",
+      separator: ",",
+    });
+
+    const deLocale = "de-DE";
+    expect(getSeparators(deLocale)).toEqual({
+      decimalSign: ",",
+      separator: ".",
+    });
+
+    const chLocale = "de-CH"; // 瑞士
+    expect(getSeparators(chLocale)).toEqual({
+      decimalSign: ".",
+      separator: "\u2019", // "’"
+    });
+
+    const uaeLocale = "ar-AE";
+    expect(getSeparators(uaeLocale)).toEqual({
+      decimalSign: ".",
+      separator: ",",
+    });
+  });
+
+  test("localizeNumeral()", () => {
+    const { localizeNumeral } = __private_fns__;
+    const usLocale = "en-US";
+    const euLocale = "de-DE";
+
+    // 同一數字轉換成不同格式
+    const numeral1 = "1234.56";
+    expect(localizeNumeral(numeral1, usLocale)).toBe("1,234.56");
+    expect(localizeNumeral(numeral1, euLocale)).toBe("1.234,56");
+
+    // 四捨五入至小數點第二位
+    const numeral2 = "1234.567";
+    expect(localizeNumeral(numeral2, usLocale)).toBe("1,234.57");
+    expect(localizeNumeral(numeral2, euLocale)).toBe("1.234,57");
+
+    // 小數點後 0 移除
+    const numeral3 = "1234.599";
+    expect(localizeNumeral(numeral3, usLocale)).toBe("1,234.6");
+    expect(localizeNumeral(numeral3, euLocale)).toBe("1.234,6");
+
+    const numeral4 = "1234.999";
+    expect(localizeNumeral(numeral4, usLocale)).toBe("1,235");
+    expect(localizeNumeral(numeral4, euLocale)).toBe("1.235");
   });
 });
