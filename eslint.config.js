@@ -45,6 +45,13 @@ export default defineConfig([
     },
 
     // custom rules to override rule presets
-    rules: {},
+    rules: {
+      "react/no-unknown-property": [
+        "error",
+        {
+          ignore: ["closedby"],
+        },
+      ],
+    },
   },
 ]);
