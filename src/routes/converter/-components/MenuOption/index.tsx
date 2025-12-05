@@ -34,7 +34,7 @@ export const MenuOption = memo(function MenuOption({
     onClick,
   });
   if (!result.success) {
-    console.error("[MenuOption]", result.error.toString());
+    console.error("[MenuOption]", z.prettifyError(result.error));
     return null;
   }
 

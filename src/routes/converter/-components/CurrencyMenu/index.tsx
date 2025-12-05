@@ -47,7 +47,7 @@ export default function CurrencyMenu({ open = false }: CurrencyMenuProps) {
 
   const result = CurrencyMenuSchema.safeParse({ open });
   if (!result.success) {
-    console.error("[CurrencyMenu]", z.treeifyError(result.error));
+    console.error("[CurrencyMenu]", z.prettifyError(result.error));
     return null;
   }
 
