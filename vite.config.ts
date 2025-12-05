@@ -22,7 +22,7 @@ export default defineConfig({
     globals: true,
     environment: "jsdom",
     css: true,
-    setupFiles: ["./src/mocks/setupTests.ts"],
+    setupFiles: ["./src/setupTests.ts"],
   },
   resolve: {
     alias: {
