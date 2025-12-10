@@ -1,4 +1,4 @@
-export const CURRENCIES = {
+const CURRENCIES = {
   // 常用幣種
   EUR: {
     code: "EUR",
@@ -1166,3 +1166,133 @@ export const CURRENCIES = {
     country_codes: ["ZW", "ZWE"],
   },
 };
+
+const TEST_CURRENCIES = {
+  // 常用幣種
+  EUR: {
+    code: "EUR",
+    symbol: "€",
+    name: "Euro",
+    country: "European Union",
+    country_codes: ["EU", "EUR"],
+  },
+  GBP: {
+    code: "GBP",
+    symbol: "£",
+    name: "British pound",
+    country: "United Kingdom",
+    country_codes: ["GB", "GBR"],
+  },
+  USD: {
+    code: "USD",
+    symbol: "$",
+    name: "United States dollar",
+    country: "United States of America",
+    country_codes: ["US", "USA"],
+  },
+  INR: {
+    code: "INR",
+    symbol: "₹",
+    name: "Indian rupee",
+    country: "India",
+    country_codes: ["IN", "IND"],
+  },
+  CAD: {
+    code: "CAD",
+    symbol: "C$",
+    name: "Canadian dollar",
+    country: "Canada",
+    country_codes: ["CA", "CAN"],
+  },
+  AUD: {
+    code: "AUD",
+    symbol: "A$",
+    name: "Australian dollar",
+    country: "Australia",
+    country_codes: ["AU", "AUS"],
+  },
+  CHF: {
+    code: "CHF",
+    symbol: "SFr.",
+    name: "Swiss franc",
+    country: "Switzerland",
+    country_codes: ["CH", "CHE"],
+  },
+  MXN: {
+    code: "MXN",
+    symbol: "Mex$",
+    name: "Mexican peso",
+    country: "Mexico",
+    country_codes: ["MX", "MEX"],
+  },
+
+  // 一般幣種，依字母排序
+  AED: {
+    code: "AED",
+    symbol: "د.إ",
+    name: "United Arab Emirates dirham",
+    country: "United Arab Emirates",
+    country_codes: ["AE", "ARE"],
+  },
+  AFN: {
+    code: "AFN",
+    symbol: "؋",
+    name: "Afghanistan afghani",
+    country: "Afghanistan",
+    country_codes: ["AF", "AFG"],
+  },
+  ALL: {
+    code: "ALL",
+    symbol: "Lek",
+    name: "Albanian lek",
+    country: "Albania",
+    country_codes: ["AL", "ALB"],
+  },
+  AMD: {
+    code: "AMD",
+    symbol: "֏",
+    name: "Armenian dram",
+    country: "Armenia",
+    country_codes: ["AM", "ARM"],
+  },
+  ANG: {
+    code: "ANG",
+    symbol: "ƒ",
+    name: "Netherlands Antillean guilder",
+    country: "Curaçao and Sint Maarten",
+    country_codes: ["CW", "CUW"], // Curaçao uses ANG, also Sint Maarten (SX)
+  },
+  AOA: {
+    code: "AOA",
+    symbol: "Kz",
+    name: "Angolan kwanza",
+    country: "Angola",
+    country_codes: ["AO", "AGO"],
+  },
+  ARS: {
+    code: "ARS",
+    symbol: "$",
+    name: "Argentine peso",
+    country: "Argentina",
+    country_codes: ["AR", "ARG"],
+  },
+
+  AWG: {
+    code: "AWG",
+    symbol: "AWG",
+    name: "Aruban florin",
+    country: "Aruba",
+    country_codes: ["AW", "ABW"],
+  },
+  AZN: {
+    code: "AZN",
+    symbol: "man.",
+    name: "Azerbaijani manat",
+    country: "Azerbaijan",
+    country_codes: ["AZ", "AZE"],
+  },
+};
+
+const data = process.env.NODE_ENV == "test" ? TEST_CURRENCIES : CURRENCIES;
+
+export { data as CURRENCIES };

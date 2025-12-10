@@ -1,4 +1,4 @@
-export const CRYPTOS = {
+const CRYPTOS = {
   // 常用幣種
   BTC: {
     code: "BTC",
@@ -1117,3 +1117,38 @@ export const CRYPTOS = {
     name: "0x Protocol",
   },
 };
+
+const TEST_CRYPTOS = {
+  // 常用幣種
+  BTC: {
+    code: "BTC",
+    name: "Bitcoin",
+  },
+  ETH: { code: "ETH", name: "Ethereum" },
+  USDT: {
+    code: "USDT",
+    name: "Tether",
+  },
+  USDC: {
+    code: "USDC",
+    name: "USD Coin",
+  },
+  XRP: {
+    code: "XRP",
+    name: "XRP",
+  },
+  ADA: { code: "ADA", name: "Cardano" },
+
+  // 一般幣種，依字母排序
+  "1INCH": { code: "1INCH", name: "1inch Network" },
+  A8: { code: "A8", name: "Ancient8" },
+  AAVE: { code: "AAVE", name: "Aave" },
+  ABT: { code: "ABT", name: "Arcblock" },
+  ACH: { code: "ACH", name: "Alchemy Pay" },
+  ACS: { code: "ACS", name: "Access" },
+  ACX: { code: "ACX", name: "Across Protocol" },
+};
+
+const data = process.env.NODE_ENV === "test" ? TEST_CRYPTOS : CRYPTOS;
+
+export { data as CRYPTOS };
