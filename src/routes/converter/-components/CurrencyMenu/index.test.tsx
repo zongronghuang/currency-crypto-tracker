@@ -12,46 +12,42 @@ describe("pop-up currency menu", () => {
     expect(popup).toHaveAttribute("closedby", "any");
   });
 
-  test("pop-up closes when user selects a currency option", async () => {
+  test("pop-up closes when user clicks confirm button", async () => {
     render(<CurrencyMenu open={true} />);
     const user = userEvent.setup();
 
     const popup = screen.queryByRole("dialog");
     expect(popup).toBeInTheDocument();
 
-    const listItems = screen.getAllByRole("listitem");
-    expect(listItems.length).toBeGreaterThan(0);
-
-    await user.click(listItems[2]);
+    const confirmButton = screen.getByRole("button", { name: /confirm/i });
+    await user.click(confirmButton);
     expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
   });
 
-  test(
-    "has currency and crypto radio buttons and they are checked upon clicks",
-    { timeout: 2000 },
-    async () => {
-      render(<CurrencyMenu open={true} />);
-      const user = userEvent.setup();
+  test("has currency and crypto radio buttons and they are checked upon clicks", async () => {
+    render(<CurrencyMenu open={true} />);
+    const user = userEvent.setup();
 
-      const radioGroup = screen.getAllByRole("radio");
-      expect(radioGroup).toHaveLength(2);
-      radioGroup.forEach((radio) => expect(radio).toBeRequired());
+    const typeButtons = screen.getAllByRole("radio", {
+      name: /currency|crypto/i,
+    });
+    expect(typeButtons).toHaveLength(2);
+    typeButtons.forEach((radio) => expect(radio).toBeRequired());
 
-      const currencyOption = screen.getByRole("radio", { name: /currency/i });
-      const cryptoOption = screen.getByRole("radio", { name: /crypto/i });
+    const currencyOption = screen.getByRole("radio", { name: /currency/i });
+    const cryptoOption = screen.getByRole("radio", { name: /crypto/i });
 
-      expect(currencyOption).toBeChecked();
-      expect(cryptoOption).not.toBeChecked();
+    expect(currencyOption).toBeChecked();
+    expect(cryptoOption).not.toBeChecked();
 
-      await user.click(cryptoOption);
-      expect(currencyOption).not.toBeChecked();
-      expect(cryptoOption).toBeChecked();
+    await user.click(cryptoOption);
+    expect(currencyOption).not.toBeChecked();
+    expect(cryptoOption).toBeChecked();
 
-      await user.click(currencyOption);
-      expect(currencyOption).toBeChecked();
-      expect(cryptoOption).not.toBeChecked();
-    },
-  );
+    await user.click(currencyOption);
+    expect(currencyOption).toBeChecked();
+    expect(cryptoOption).not.toBeChecked();
+  });
 
   test("currency list changes with selected radio button", async () => {
     render(<CurrencyMenu open={true} />);
@@ -94,11 +90,10 @@ describe("pop-up currency menu", () => {
     expect(search).toHaveValue("ab0");
   });
 
-  test("typing in search input returns partial matches by country name or currency name", async () => {
+  test("typing in search input returns partial currency matches by country name or currency name", async () => {
     render(<CurrencyMenu open={true} />);
     const user = userEvent.setup();
 
-    // currency 選單
     const search = screen.getByRole("searchbox");
     const currencyOption = screen.getByRole("radio", { name: /currency/i });
     const cryptoOption = screen.getByRole("radio", { name: /crypto/i });
@@ -118,6 +113,7 @@ describe("pop-up currency menu", () => {
     await user.type(search, "D");
     const thirdKeystrokeListLength = screen.getAllByRole("listitem").length;
 
+    // 輸入愈少字母時的符合項目數量應會大於等於愈多字母時的數量
     expect(initialListLength).toBeGreaterThan(firstKeystrokeListLength);
     expect(firstKeystrokeListLength).toBeGreaterThanOrEqual(
       secondkeystrokeListLength,
@@ -125,64 +121,160 @@ describe("pop-up currency menu", () => {
     expect(secondkeystrokeListLength).toBeGreaterThanOrEqual(
       thirdKeystrokeListLength,
     );
-
-    // crypto 選單
   });
 
-  test(
-    "show full list of options when search input gets cleared",
-    { timeout: 8000 },
-    async () => {
+  test("typing in search input returns partial crypto matches by crypto code or name", async () => {
+    render(<CurrencyMenu open={true} />);
+    const user = userEvent.setup();
+
+    const search = screen.getByRole("searchbox");
+    const currencyOption = screen.getByRole("radio", { name: /currency/i });
+    const cryptoOption = screen.getByRole("radio", { name: /crypto/i });
+
+    await user.click(cryptoOption);
+    expect(cryptoOption).toBeChecked();
+    expect(currencyOption).not.toBeChecked();
+
+    await user.clear(search);
+    const initialListLength = screen.getAllByRole("listitem").length;
+
+    await user.type(search, "B");
+    const firstKeystrokeListLength = screen.getAllByRole("listitem").length;
+
+    await user.type(search, "T");
+    const secondkeystrokeListLength = screen.getAllByRole("listitem").length;
+
+    await user.type(search, "C");
+    const thirdKeystrokeListLength = screen.getAllByRole("listitem").length;
+
+    // 輸入愈少字母時的符合項目數量應會大於等於愈多字母時的數量
+    expect(initialListLength).toBeGreaterThan(firstKeystrokeListLength);
+    expect(firstKeystrokeListLength).toBeGreaterThanOrEqual(
+      secondkeystrokeListLength,
+    );
+    expect(secondkeystrokeListLength).toBeGreaterThanOrEqual(
+      thirdKeystrokeListLength,
+    );
+  });
+
+  test("show full list of currency options when search input gets cleared", async () => {
+    render(<CurrencyMenu open={true} />);
+    const user = userEvent.setup();
+
+    const search = screen.getByRole("searchbox");
+    const currencyOption = screen.getByRole("radio", { name: /currency/i });
+
+    expect(search).toHaveValue("");
+    expect(currencyOption).toBeChecked();
+
+    // currency 選單
+    //// 清除 exact match 後，顯示完整選單
+    await user.type(search, "USD");
+    expect(screen.queryAllByRole("listitem")).toHaveLength(1);
+
+    await user.clear(search);
+    expect(screen.queryAllByRole("listitem")).toHaveLength(17);
+  });
+
+  test("show full list of crypto options when search input gets cleared", async () => {
+    render(<CurrencyMenu open={true} />);
+    const user = userEvent.setup();
+
+    const search = screen.getByRole("searchbox");
+    const currencyOption = screen.getByRole("radio", { name: /currency/i });
+    const cryptoOption = screen.getByRole("radio", { name: /crypto/i });
+
+    await user.click(cryptoOption);
+    expect(cryptoOption).toBeChecked();
+    expect(currencyOption).not.toBeChecked();
+
+    // crypto 選單
+    const cryptoItems = screen.queryAllByRole("listitem");
+    expect(cryptoItems).toHaveLength(13);
+
+    //// 清除 exact match 後，顯示完整選單
+    await user.clear(search);
+    await user.type(search, "USDC");
+    expect(screen.queryAllByRole("listitem")).toHaveLength(1);
+
+    await user.clear(search);
+    expect(screen.queryAllByRole("listitem")).toHaveLength(13);
+  });
+
+  describe("keyboard navigation among radio inputs", () => {
+    test("tab-move to check currency radio options", async () => {
       render(<CurrencyMenu open={true} />);
       const user = userEvent.setup();
 
-      const search = screen.getByRole("searchbox");
       const currencyOption = screen.getByRole("radio", { name: /currency/i });
-      const cryptoOption = screen.getByRole("radio", { name: /crypto/i });
-      const currencyItems = screen.queryAllByRole("listitem");
+      const search = screen.getByRole("searchbox");
+      const firstRadioInput = screen.getByLabelText(/eur/i);
+      const secondRadioInput = screen.getByLabelText(/gbp/i);
+      const thirdRadioInput = screen.getByLabelText(/usd/i);
 
-      expect(search).toHaveValue("");
       expect(currencyOption).toBeChecked();
-      expect(cryptoOption).not.toBeChecked();
-      expect(currencyItems).toHaveLength(164);
+      expect(search).toHaveValue("");
 
-      // currency 選單
-      //// 清除 exact match 後，顯示完整選單
-      await user.type(search, "USD");
-      expect(screen.queryAllByRole("listitem")).toHaveLength(1);
+      // tab focus 移動到第一個 currency 選項; 有 focus 但不選取
+      await user.keyboard("{Tab}");
+      await user.keyboard("{Tab}");
+      await user.keyboard("{Tab}");
+      expect(firstRadioInput).toHaveFocus();
+      expect(firstRadioInput).not.toBeChecked();
 
-      await user.clear(search);
-      expect(screen.queryAllByRole("listitem")).toHaveLength(164);
+      // 箭頭移動會 focus 並選取選項
+      //// 下箭頭和右箭頭都是前往下一個選項
+      await user.keyboard("{ArrowRight}");
+      expect(secondRadioInput).toHaveFocus();
+      expect(secondRadioInput).toBeChecked();
 
-      //// 清除無 match 字串後，顯示完整選單
-      await user.type(search, "XXXXXX");
-      expect(screen.queryAllByRole("listitem")).toHaveLength(0);
+      await user.keyboard("{ArrowDown}");
+      expect(thirdRadioInput).toHaveFocus();
+      expect(thirdRadioInput).toBeChecked();
 
-      await user.clear(search);
-      expect(screen.queryAllByRole("listitem")).toHaveLength(164);
+      //// 上箭頭和左箭頭都是回到上一個選項
+      await user.keyboard("{ArrowUp}");
+      await user.keyboard("{ArrowLeft}");
+      expect(firstRadioInput).toHaveFocus();
+      expect(firstRadioInput).toBeChecked();
+    });
 
-      // crypto 選單
+    test("tab-move to check crypto radio options", async () => {
+      render(<CurrencyMenu open={true} />);
+      const user = userEvent.setup();
+
+      const cryptoOption = screen.getByRole("radio", { name: /crypto/i });
+      const search = screen.getByRole("searchbox");
+
       await user.click(cryptoOption);
-      expect(currencyOption).not.toBeChecked();
       expect(cryptoOption).toBeChecked();
+      expect(search).toHaveValue("");
 
-      const cryptoItems = screen.queryAllByRole("listitem");
-      expect(cryptoItems).toHaveLength(353);
+      // tab focus 移動到第一個 currency 選項; 有 focus 但不選取
+      await user.keyboard("{Tab}");
+      await user.keyboard("{Tab}");
 
-      //// 清除 exact match 後，顯示完整選單
-      await user.clear(search);
-      await user.type(search, "USDC");
-      expect(screen.queryAllByRole("listitem")).toHaveLength(1);
+      const firstRadioInput = screen.getByLabelText(/^btc$/i);
+      const secondRadioInput = screen.getByLabelText(/^eth$/i);
+      const thirdRadioInput = screen.getByLabelText(/^usdt$/i);
+      expect(firstRadioInput).toHaveFocus();
+      expect(firstRadioInput).not.toBeChecked();
 
-      await user.clear(search);
-      expect(screen.queryAllByRole("listitem")).toHaveLength(353);
+      // 箭頭移動會 focus 並選取選項
+      //// 下箭頭和右箭頭都是前往下一個選項
+      await user.keyboard("{ArrowRight}");
+      expect(secondRadioInput).toHaveFocus();
+      expect(secondRadioInput).toBeChecked();
 
-      //// 清除無 match 字串後，顯示完整選單
-      await user.type(search, "XXXXXX");
-      expect(screen.queryAllByRole("listitem")).toHaveLength(0);
+      await user.keyboard("{ArrowDown}");
+      expect(thirdRadioInput).toHaveFocus();
+      expect(thirdRadioInput).toBeChecked();
 
-      await user.clear(search);
-      expect(screen.queryAllByRole("listitem")).toHaveLength(353);
-    },
-  );
+      //// 上箭頭和左箭頭都是回到上一個選項
+      await user.keyboard("{ArrowUp}");
+      await user.keyboard("{ArrowLeft}");
+      expect(firstRadioInput).toHaveFocus();
+      expect(firstRadioInput).toBeChecked();
+    });
+  });
 });
