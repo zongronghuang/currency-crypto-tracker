@@ -1,5 +1,12 @@
-import { useState, useRef, type ChangeEvent, type FormEvent } from "react";
-import * as z from "zod";
+import {
+  useState,
+  memo,
+  type ChangeEvent,
+  type FormEvent,
+  type RefObject,
+} from "react";
+import { createPortal } from "react-dom";
+import { z } from "zod";
 import clsx from "clsx";
 import OptionList from "./OptionList";
 
@@ -15,14 +22,19 @@ const CurrencyMenuSchema = z.object({
   open: z.boolean().optional(),
 });
 
-type CurrencyMenuProps = z.infer<typeof CurrencyMenuSchema>;
+type CurrencyMenuProps = z.infer<typeof CurrencyMenuSchema> & {
+  ref: RefObject<HTMLDialogElement | null>;
+};
 
-export default function CurrencyMenu({ open = false }: CurrencyMenuProps) {
+const CurrencyMenu = memo(function CurrencyMenu({
+  ref,
+  open = false,
+}: CurrencyMenuProps) {
   const [currencyType, setCurrencyType] = useState<"currency" | "crypto">(
     "currency",
   );
   const [searchTerm, setSearchTerm] = useState("");
-  const dialogRef = useRef<HTMLDialogElement>(null);
+  // const dialogRef = useRef<HTMLDialogElement>(null);
 
   // props validation
   const result = CurrencyMenuSchema.safeParse({ open });
@@ -42,9 +54,9 @@ export default function CurrencyMenu({ open = false }: CurrencyMenuProps) {
     }
   }
 
-  return (
+  return createPortal(
     <dialog
-      ref={dialogRef}
+      ref={ref}
       className={clsx(
         "inset-0 z-10 mx-auto max-h-screen w-10/12 translate-y-1/12 rounded-lg p-2 outline outline-amber-600",
       )}
@@ -62,7 +74,7 @@ export default function CurrencyMenu({ open = false }: CurrencyMenuProps) {
           onSubmit={(event: FormEvent) => {
             event.preventDefault();
             console.log("submit");
-            dialogRef.current!.close();
+            ref.current!.close();
           }}
         >
           <div className="mb-4 flex">
@@ -126,6 +138,10 @@ export default function CurrencyMenu({ open = false }: CurrencyMenuProps) {
           </button>
         </form>
       </div>
-    </dialog>
+    </dialog>,
+    document.body,
+    "currency-menu",
   );
-}
+});
+
+export default CurrencyMenu;
