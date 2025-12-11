@@ -1,10 +1,14 @@
 import { screen, render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import { type RefObject } from "react";
 import CurrencyMenu from ".";
 
 describe("pop-up currency menu", () => {
   test("pop-up closes when user clicks the backdrop or outside the dialog", async () => {
-    render(<CurrencyMenu />);
+    const mockRefObject = {
+      current: {},
+    } as RefObject<HTMLDialogElement | null>;
+    render(<CurrencyMenu ref={mockRefObject} />);
 
     const popup = screen.getByRole("dialog", { hidden: true });
 
@@ -13,7 +17,10 @@ describe("pop-up currency menu", () => {
   });
 
   test("pop-up closes when user clicks confirm button", async () => {
-    render(<CurrencyMenu open={true} />);
+    const mockRefObject = {
+      current: {},
+    } as RefObject<HTMLDialogElement | null>;
+    render(<CurrencyMenu ref={mockRefObject} open={true} />);
     const user = userEvent.setup();
 
     const popup = screen.queryByRole("dialog");
@@ -25,7 +32,10 @@ describe("pop-up currency menu", () => {
   });
 
   test("has currency and crypto radio buttons and they are checked upon clicks", async () => {
-    render(<CurrencyMenu open={true} />);
+    const mockRefObject = {
+      current: {},
+    } as RefObject<HTMLDialogElement | null>;
+    render(<CurrencyMenu ref={mockRefObject} open={true} />);
     const user = userEvent.setup();
 
     const typeButtons = screen.getAllByRole("radio", {
@@ -50,7 +60,10 @@ describe("pop-up currency menu", () => {
   });
 
   test("currency list changes with selected radio button", async () => {
-    render(<CurrencyMenu open={true} />);
+    const mockRefObject = {
+      current: {},
+    } as RefObject<HTMLDialogElement | null>;
+    render(<CurrencyMenu ref={mockRefObject} open={true} />);
     const user = userEvent.setup();
 
     const currencyOption = screen.getByRole("radio", { name: /currency/i });
@@ -71,7 +84,10 @@ describe("pop-up currency menu", () => {
   });
 
   test("search input accepts only digits and alphabet", async () => {
-    render(<CurrencyMenu open={true} />);
+    const mockRefObject = {
+      current: {},
+    } as RefObject<HTMLDialogElement | null>;
+    render(<CurrencyMenu ref={mockRefObject} open={true} />);
     const user = userEvent.setup();
 
     const search = screen.getByRole("searchbox");
@@ -91,7 +107,10 @@ describe("pop-up currency menu", () => {
   });
 
   test("typing in search input returns partial currency matches by country name or currency name", async () => {
-    render(<CurrencyMenu open={true} />);
+    const mockRefObject = {
+      current: {},
+    } as RefObject<HTMLDialogElement | null>;
+    render(<CurrencyMenu ref={mockRefObject} open={true} />);
     const user = userEvent.setup();
 
     const search = screen.getByRole("searchbox");
@@ -124,7 +143,10 @@ describe("pop-up currency menu", () => {
   });
 
   test("typing in search input returns partial crypto matches by crypto code or name", async () => {
-    render(<CurrencyMenu open={true} />);
+    const mockRefObject = {
+      current: {},
+    } as RefObject<HTMLDialogElement | null>;
+    render(<CurrencyMenu ref={mockRefObject} open={true} />);
     const user = userEvent.setup();
 
     const search = screen.getByRole("searchbox");
@@ -158,7 +180,10 @@ describe("pop-up currency menu", () => {
   });
 
   test("show full list of currency options when search input gets cleared", async () => {
-    render(<CurrencyMenu open={true} />);
+    const mockRefObject = {
+      current: {},
+    } as RefObject<HTMLDialogElement | null>;
+    render(<CurrencyMenu ref={mockRefObject} open={true} />);
     const user = userEvent.setup();
 
     const search = screen.getByRole("searchbox");
@@ -177,7 +202,10 @@ describe("pop-up currency menu", () => {
   });
 
   test("show full list of crypto options when search input gets cleared", async () => {
-    render(<CurrencyMenu open={true} />);
+    const mockRefObject = {
+      current: {},
+    } as RefObject<HTMLDialogElement | null>;
+    render(<CurrencyMenu ref={mockRefObject} open={true} />);
     const user = userEvent.setup();
 
     const search = screen.getByRole("searchbox");
@@ -203,7 +231,10 @@ describe("pop-up currency menu", () => {
 
   describe("keyboard navigation among radio inputs", () => {
     test("tab-move to check currency radio options", async () => {
-      render(<CurrencyMenu open={true} />);
+      const mockRefObject = {
+        current: {},
+      } as RefObject<HTMLDialogElement | null>;
+      render(<CurrencyMenu ref={mockRefObject} open={true} />);
       const user = userEvent.setup();
 
       const currencyOption = screen.getByRole("radio", { name: /currency/i });
@@ -240,7 +271,10 @@ describe("pop-up currency menu", () => {
     });
 
     test("tab-move to check crypto radio options", async () => {
-      render(<CurrencyMenu open={true} />);
+      const mockRefObject = {
+        current: {},
+      } as RefObject<HTMLDialogElement | null>;
+      render(<CurrencyMenu ref={mockRefObject} open={true} />);
       const user = userEvent.setup();
 
       const cryptoOption = screen.getByRole("radio", { name: /crypto/i });
