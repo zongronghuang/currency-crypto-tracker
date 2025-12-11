@@ -110,6 +110,7 @@ function CurrencyOption({ isMatch, optionData, onChange }: MenuOptionProps) {
       >
         <CircleFlag
           fetchPriority="low"
+          loading="lazy"
           className="block w-8 rounded-full in-focus-within:border in-focus-within:border-solid in-focus-within:border-white"
           countryCode={lowercaseCountryCode}
           alt={optionData.name}
@@ -160,6 +161,7 @@ function CryptoOption({ isMatch, optionData, onChange }: MenuOptionProps) {
       >
         <img
           fetchPriority="low"
+          loading="lazy"
           src={cryptoIcon}
           alt={optionData.name}
           className="block w-8 rounded-full in-focus-within:border in-focus-within:border-solid in-focus-within:border-white"
