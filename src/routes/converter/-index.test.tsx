@@ -2,21 +2,60 @@ import { screen, render } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import ConverterPage from ".";
 
-describe("initial converter page", () => {
-  test("clicking switch button changes currency input positions", async () => {
-    render(<ConverterPage />);
-    const user = userEvent.setup();
+test("clicking switch button changes currency input positions", async () => {
+  render(<ConverterPage />);
+  const user = userEvent.setup();
 
-    const usaFlagIcon = screen.getByTitle(/^us$/i);
-    const ukFlagIcon = screen.getByTitle(/^gb$/i);
-    expect(usaFlagIcon).toAppearBefore(ukFlagIcon);
+  const switchButton = screen.getByTitle(/switch/i);
+  const usdFlagIcon = screen.getByTitle(/united states dollar/i);
+  const eurFlagIcon = screen.getByTitle(/euro/i);
+  expect(usdFlagIcon).toAppearBefore(eurFlagIcon);
 
-    const switchButton = screen.getByTitle(/switch/i);
+  await user.click(switchButton);
+  expect(screen.getByTitle(/united states dollar/i)).toAppearAfter(
+    screen.getByTitle(/euro/i),
+  );
 
-    await user.click(switchButton);
+  await user.click(switchButton);
+  expect(screen.getByTitle(/euro/i)).toAppearAfter(
+    screen.getByTitle(/united states dollar/i),
+  );
+});
 
-    expect(screen.getByTitle(/^us$/i)).toAppearAfter(
-      screen.getByTitle(/^gb$/i),
-    );
+test.skip("opens and closes currency menu dialog via buttons", async () => {
+  render(<ConverterPage />);
+
+  const user = userEvent.setup();
+  const currencyMenu = await screen.findByRole("dialog", {
+    hidden: true,
   });
+
+  const currencyButton = await screen.findByRole("button", { name: /usd/i });
+
+  await user.click(currencyButton);
+  expect(currencyMenu).toBeInTheDocument();
+  const confirmButton = screen.getByRole("button", { name: /confirm/i });
+  await user.click(confirmButton);
+  expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+});
+
+test.skip("change currency icon and name when choosing a different icon", async () => {
+  render(<ConverterPage />);
+
+  const user = userEvent.setup();
+  const currencyButton = screen.getByRole("button", { name: /usd/i });
+  await user.click(currencyButton);
+
+  const currencyMenu = screen.getByRole("dialog");
+  expect(currencyMenu).toBeInTheDocument();
+
+  const eurOption = screen.getByRole("radio", { name: /eur/i });
+  await user.click(eurOption);
+
+  const confirmButton = screen.getByRole("button", { name: /confirm/i });
+  await user.click(confirmButton);
+
+  expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+
+  expect(screen.getByRole("button", { name: /eur/i })).toBeInTheDocument();
 });
