@@ -1296,14 +1296,3 @@ const TEST_FIATS = {
 const data = process.env.NODE_ENV == "test" ? TEST_FIATS : FIATS;
 
 export { data as FIATS };
-
-export type Fiat = {
-  type?: string;
-  code: string;
-  symbol: string;
-  name: string;
-  country: string;
-  country_codes: string[];
-};
-
-export type FiatNames = keyof typeof FIATS;

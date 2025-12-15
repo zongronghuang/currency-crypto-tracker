@@ -17,8 +17,9 @@ import {
   isSearchMatch,
   validateComponentProps,
 } from "@/utils";
-import { FIATS, type Fiat } from "@/constants/fiat-currency-list";
-import { CRYPTOS, type Crypto } from "@/constants/crypto-currency-list";
+import { FIATS } from "@/constants/fiat-currency-list";
+import { CRYPTOS } from "@/constants/crypto-currency-list";
+import type { Currency, CurrencyType } from "@/constants/types";
 
 const dataSources = {
   fiat: Object.values(FIATS),
@@ -31,13 +32,9 @@ const CurrencyMenuSchema = z.object({
 
 type CurrencyMenuProps = z.infer<typeof CurrencyMenuSchema> & {
   ref: RefObject<HTMLDialogElement | null>;
-  targetCurrencyRef: RefObject<string>;
+  targetCurrencyRef: RefObject<{ code: string; type: "fiat" | "crypto" }>;
   setCurrencies: Dispatch<SetStateAction<[Currency, Currency]>>;
 };
-
-type Currency = Fiat | Crypto;
-
-type CurrencyType = keyof typeof dataSources;
 
 type PageCollection = {
   data: Currency[];
@@ -109,7 +106,7 @@ const CurrencyMenu = memo(function CurrencyMenu({
     currencyData.type = currencyType;
 
     setCurrencies((prev) =>
-      prev[0].code === targetCurrencyRef.current
+      prev[0].code === targetCurrencyRef.current.code
         ? [currencyData, prev[1]]
         : [prev[0], currencyData],
     );

@@ -1152,11 +1152,3 @@ const TEST_CRYPTOS = {
 const data = process.env.NODE_ENV === "test" ? TEST_CRYPTOS : CRYPTOS;
 
 export { data as CRYPTOS };
-
-export type Crypto = {
-  type?: string;
-  code: string;
-  name: string;
-};
-
-export type CryptoNames = keyof typeof CRYPTOS;
