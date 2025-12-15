@@ -4,7 +4,7 @@
   display: block;
 }
 
-/* optionList 內任何可見 li 元素出現時，alert 元素隱藏 */
-.optionList > li:not([hidden=""]) ~ span[role="alert"] {
+/* optionList 內任何 li 元素出現時，alert 元素隱藏 */
+.optionList > li ~ span[role="alert"] {
   display: none;
 }

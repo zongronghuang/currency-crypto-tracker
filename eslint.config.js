@@ -52,6 +52,8 @@ export default defineConfig([
           ignore: ["closedby"],
         },
       ],
+      // TypeScript + Zod is sufficient; no need of PropTypes
+      "react/prop-types": "off",
     },
   },
 ]);

@@ -1,3 +1,79 @@
+import type { ReactNode, RefObject } from "react";
+import { z, type ZodType } from "zod";
+
+export function isSearchMatch(
+  searchTerm: string,
+  optionData: { code: string; name: string },
+) {
+  return [optionData.code, optionData.name]
+    .map((str) => str.toLowerCase())
+    .some((str) => str.includes(searchTerm.toLowerCase()));
+}
+
+export function sanitizeSearchTerm(term: string) {
+  const regex = /[^a-z0-9]/gi;
+  return z
+    .string()
+    .transform((term) => term.replace(regex, ""))
+    .parse(term);
+}
+
+export function scrollToTop(
+  elementRef: RefObject<HTMLElement | null>,
+  behavior: "auto" | "instant" | "smooth" = "smooth",
+) {
+  if (!elementRef.current) return;
+  elementRef.current.scrollTo({ top: 0, behavior });
+}
+
+const SliceListByPageSchema = z.object({
+  list: z.array(z.any()),
+  pageSize: z.number().positive().optional(),
+  pageNo: z.number().positive().optional(),
+});
+
+type SliceListByPageParams = z.infer<typeof SliceListByPageSchema>;
+
+export function sliceListByPage({
+  list,
+  pageSize = 10,
+  pageNo = 1,
+}: SliceListByPageParams) {
+  // validate params
+  const result = SliceListByPageSchema.safeParse({
+    list,
+    pageSize,
+    pageNo,
+  });
+  if (!result.success) {
+    console.error(z.prettifyError(result.error));
+    return { pageData: [], maxPageNo: 0, hasMore: false };
+  }
+
+  const hasMore = pageSize * pageNo < list.length;
+  const maxPageNo =
+    Math.floor(list.length / pageSize) + (list.length % pageSize ? 1 : 0);
+  const pageData = list.slice((pageNo - 1) * pageSize, pageNo * pageSize);
+
+  return { pageData, maxPageNo, hasMore };
+}
+
+/**
+ * [NOTE]: It should always apply AFTER all React Hooks.
+ * When validation fails, it returns the fallback. This makes any following Hooks conditional and is not allowed in React
+ */
+export function validateComponentProps(
+  schema: ZodType,
+  props: object,
+  fallback: ReactNode = null,
+) {
+  const result = schema.safeParse(props);
+  if (!result.success) {
+    z.prettifyError(result.error);
+    return fallback;
+  }
+}
+
 type LocaleOption =
   | {
       to: string; // source locale
@@ -5,10 +81,10 @@ type LocaleOption =
     }
   | string; // 'de-DE' 同幣別轉換
 
-export const calibrateNumeral = (
+export function calibrateNumeral(
   numeral: string,
   localeOption: LocaleOption = "en-US",
-) => {
+) {
   if (typeof localeOption === "string") {
     const safeNumeral = sanitizeNumeral(numeral, localeOption);
     const localizedNumeral = localizeNumeral(safeNumeral, localeOption);
@@ -21,7 +97,7 @@ export const calibrateNumeral = (
 
     return localizedNumeral;
   }
-};
+}
 
 export const __private_fns__ = {
   sanitizeNumeral,

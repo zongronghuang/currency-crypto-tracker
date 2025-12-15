@@ -1,25 +1,52 @@
-import { Suspense, lazy, useRef, Activity } from "react";
-import { CircleFlag } from "react-circle-flags";
+import { type ChangeEvent, type RefObject } from "react";
+import { z } from "zod";
+import { FiatIcon, CryptoIcon } from "../CurrencyIcon";
+import { validateComponentProps } from "@/utils";
 
-const CurrencyMenu = lazy(() => import("../CurrencyMenu"));
+const CurrencyInputSchema = z.object({
+  isPivotal: z.boolean().optional(),
+  currencyData: z.object({
+    type: z.enum(["fiat", "crypto"]),
+    code: z.string(),
+    name: z.string(),
+    country_codes: z.array(z.string()).optional(),
+  }),
+});
 
-type CurrencyInputProps = {
-  type: "currency" | "crypto";
-  name: string;
-  countryCode: string;
-  code: string;
-  value?: string;
+type CurrencyInputProps = z.infer<typeof CurrencyInputSchema> & {
+  dialogRef: RefObject<HTMLDialogElement | null>;
+  targetCurrencyRef: RefObject<string>;
 };
 
 export default function CurrencyInput({
-  type,
-  name,
-  code,
-  countryCode,
-  value = "0.00",
+  isPivotal = false,
+  dialogRef,
+  targetCurrencyRef,
+  currencyData,
 }: CurrencyInputProps) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-  const identifier = `${type}-${name}`;
+  const identifier = `${currencyData.type}-${currencyData.name}`;
+
+  const IconImage =
+    currencyData.type === "fiat" ? (
+      <FiatIcon
+        className="w-8"
+        alt={currencyData.name}
+        title={currencyData.name}
+        code={currencyData.country_codes![0]}
+      />
+    ) : (
+      <CryptoIcon
+        className="w-8"
+        alt={currencyData.name}
+        title={currencyData.name}
+        code={currencyData.code}
+      />
+    );
+
+  validateComponentProps(CurrencyInputSchema, {
+    isPivotal,
+    currencyData,
+  });
 
   return (
     <div className="flex flex-col items-center p-2 text-2xl outline outline-black">
@@ -29,14 +56,13 @@ export default function CurrencyInput({
       >
         <button
           className="flex w-full justify-start gap-4 p-2 outline"
-          onClick={() => dialogRef.current?.showModal()}
+          onClick={() => {
+            targetCurrencyRef.current = currencyData.code as string;
+            dialogRef.current?.showModal();
+          }}
         >
-          <CircleFlag
-            className="w-8"
-            alt={name}
-            countryCode={countryCode.toLowerCase()}
-          />
-          <span>{code}</span>
+          {IconImage}
+          <span>{currencyData.code}</span>
         </button>
       </label>
       <input
@@ -44,15 +70,10 @@ export default function CurrencyInput({
         id={identifier}
         type="text"
         inputMode="numeric"
-        value={value}
-        onChange={() => {}}
+        onChange={(event: ChangeEvent<HTMLInputElement>) =>
+          console.log("value", event.target.value)
+        }
       />
-
-      <Suspense fallback="">
-        <Activity mode="visible">
-          <CurrencyMenu ref={dialogRef} />
-        </Activity>
-      </Suspense>
     </div>
   );
 }

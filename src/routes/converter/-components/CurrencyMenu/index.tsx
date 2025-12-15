@@ -4,19 +4,26 @@ import {
   type ChangeEvent,
   type FormEvent,
   type RefObject,
+  type Dispatch,
+  type SetStateAction,
 } from "react";
 import { createPortal } from "react-dom";
 import { z } from "zod";
 import clsx from "clsx";
 import OptionList from "./OptionList";
+import {
+  sliceListByPage,
+  sanitizeSearchTerm,
+  isSearchMatch,
+  validateComponentProps,
+} from "@/utils";
+import { FIATS, type Fiat } from "@/constants/fiat-currency-list";
+import { CRYPTOS, type Crypto } from "@/constants/crypto-currency-list";
 
-function sanitizeSearchValue(value: string) {
-  const regex = /[^a-z0-9]/gi;
-  return z
-    .string()
-    .transform((value) => value.replace(regex, ""))
-    .parse(value);
-}
+const dataSources = {
+  fiat: Object.values(FIATS),
+  crypto: Object.values(CRYPTOS),
+};
 
 const CurrencyMenuSchema = z.object({
   open: z.boolean().optional(),
@@ -24,35 +31,108 @@ const CurrencyMenuSchema = z.object({
 
 type CurrencyMenuProps = z.infer<typeof CurrencyMenuSchema> & {
   ref: RefObject<HTMLDialogElement | null>;
+  targetCurrencyRef: RefObject<string>;
+  setCurrencies: Dispatch<SetStateAction<[Currency, Currency]>>;
+};
+
+type Currency = Fiat | Crypto;
+
+type CurrencyType = keyof typeof dataSources;
+
+type PageCollection = {
+  data: Currency[];
+  pageNo: number;
+  hasMore: boolean;
+};
+
+type SearchMatches = {
+  term: string;
+  matches: Currency[];
 };
 
 const CurrencyMenu = memo(function CurrencyMenu({
   ref,
+  targetCurrencyRef,
+  setCurrencies,
   open = false,
 }: CurrencyMenuProps) {
-  const [currencyType, setCurrencyType] = useState<"currency" | "crypto">(
-    "currency",
-  );
-  const [searchTerm, setSearchTerm] = useState("");
-  // const dialogRef = useRef<HTMLDialogElement>(null);
+  const [currencyType, setCurrencyType] = useState<CurrencyType>("fiat");
+  const [pageCollection, setPageCollection] = useState<PageCollection>({
+    data: [],
+    pageNo: 1,
+    hasMore: true,
+  });
+  const [searchMatches, setSearchMatches] = useState<SearchMatches>({
+    term: "",
+    matches: [],
+  });
+  const isSearchMode = searchMatches.term.length > 0;
 
-  // props validation
-  const result = CurrencyMenuSchema.safeParse({ open });
-  if (!result.success) {
-    console.error(z.prettifyError(result.error));
-    return null;
-  }
-
+  // handlers
   function handleSearchChange(event: ChangeEvent<HTMLInputElement>) {
-    const sanitizedValue = sanitizeSearchValue(event.target.value);
-    setSearchTerm(sanitizedValue);
+    const sanitizedTerm = sanitizeSearchTerm(event.target.value);
+    setSearchMatches((prev) => ({ ...prev, term: sanitizedTerm }));
+
+    if (!sanitizedTerm.length) return;
+
+    const dataSource = dataSources[currencyType];
+    const filteredData = dataSource.filter((data) =>
+      isSearchMatch(sanitizedTerm, data),
+    );
+    setSearchMatches((prev) => ({ ...prev, matches: filteredData }));
   }
 
   function handleTypeChange(event: ChangeEvent<HTMLInputElement>) {
-    if (event.target.value === "currency" || event.target.value === "crypto") {
+    if (event.target.value === "fiat" || event.target.value === "crypto") {
       setCurrencyType(event.target.value);
+      setPageCollection({
+        pageNo: 1,
+        data: [],
+        hasMore: true,
+      });
     }
   }
+
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const formData = new FormData(event.currentTarget);
+    const currencyType = formData.get("currency-type") as CurrencyType;
+    const currencyOption =
+      formData.get("fiat-option") || formData.get("crypto-option");
+
+    // Get new currency data
+    const dataSource = currencyType === "fiat" ? FIATS : CRYPTOS;
+    const currencyData = dataSource[
+      currencyOption! as keyof typeof dataSource
+    ] as Currency;
+    currencyData.type = currencyType;
+
+    setCurrencies((prev) =>
+      prev[0].code === targetCurrencyRef.current
+        ? [currencyData, prev[1]]
+        : [prev[0], currencyData],
+    );
+
+    ref.current!.close();
+  }
+
+  function handleIntersection(entries: IntersectionObserverEntry[]) {
+    const [entry] = entries;
+    if (!entry.isIntersecting || !pageCollection.hasMore) return;
+
+    const { pageData, hasMore } = sliceListByPage({
+      list: dataSources[currencyType],
+      pageNo: pageCollection.pageNo,
+    });
+    setPageCollection((prev) => ({
+      pageNo: prev.pageNo + 1,
+      data: [...prev.data, ...pageData],
+      hasMore,
+    }));
+  }
+
+  validateComponentProps(CurrencyMenuSchema, { open });
 
   return createPortal(
     <dialog
@@ -69,24 +149,17 @@ const CurrencyMenu = memo(function CurrencyMenu({
       </h2>
 
       <div>
-        <form
-          method="dialog"
-          onSubmit={(event: FormEvent) => {
-            event.preventDefault();
-            console.log("submit");
-            ref.current!.close();
-          }}
-        >
+        <form method="dialog" onSubmit={handleSubmit}>
           <div className="mb-4 flex">
             <label
-              htmlFor="currency"
+              htmlFor="fiat"
               className="grow text-center text-lg leading-loose outline focus:bg-indigo-400 focus:text-amber-200"
             >
-              <span>Currency</span>
+              <span>Fiat</span>
               <input
-                id="currency"
+                id="fiat"
                 type="radio"
-                value="currency"
+                value="fiat"
                 defaultChecked
                 required
                 name="currency-type"
@@ -116,7 +189,7 @@ const CurrencyMenu = memo(function CurrencyMenu({
             className="mb-4 block h-12 w-full rounded-lg border border-solid border-gray-300 px-2 text-lg"
             type="search"
             spellCheck={false}
-            value={searchTerm}
+            value={searchMatches.term}
             name="search-term"
             onChange={handleSearchChange}
             placeholder="Currency name"
@@ -124,10 +197,12 @@ const CurrencyMenu = memo(function CurrencyMenu({
 
           <OptionList
             currencyType={currencyType}
-            searchTerm={searchTerm}
+            searchTerm={searchMatches.term}
+            data={isSearchMode ? searchMatches.matches : pageCollection.data}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
               console.log("change", event.target.value);
             }}
+            onIntersect={handleIntersection}
           />
 
           <button
@@ -140,7 +215,6 @@ const CurrencyMenu = memo(function CurrencyMenu({
       </div>
     </dialog>,
     document.body,
-    "currency-menu",
   );
 });
 
