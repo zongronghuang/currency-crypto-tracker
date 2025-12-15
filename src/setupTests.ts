@@ -19,11 +19,11 @@ declare global {
 
 // Provide mock implementations
 HTMLDialogElement.prototype.show = function () {
-  this.setAttribute("open", "");
+  this.setAttribute("open", "true");
 };
 
 HTMLDialogElement.prototype.showModal = function () {
-  this.setAttribute("open", "");
+  this.setAttribute("open", "true");
   this.setAttribute("data-modal", ""); // helpful for tests if needed
 };
 
@@ -31,3 +31,19 @@ HTMLDialogElement.prototype.close = function () {
   this.removeAttribute("open");
   this.removeAttribute("data-modal");
 };
+
+HTMLElement.prototype.scrollTo = vi.fn();
+
+const IntersectionObserverMock = vi.fn(function () {
+  return {
+    observe: vi.fn(),
+    unobserve: vi.fn(),
+    disconnect: vi.fn(),
+  };
+});
+
+Object.defineProperty(window, "IntersectionObserver", {
+  writable: true,
+  configurable: true,
+  value: IntersectionObserverMock,
+});
