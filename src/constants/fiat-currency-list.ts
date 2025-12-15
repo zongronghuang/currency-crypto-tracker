@@ -1,4 +1,4 @@
-const CURRENCIES = {
+const FIATS = {
   // 常用幣種
   EUR: {
     code: "EUR",
@@ -1167,7 +1167,7 @@ const CURRENCIES = {
   },
 };
 
-const TEST_CURRENCIES = {
+const TEST_FIATS = {
   // 常用幣種
   EUR: {
     code: "EUR",
@@ -1293,6 +1293,17 @@ const TEST_CURRENCIES = {
   },
 };
 
-const data = process.env.NODE_ENV == "test" ? TEST_CURRENCIES : CURRENCIES;
+const data = process.env.NODE_ENV == "test" ? TEST_FIATS : FIATS;
 
-export { data as CURRENCIES };
+export { data as FIATS };
+
+export type Fiat = {
+  type?: string;
+  code: string;
+  symbol: string;
+  name: string;
+  country: string;
+  country_codes: string[];
+};
+
+export type FiatNames = keyof typeof FIATS;
