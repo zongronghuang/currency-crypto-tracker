@@ -1,6 +1,5 @@
 import {
   useState,
-  memo,
   type ChangeEvent,
   type FormEvent,
   type RefObject,
@@ -19,7 +18,7 @@ import {
 } from "@/utils";
 import { FIATS } from "@/constants/fiat-currency-list";
 import { CRYPTOS } from "@/constants/crypto-currency-list";
-import type { Currency, CurrencyType } from "@/constants/types";
+import type { Currency, CurrencyType, ActiveCurrency } from "@/constants/types";
 
 const dataSources = {
   fiat: Object.values(FIATS),
@@ -32,8 +31,9 @@ const CurrencyMenuSchema = z.object({
 
 type CurrencyMenuProps = z.infer<typeof CurrencyMenuSchema> & {
   ref: RefObject<HTMLDialogElement | null>;
-  targetCurrencyRef: RefObject<{ code: string; type: "fiat" | "crypto" }>;
   setCurrencies: Dispatch<SetStateAction<[Currency, Currency]>>;
+  activeCurrency?: ActiveCurrency | null;
+  setActiveCurrency: Dispatch<SetStateAction<ActiveCurrency | null>>;
 };
 
 type PageCollection = {
@@ -47,13 +47,13 @@ type SearchMatches = {
   matches: Currency[];
 };
 
-const CurrencyMenu = memo(function CurrencyMenu({
+export default function CurrencyMenu({
   ref,
-  targetCurrencyRef,
   setCurrencies,
+  activeCurrency,
+  setActiveCurrency,
   open = false,
 }: CurrencyMenuProps) {
-  const [currencyType, setCurrencyType] = useState<CurrencyType>("fiat");
   const [pageCollection, setPageCollection] = useState<PageCollection>({
     data: [],
     pageNo: 1,
@@ -68,20 +68,22 @@ const CurrencyMenu = memo(function CurrencyMenu({
   // handlers
   function handleSearchChange(event: ChangeEvent<HTMLInputElement>) {
     const sanitizedTerm = sanitizeSearchTerm(event.target.value);
-    setSearchMatches((prev) => ({ ...prev, term: sanitizedTerm }));
-
     if (!sanitizedTerm.length) return;
 
-    const dataSource = dataSources[currencyType];
+    const dataSource = dataSources[activeCurrency!.type];
     const filteredData = dataSource.filter((data) =>
       isSearchMatch(sanitizedTerm, data),
     );
-    setSearchMatches((prev) => ({ ...prev, matches: filteredData }));
+    setSearchMatches({ term: sanitizedTerm, matches: filteredData });
   }
 
   function handleTypeChange(event: ChangeEvent<HTMLInputElement>) {
     if (event.target.value === "fiat" || event.target.value === "crypto") {
-      setCurrencyType(event.target.value);
+      console.log("type change");
+      setActiveCurrency((prev) => ({
+        ...prev!,
+        type: event.target.value as CurrencyType,
+      }));
       setPageCollection({
         pageNo: 1,
         data: [],
@@ -103,10 +105,9 @@ const CurrencyMenu = memo(function CurrencyMenu({
     const currencyData = dataSource[
       currencyOption! as keyof typeof dataSource
     ] as Currency;
-    currencyData.type = currencyType;
 
     setCurrencies((prev) =>
-      prev[0].code === targetCurrencyRef.current.code
+      prev[0].code === activeCurrency?.__memoCode
         ? [currencyData, prev[1]]
         : [prev[0], currencyData],
     );
@@ -116,17 +117,31 @@ const CurrencyMenu = memo(function CurrencyMenu({
 
   function handleIntersection(entries: IntersectionObserverEntry[]) {
     const [entry] = entries;
+    console.log("intersecting", entry.isIntersecting);
     if (!entry.isIntersecting || !pageCollection.hasMore) return;
 
     const { pageData, hasMore } = sliceListByPage({
-      list: dataSources[currencyType],
+      list: dataSources[activeCurrency!.type],
       pageNo: pageCollection.pageNo,
     });
+
+    console.log("intersection", activeCurrency?.type);
+
     setPageCollection((prev) => ({
       pageNo: prev.pageNo + 1,
       data: [...prev.data, ...pageData],
       hasMore,
     }));
+  }
+
+  function resetDialog() {
+    console.log("dialog close");
+    setPageCollection({
+      pageNo: 1,
+      data: [],
+      hasMore: true,
+    });
+    setActiveCurrency(null);
   }
 
   validateComponentProps(CurrencyMenuSchema, { open });
@@ -140,6 +155,7 @@ const CurrencyMenu = memo(function CurrencyMenu({
       open={open}
       closedby="any"
       aria-labelledby="currency-crypto"
+      onClose={resetDialog}
     >
       <h2 id="currency-crypto" className="mb-4 text-center text-lg">
         Currency-crypto list
@@ -150,16 +166,16 @@ const CurrencyMenu = memo(function CurrencyMenu({
           <div className="mb-4 flex">
             <label
               htmlFor="fiat"
-              className="grow text-center text-lg leading-loose outline focus:bg-indigo-400 focus:text-amber-200"
+              className="grow text-center text-lg leading-loose hover:bg-blue-300 hover:text-white focus:bg-indigo-400 focus:text-amber-200 has-checked:bg-blue-600 has-checked:text-white"
             >
               <span>Fiat</span>
               <input
                 id="fiat"
                 type="radio"
                 value="fiat"
-                defaultChecked
                 required
                 name="currency-type"
+                checked={activeCurrency?.type === "fiat"}
                 onChange={handleTypeChange}
                 className="appearance-none"
               />
@@ -167,7 +183,7 @@ const CurrencyMenu = memo(function CurrencyMenu({
 
             <label
               htmlFor="crypto"
-              className="grow text-center text-lg leading-loose"
+              className="grow text-center text-lg leading-loose hover:bg-blue-300 hover:text-white has-checked:bg-blue-600 has-checked:text-white"
             >
               <span>Crypto</span>
               <input
@@ -176,6 +192,7 @@ const CurrencyMenu = memo(function CurrencyMenu({
                 value="crypto"
                 required
                 name="currency-type"
+                checked={activeCurrency?.type === "crypto"}
                 onChange={handleTypeChange}
                 className="appearance-none"
               />
@@ -193,11 +210,14 @@ const CurrencyMenu = memo(function CurrencyMenu({
           />
 
           <OptionList
-            currencyType={currencyType}
+            activeCurrency={activeCurrency!}
             searchTerm={searchMatches.term}
             data={isSearchMode ? searchMatches.matches : pageCollection.data}
             onChange={(event: ChangeEvent<HTMLInputElement>) => {
-              console.log("change", event.target.value);
+              setActiveCurrency((prev) => ({
+                ...prev!,
+                code: event.target.value,
+              }));
             }}
             onIntersect={handleIntersection}
           />
@@ -213,6 +233,4 @@ const CurrencyMenu = memo(function CurrencyMenu({
     </dialog>,
     document.body,
   );
-});
-
-export default CurrencyMenu;
+}

@@ -1,4 +1,4 @@
-import { useRef, useLayoutEffect } from "react";
+import { useRef, useEffect } from "react";
 import { z } from "zod";
 import clsx from "clsx";
 import { FiatIcon, CryptoIcon } from "../CurrencyIcon";
@@ -42,7 +42,7 @@ export default function OptionList({
   const CurrencyOption =
     activeCurrency?.type === "fiat" ? FiatOption : CryptoOption;
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     scrollToTop(listRef, "instant");
   }, [activeCurrency?.type]);
 
