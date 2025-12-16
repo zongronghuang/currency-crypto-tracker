@@ -1,13 +1,13 @@
-import { useRef, useEffect } from "react";
+import { useRef, useLayoutEffect } from "react";
 import { z } from "zod";
 import clsx from "clsx";
 import { FiatIcon, CryptoIcon } from "../CurrencyIcon";
 import useIntersectionObserver from "@/hooks/useIntersectionObserver";
 import { validateComponentProps, scrollToTop } from "@/utils";
+import { type Currency } from "@/constants/types";
 import styles from "./OptionList.module.css";
 
 const OptionListSchema = z.object({
-  currencyType: z.enum(["fiat", "crypto"]),
   searchTerm: z.string(),
   data: z.array(
     z.object({
@@ -21,11 +21,12 @@ const OptionListSchema = z.object({
 
 type OptionListProps = z.infer<typeof OptionListSchema> & {
   onIntersect: IntersectionObserverCallback;
+  activeCurrency: Currency;
 };
 
 export default function OptionList({
-  currencyType,
   searchTerm,
+  activeCurrency,
   data,
   onChange,
   onIntersect,
@@ -38,15 +39,15 @@ export default function OptionList({
     onIntersect,
   });
 
-  const CurrencyOption = currencyType === "fiat" ? FiatOption : CryptoOption;
+  const CurrencyOption =
+    activeCurrency?.type === "fiat" ? FiatOption : CryptoOption;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     scrollToTop(listRef, "instant");
-  }, [currencyType]);
+  }, [activeCurrency?.type]);
 
   // props validation
   validateComponentProps(OptionListSchema, {
-    currencyType,
     searchTerm,
     data,
     onChange,
@@ -56,13 +57,18 @@ export default function OptionList({
     <ul
       ref={listRef}
       className={clsx(
-        currencyType,
+        activeCurrency?.type,
         styles.optionList,
         "no-scrollbar mb-4 grid h-[40vh] auto-rows-min grid-cols-2 items-start overflow-y-scroll rounded-lg border border-solid border-gray-300 px-2 focus-within:outline-2 focus-within:outline-blue-500",
       )}
     >
       {data.map((op) => (
-        <CurrencyOption key={op.code} optionData={op} onChange={onChange} />
+        <CurrencyOption
+          isActive={activeCurrency?.code === op.code}
+          key={op.code}
+          optionData={op}
+          onChange={onChange}
+        />
       ))}
 
       <div ref={targetRef} className="h-0.5 bg-transparent"></div>
@@ -72,6 +78,7 @@ export default function OptionList({
 }
 
 const OptionSchema = z.object({
+  isActive: z.boolean(),
   optionData: z.object({
     code: z.string(),
     name: z.string(),
@@ -82,8 +89,8 @@ const OptionSchema = z.object({
 
 type CurrencyOptionProps = z.infer<typeof OptionSchema>;
 
-function FiatOption({ optionData, onChange }: CurrencyOptionProps) {
-  validateComponentProps(OptionSchema, { optionData, onChange });
+function FiatOption({ isActive, optionData, onChange }: CurrencyOptionProps) {
+  validateComponentProps(OptionSchema, { isActive, optionData, onChange });
 
   return (
     <li
@@ -108,6 +115,7 @@ function FiatOption({ optionData, onChange }: CurrencyOptionProps) {
           value={optionData.code}
           name="fiat-option"
           onChange={onChange}
+          checked={isActive}
           className="appearance-none"
         />
       </label>
@@ -115,8 +123,8 @@ function FiatOption({ optionData, onChange }: CurrencyOptionProps) {
   );
 }
 
-function CryptoOption({ optionData, onChange }: CurrencyOptionProps) {
-  validateComponentProps(OptionSchema, { optionData, onChange });
+function CryptoOption({ isActive, optionData, onChange }: CurrencyOptionProps) {
+  validateComponentProps(OptionSchema, { isActive, optionData, onChange });
 
   return (
     <li
@@ -141,6 +149,7 @@ function CryptoOption({ optionData, onChange }: CurrencyOptionProps) {
           value={optionData.code}
           name="crypto-option"
           onChange={onChange}
+          checked={isActive}
           className="appearance-none"
         />
       </label>

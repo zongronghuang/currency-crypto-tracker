@@ -1,13 +1,18 @@
-import { type ChangeEvent, type RefObject } from "react";
+import {
+  type ChangeEvent,
+  type Dispatch,
+  type RefObject,
+  type SetStateAction,
+} from "react";
 import { z } from "zod";
 import { FiatIcon, CryptoIcon } from "../CurrencyIcon";
 import { validateComponentProps } from "@/utils";
-import type { CurrencyType } from "@/constants/types";
+import type { ActiveCurrency } from "@/constants/types";
 
 const CurrencyInputSchema = z.object({
   isPivotal: z.boolean().optional(),
   currencyData: z.object({
-    type: z.enum(["fiat", "crypto"]).optional(),
+    type: z.enum(["fiat", "crypto"]),
     code: z.string(),
     name: z.string(),
     country_codes: z.array(z.string()).optional(),
@@ -16,14 +21,14 @@ const CurrencyInputSchema = z.object({
 
 type CurrencyInputProps = z.infer<typeof CurrencyInputSchema> & {
   dialogRef: RefObject<HTMLDialogElement | null>;
-  targetCurrencyRef: RefObject<{ code: string; type: CurrencyType }>;
+  setActiveCurrency: Dispatch<SetStateAction<ActiveCurrency | null>>;
 };
 
 export default function CurrencyInput({
   isPivotal = false,
   dialogRef,
-  targetCurrencyRef,
   currencyData,
+  setActiveCurrency,
 }: CurrencyInputProps) {
   const identifier = `${currencyData.type}-${currencyData.name}`;
 
@@ -58,10 +63,10 @@ export default function CurrencyInput({
         <button
           className="flex w-full justify-start gap-4 p-2 outline"
           onClick={() => {
-            targetCurrencyRef.current = {
-              type: currencyData.type!,
-              code: currencyData.code,
-            };
+            setActiveCurrency({
+              ...currencyData,
+              __memoCode: currencyData.code,
+            });
             dialogRef.current?.showModal();
           }}
         >

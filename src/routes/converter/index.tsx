@@ -2,7 +2,7 @@ import { useState, useRef, Suspense, lazy, Activity } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import CurrencyInput from "./-components/CurrencyInput";
 import { FIATS } from "@/constants/fiat-currency-list";
-import type { Currency, CurrencyType } from "@/constants/types";
+import type { Currency, ActiveCurrency } from "@/constants/types";
 
 export const Route = createFileRoute("/converter/")({
   component: ConverterPage,
@@ -10,20 +10,14 @@ export const Route = createFileRoute("/converter/")({
 
 const CurrencyMenu = lazy(() => import("./-components/CurrencyMenu"));
 
-const currencyData1 = { type: "fiat" as const, ...FIATS.USD };
-const currencyData2 = { type: "fiat" as const, ...FIATS.EUR };
-
-type TargetCurrency = {
-  code: string;
-  type: CurrencyType;
-};
-
 export default function ConverterPage() {
   const [currencies, setCurrencies] = useState<[Currency, Currency]>([
-    currencyData1,
-    currencyData2,
+    FIATS.USD,
+    FIATS.EUR,
   ]);
-  const targetCurrencyRef = useRef<TargetCurrency>({ code: "", type: "fiat" });
+  const [activeCurrency, setActiveCurrency] = useState<ActiveCurrency | null>(
+    null,
+  );
   const dialogRef = useRef<HTMLDialogElement>(null);
 
   return (
@@ -35,7 +29,7 @@ export default function ConverterPage() {
       <CurrencyInput
         isPivotal={true}
         dialogRef={dialogRef}
-        targetCurrencyRef={targetCurrencyRef}
+        setActiveCurrency={setActiveCurrency}
         currencyData={currencies[0]}
       />
 
@@ -43,7 +37,7 @@ export default function ConverterPage() {
 
       <CurrencyInput
         dialogRef={dialogRef}
-        targetCurrencyRef={targetCurrencyRef}
+        setActiveCurrency={setActiveCurrency}
         currencyData={currencies[1]}
       />
 
@@ -52,7 +46,8 @@ export default function ConverterPage() {
           <CurrencyMenu
             ref={dialogRef}
             setCurrencies={setCurrencies}
-            targetCurrencyRef={targetCurrencyRef}
+            activeCurrency={activeCurrency}
+            setActiveCurrency={setActiveCurrency}
           />
         </Activity>
       </Suspense>
