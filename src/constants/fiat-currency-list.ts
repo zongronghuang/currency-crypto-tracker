@@ -1,6 +1,7 @@
 const FIATS = {
   // 常用幣種
   EUR: {
+    type: "fiat" as const,
     code: "EUR",
     symbol: "€",
     name: "Euro",
@@ -8,6 +9,7 @@ const FIATS = {
     country_codes: ["EU", "EUR"],
   },
   GBP: {
+    type: "fiat" as const,
     code: "GBP",
     symbol: "£",
     name: "British pound",
@@ -15,6 +17,7 @@ const FIATS = {
     country_codes: ["GB", "GBR"],
   },
   USD: {
+    type: "fiat" as const,
     code: "USD",
     symbol: "$",
     name: "United States dollar",
@@ -22,6 +25,7 @@ const FIATS = {
     country_codes: ["US", "USA"],
   },
   INR: {
+    type: "fiat" as const,
     code: "INR",
     symbol: "₹",
     name: "Indian rupee",
@@ -29,6 +33,7 @@ const FIATS = {
     country_codes: ["IN", "IND"],
   },
   CAD: {
+    type: "fiat" as const,
     code: "CAD",
     symbol: "C$",
     name: "Canadian dollar",
@@ -36,6 +41,7 @@ const FIATS = {
     country_codes: ["CA", "CAN"],
   },
   AUD: {
+    type: "fiat" as const,
     code: "AUD",
     symbol: "A$",
     name: "Australian dollar",
@@ -43,6 +49,7 @@ const FIATS = {
     country_codes: ["AU", "AUS"],
   },
   CHF: {
+    type: "fiat" as const,
     code: "CHF",
     symbol: "SFr.",
     name: "Swiss franc",
@@ -50,6 +57,7 @@ const FIATS = {
     country_codes: ["CH", "CHE"],
   },
   MXN: {
+    type: "fiat" as const,
     code: "MXN",
     symbol: "Mex$",
     name: "Mexican peso",
@@ -59,6 +67,7 @@ const FIATS = {
 
   // 一般幣種，依字母排序
   AED: {
+    type: "fiat" as const,
     code: "AED",
     symbol: "د.إ",
     name: "United Arab Emirates dirham",
@@ -66,6 +75,7 @@ const FIATS = {
     country_codes: ["AE", "ARE"],
   },
   AFN: {
+    type: "fiat" as const,
     code: "AFN",
     symbol: "؋",
     name: "Afghanistan afghani",
@@ -73,6 +83,7 @@ const FIATS = {
     country_codes: ["AF", "AFG"],
   },
   ALL: {
+    type: "fiat" as const,
     code: "ALL",
     symbol: "Lek",
     name: "Albanian lek",
@@ -80,6 +91,7 @@ const FIATS = {
     country_codes: ["AL", "ALB"],
   },
   AMD: {
+    type: "fiat" as const,
     code: "AMD",
     symbol: "֏",
     name: "Armenian dram",
@@ -87,6 +99,7 @@ const FIATS = {
     country_codes: ["AM", "ARM"],
   },
   ANG: {
+    type: "fiat" as const,
     code: "ANG",
     symbol: "ƒ",
     name: "Netherlands Antillean guilder",
@@ -94,6 +107,7 @@ const FIATS = {
     country_codes: ["CW", "CUW"], // Curaçao uses ANG, also Sint Maarten (SX)
   },
   AOA: {
+    type: "fiat" as const,
     code: "AOA",
     symbol: "Kz",
     name: "Angolan kwanza",
@@ -101,6 +115,7 @@ const FIATS = {
     country_codes: ["AO", "AGO"],
   },
   ARS: {
+    type: "fiat" as const,
     code: "ARS",
     symbol: "$",
     name: "Argentine peso",
@@ -109,6 +124,7 @@ const FIATS = {
   },
 
   AWG: {
+    type: "fiat" as const,
     code: "AWG",
     symbol: "AWG",
     name: "Aruban florin",
@@ -116,6 +132,7 @@ const FIATS = {
     country_codes: ["AW", "ABW"],
   },
   AZN: {
+    type: "fiat" as const,
     code: "AZN",
     symbol: "man.",
     name: "Azerbaijani manat",
@@ -123,6 +140,7 @@ const FIATS = {
     country_codes: ["AZ", "AZE"],
   },
   BAM: {
+    type: "fiat" as const,
     code: "BAM",
     symbol: "KM",
     name: "Bosnia and Herzegovina convertible mark",
@@ -130,6 +148,7 @@ const FIATS = {
     country_codes: ["BA", "BIH"],
   },
   BBD: {
+    type: "fiat" as const,
     code: "BBD",
     symbol: "BBD",
     name: "Barbadian dollar",
@@ -137,6 +156,7 @@ const FIATS = {
     country_codes: ["BB", "BRB"],
   },
   BDT: {
+    type: "fiat" as const,
     code: "BDT",
     symbol: "Tk",
     name: "Bangladeshi taka",
@@ -144,6 +164,7 @@ const FIATS = {
     country_codes: ["BD", "BGD"],
   },
   BGN: {
+    type: "fiat" as const,
     code: "BGN",
     symbol: "лв",
     name: "Bulgarian lev",
@@ -151,6 +172,7 @@ const FIATS = {
     country_codes: ["BG", "BGR"],
   },
   BHD: {
+    type: "fiat" as const,
     code: "BHD",
     symbol: "BHD",
     name: "Bahraini dinar",
@@ -158,6 +180,7 @@ const FIATS = {
     country_codes: ["BH", "BHR"],
   },
   BIF: {
+    type: "fiat" as const,
     code: "BIF",
     symbol: "BIF",
     name: "Burundian franc",
@@ -165,6 +188,7 @@ const FIATS = {
     country_codes: ["BI", "BDI"],
   },
   BMD: {
+    type: "fiat" as const,
     code: "BMD",
     symbol: "BMD",
     name: "Bermudian dollar",
@@ -172,6 +196,7 @@ const FIATS = {
     country_codes: ["BM", "BMU"],
   },
   BND: {
+    type: "fiat" as const,
     code: "BND",
     symbol: "BND",
     name: "Brunei dollar",
@@ -179,6 +204,7 @@ const FIATS = {
     country_codes: ["BN", "BRN"],
   },
   BOB: {
+    type: "fiat" as const,
     code: "BOB",
     symbol: "BOB",
     name: "Bolivian boliviano",
@@ -186,6 +212,7 @@ const FIATS = {
     country_codes: ["BO", "BOL"],
   },
   BRL: {
+    type: "fiat" as const,
     code: "BRL",
     symbol: "R$",
     name: "Brazilian real",
@@ -193,6 +220,7 @@ const FIATS = {
     country_codes: ["BR", "BRA"],
   },
   BSD: {
+    type: "fiat" as const,
     code: "BSD",
     symbol: "BSD",
     name: "Bahamian dollar",
@@ -200,6 +228,7 @@ const FIATS = {
     country_codes: ["BS", "BHS"],
   },
   BTN: {
+    type: "fiat" as const,
     code: "BTN",
     symbol: "BTN",
     name: "Bhutanese ngultrum",
@@ -207,6 +236,7 @@ const FIATS = {
     country_codes: ["BT", "BTN"],
   },
   BWP: {
+    type: "fiat" as const,
     code: "BWP",
     symbol: "BWP",
     name: "Botswana pula",
@@ -214,6 +244,7 @@ const FIATS = {
     country_codes: ["BW", "BWA"],
   },
   BYN: {
+    type: "fiat" as const,
     code: "BYN",
     symbol: "BYN",
     name: "Belarusian ruble",
@@ -221,6 +252,7 @@ const FIATS = {
     country_codes: ["BY", "BLR"],
   },
   BZD: {
+    type: "fiat" as const,
     code: "BZD",
     symbol: "BZ$",
     name: "Belizean dollar",
@@ -229,6 +261,7 @@ const FIATS = {
   },
 
   CDF: {
+    type: "fiat" as const,
     code: "CDF",
     symbol: "CDF",
     name: "Congolese franc",
@@ -237,6 +270,7 @@ const FIATS = {
   },
 
   CLP: {
+    type: "fiat" as const,
     code: "CLP",
     symbol: "$",
     name: "Chilean peso",
@@ -244,6 +278,7 @@ const FIATS = {
     country_codes: ["CL", "CHL"],
   },
   CNH: {
+    type: "fiat" as const,
     code: "CNH",
     symbol: "¥",
     name: "Chinese yuan (offshore)",
@@ -251,6 +286,7 @@ const FIATS = {
     country_codes: ["CN", "CHN"],
   },
   CNY: {
+    type: "fiat" as const,
     code: "CNY",
     symbol: "¥",
     name: "Chinese yuan",
@@ -258,6 +294,7 @@ const FIATS = {
     country_codes: ["CN", "CHN"],
   },
   COP: {
+    type: "fiat" as const,
     code: "COP",
     symbol: "$",
     name: "Colombian peso",
@@ -265,6 +302,7 @@ const FIATS = {
     country_codes: ["CO", "COL"],
   },
   CRC: {
+    type: "fiat" as const,
     code: "CRC",
     symbol: "₡",
     name: "Costa Rican colón",
@@ -272,6 +310,7 @@ const FIATS = {
     country_codes: ["CR", "CRI"],
   },
   CUC: {
+    type: "fiat" as const,
     code: "CUC",
     symbol: "CUC$",
     name: "Cuban Convertible peso",
@@ -279,6 +318,7 @@ const FIATS = {
     country_codes: ["CU", "CUB"],
   },
   CUP: {
+    type: "fiat" as const,
     code: "CUP",
     symbol: "CUP",
     name: "Cuban peso",
@@ -286,6 +326,7 @@ const FIATS = {
     country_codes: ["CU", "CUB"],
   },
   CVE: {
+    type: "fiat" as const,
     code: "CVE",
     symbol: "CVE",
     name: "Cape Verdean escudo",
@@ -293,6 +334,7 @@ const FIATS = {
     country_codes: ["CV", "CPV"],
   },
   CZK: {
+    type: "fiat" as const,
     code: "CZK",
     symbol: "Kč",
     name: "Czech koruna",
@@ -300,6 +342,7 @@ const FIATS = {
     country_codes: ["CZ", "CZE"],
   },
   DJF: {
+    type: "fiat" as const,
     code: "DJF",
     symbol: "DJF",
     name: "Djiboutian franc",
@@ -307,6 +350,7 @@ const FIATS = {
     country_codes: ["DJ", "DJI"],
   },
   DKK: {
+    type: "fiat" as const,
     code: "DKK",
     symbol: "kr",
     name: "Danish krone",
@@ -314,6 +358,7 @@ const FIATS = {
     country_codes: ["DK", "DNK"],
   },
   DOP: {
+    type: "fiat" as const,
     code: "DOP",
     symbol: "$",
     name: "Dominican peso",
@@ -321,6 +366,7 @@ const FIATS = {
     country_codes: ["DO", "DOM"],
   },
   DZD: {
+    type: "fiat" as const,
     code: "DZD",
     symbol: "DZD",
     name: "Algerian dinar",
@@ -329,6 +375,7 @@ const FIATS = {
   },
 
   EGP: {
+    type: "fiat" as const,
     code: "EGP",
     symbol: "E£",
     name: "Egyptian pound",
@@ -336,6 +383,7 @@ const FIATS = {
     country_codes: ["EG", "EGY"],
   },
   ERN: {
+    type: "fiat" as const,
     code: "ERN",
     symbol: "ERN",
     name: "Eritrean nakfa",
@@ -343,6 +391,7 @@ const FIATS = {
     country_codes: ["ER", "ERI"],
   },
   ETB: {
+    type: "fiat" as const,
     code: "ETB",
     symbol: "Br",
     name: "Ethiopian birr",
@@ -351,6 +400,7 @@ const FIATS = {
   },
 
   FJD: {
+    type: "fiat" as const,
     code: "FJD",
     symbol: "FJD",
     name: "Fijian dollar",
@@ -358,6 +408,7 @@ const FIATS = {
     country_codes: ["FJ", "FJI"],
   },
   FKP: {
+    type: "fiat" as const,
     code: "FKP",
     symbol: "£",
     name: "Falkland Islands pound",
@@ -366,6 +417,7 @@ const FIATS = {
   },
 
   GEL: {
+    type: "fiat" as const,
     code: "GEL",
     symbol: "GEL",
     name: "Georgian lari",
@@ -373,6 +425,7 @@ const FIATS = {
     country_codes: ["GE", "GEO"],
   },
   GGP: {
+    type: "fiat" as const,
     code: "GGP",
     symbol: "£",
     name: "Guernsey pound",
@@ -380,6 +433,7 @@ const FIATS = {
     country_codes: ["GG", "GGY"],
   },
   GHS: {
+    type: "fiat" as const,
     code: "GHS",
     symbol: "GH¢",
     name: "Ghanaian cedi",
@@ -387,6 +441,7 @@ const FIATS = {
     country_codes: ["GH", "GHA"],
   },
   GIP: {
+    type: "fiat" as const,
     code: "GIP",
     symbol: "£",
     name: "Gibraltar pound",
@@ -394,6 +449,7 @@ const FIATS = {
     country_codes: ["GI", "GIB"],
   },
   GMD: {
+    type: "fiat" as const,
     code: "GMD",
     symbol: "GMD",
     name: "Gambian dalasi",
@@ -401,6 +457,7 @@ const FIATS = {
     country_codes: ["GM", "GMB"],
   },
   GNF: {
+    type: "fiat" as const,
     code: "GNF",
     symbol: "GNF",
     name: "Guinean franc",
@@ -408,6 +465,7 @@ const FIATS = {
     country_codes: ["GN", "GIN"],
   },
   GTQ: {
+    type: "fiat" as const,
     code: "GTQ",
     symbol: "Q",
     name: "Guatemalan quetzal",
@@ -415,6 +473,7 @@ const FIATS = {
     country_codes: ["GT", "GTM"],
   },
   GYD: {
+    type: "fiat" as const,
     code: "GYD",
     symbol: "GYD",
     name: "Guyanese dollar",
@@ -423,6 +482,7 @@ const FIATS = {
   },
 
   HKD: {
+    type: "fiat" as const,
     code: "HKD",
     symbol: "$",
     name: "Hong Kong dollar",
@@ -430,6 +490,7 @@ const FIATS = {
     country_codes: ["HK", "HKG"],
   },
   HNL: {
+    type: "fiat" as const,
     code: "HNL",
     symbol: "L",
     name: "Honduran lempira",
@@ -437,6 +498,7 @@ const FIATS = {
     country_codes: ["HN", "HND"],
   },
   HTG: {
+    type: "fiat" as const,
     code: "HTG",
     symbol: "HTG",
     name: "Haitian gourde",
@@ -444,6 +506,7 @@ const FIATS = {
     country_codes: ["HT", "HTI"],
   },
   HUF: {
+    type: "fiat" as const,
     code: "HUF",
     symbol: "Ft",
     name: "Hungarian forint",
@@ -451,6 +514,7 @@ const FIATS = {
     country_codes: ["HU", "HUN"],
   },
   IDR: {
+    type: "fiat" as const,
     code: "IDR",
     symbol: "Rp",
     name: "Indonesian rupiah",
@@ -458,6 +522,7 @@ const FIATS = {
     country_codes: ["ID", "IDN"],
   },
   ILS: {
+    type: "fiat" as const,
     code: "ILS",
     symbol: "₪",
     name: "Israeli shekel",
@@ -465,6 +530,7 @@ const FIATS = {
     country_codes: ["IL", "ISR"],
   },
   IMP: {
+    type: "fiat" as const,
     code: "IMP",
     symbol: "£",
     name: "Isle of Man pound",
@@ -473,6 +539,7 @@ const FIATS = {
   },
 
   IQD: {
+    type: "fiat" as const,
     code: "IQD",
     symbol: "IQD",
     name: "Iraqi dinar",
@@ -480,6 +547,7 @@ const FIATS = {
     country_codes: ["IQ", "IRQ"],
   },
   IRR: {
+    type: "fiat" as const,
     code: "IRR",
     symbol: "﷼",
     name: "Iranian rial",
@@ -487,6 +555,7 @@ const FIATS = {
     country_codes: ["IR", "IRN"],
   },
   ISK: {
+    type: "fiat" as const,
     code: "ISK",
     symbol: "kr",
     name: "Icelandic króna",
@@ -494,6 +563,7 @@ const FIATS = {
     country_codes: ["IS", "ISL"],
   },
   JEP: {
+    type: "fiat" as const,
     code: "JEP",
     symbol: "£",
     name: "Jersey pound",
@@ -501,6 +571,7 @@ const FIATS = {
     country_codes: ["JE", "JEY"],
   },
   JMD: {
+    type: "fiat" as const,
     code: "JMD",
     symbol: "J$",
     name: "Jamaican dollar",
@@ -508,6 +579,7 @@ const FIATS = {
     country_codes: ["JM", "JAM"],
   },
   JOD: {
+    type: "fiat" as const,
     code: "JOD",
     symbol: "JD",
     name: "Jordanian dinar",
@@ -515,6 +587,7 @@ const FIATS = {
     country_codes: ["JO", "JOR"],
   },
   JPY: {
+    type: "fiat" as const,
     code: "JPY",
     symbol: "¥",
     name: "Japanese yen",
@@ -523,6 +596,7 @@ const FIATS = {
   },
 
   KES: {
+    type: "fiat" as const,
     code: "KES",
     symbol: "Ksh",
     name: "Kenyan shilling",
@@ -530,6 +604,7 @@ const FIATS = {
     country_codes: ["KE", "KEN"],
   },
   KGS: {
+    type: "fiat" as const,
     code: "KGS",
     symbol: "KGS",
     name: "Kyrgyzstani som",
@@ -537,6 +612,7 @@ const FIATS = {
     country_codes: ["KG", "KGZ"],
   },
   KHR: {
+    type: "fiat" as const,
     code: "KHR",
     symbol: "៛",
     name: "Cambodian riel",
@@ -544,6 +620,7 @@ const FIATS = {
     country_codes: ["KH", "KHM"],
   },
   KMF: {
+    type: "fiat" as const,
     code: "KMF",
     symbol: "KMF",
     name: "Comorian franc",
@@ -551,6 +628,7 @@ const FIATS = {
     country_codes: ["KM", "COM"],
   },
   KPW: {
+    type: "fiat" as const,
     code: "KPW",
     symbol: "KPW",
     name: "North Korean won",
@@ -558,6 +636,7 @@ const FIATS = {
     country_codes: ["KP", "PRK"],
   },
   KRW: {
+    type: "fiat" as const,
     code: "KRW",
     symbol: "₩",
     name: "South Korean won",
@@ -565,6 +644,7 @@ const FIATS = {
     country_codes: ["KR", "KOR"],
   },
   KWD: {
+    type: "fiat" as const,
     code: "KWD",
     symbol: "ك",
     name: "Kuwaiti dinar",
@@ -572,6 +652,7 @@ const FIATS = {
     country_codes: ["KW", "KWT"],
   },
   KYD: {
+    type: "fiat" as const,
     code: "KYD",
     symbol: "$",
     name: "Cayman Islands dollar",
@@ -579,6 +660,7 @@ const FIATS = {
     country_codes: ["KY", "CYM"],
   },
   KZT: {
+    type: "fiat" as const,
     code: "KZT",
     symbol: "₸",
     name: "Kazakhstani tenge",
@@ -586,6 +668,7 @@ const FIATS = {
     country_codes: ["KZ", "KAZ"],
   },
   LAK: {
+    type: "fiat" as const,
     code: "LAK",
     symbol: "LAK",
     name: "Lao kip",
@@ -593,6 +676,7 @@ const FIATS = {
     country_codes: ["LA", "LAO"],
   },
   LBP: {
+    type: "fiat" as const,
     code: "LBP",
     symbol: "LBP",
     name: "Lebanese pound",
@@ -600,6 +684,7 @@ const FIATS = {
     country_codes: ["LB", "LBN"],
   },
   LKR: {
+    type: "fiat" as const,
     code: "LKR",
     symbol: "Rs",
     name: "Sri Lankan rupee",
@@ -607,6 +692,7 @@ const FIATS = {
     country_codes: ["LK", "LKA"],
   },
   LRD: {
+    type: "fiat" as const,
     code: "LRD",
     symbol: "L$",
     name: "Liberian dollar",
@@ -614,6 +700,7 @@ const FIATS = {
     country_codes: ["LR", "LBR"],
   },
   LSL: {
+    type: "fiat" as const,
     code: "LSL",
     symbol: "LSL",
     name: "Lesotho loti",
@@ -621,6 +708,7 @@ const FIATS = {
     country_codes: ["LS", "LSO"],
   },
   LYD: {
+    type: "fiat" as const,
     code: "LYD",
     symbol: "LYD",
     name: "Libyan dinar",
@@ -629,6 +717,7 @@ const FIATS = {
   },
 
   MAD: {
+    type: "fiat" as const,
     code: "MAD",
     symbol: "د.م.",
     name: "Moroccan dirham",
@@ -636,6 +725,7 @@ const FIATS = {
     country_codes: ["MA", "MAR"],
   },
   MDL: {
+    type: "fiat" as const,
     code: "MDL",
     symbol: "MDL",
     name: "Moldovan leu",
@@ -643,6 +733,7 @@ const FIATS = {
     country_codes: ["MD", "MDA"],
   },
   MGA: {
+    type: "fiat" as const,
     code: "MGA",
     symbol: "MGA",
     name: "Malagasy ariary",
@@ -650,6 +741,7 @@ const FIATS = {
     country_codes: ["MG", "MDG"],
   },
   MKD: {
+    type: "fiat" as const,
     code: "MKD",
     symbol: "ден",
     name: "Macedonian denar",
@@ -657,6 +749,7 @@ const FIATS = {
     country_codes: ["MK", "MKD"],
   },
   MMK: {
+    type: "fiat" as const,
     code: "MMK",
     symbol: "K",
     name: "Myanmar kyat",
@@ -664,6 +757,7 @@ const FIATS = {
     country_codes: ["MM", "MMR"],
   },
   MNT: {
+    type: "fiat" as const,
     code: "MNT",
     symbol: "MNT",
     name: "Mongolian tugrik",
@@ -671,6 +765,7 @@ const FIATS = {
     country_codes: ["MN", "MNG"],
   },
   MOP: {
+    type: "fiat" as const,
     code: "MOP",
     symbol: "MOP",
     name: "Macanese pataca",
@@ -678,6 +773,7 @@ const FIATS = {
     country_codes: ["MO", "MAC"],
   },
   MRU: {
+    type: "fiat" as const,
     code: "MRU",
     symbol: "UM",
     name: "Mauritanian ouguiya",
@@ -685,6 +781,7 @@ const FIATS = {
     country_codes: ["MR", "MRT"],
   },
   MUR: {
+    type: "fiat" as const,
     code: "MUR",
     symbol: "₨",
     name: "Mauritian rupee",
@@ -692,6 +789,7 @@ const FIATS = {
     country_codes: ["MU", "MUS"],
   },
   MVR: {
+    type: "fiat" as const,
     code: "MVR",
     symbol: "MVR",
     name: "Maldivian rufiyaa",
@@ -699,6 +797,7 @@ const FIATS = {
     country_codes: ["MV", "MDV"],
   },
   MWK: {
+    type: "fiat" as const,
     code: "MWK",
     symbol: "MWK",
     name: "Malawian kwacha",
@@ -707,6 +806,7 @@ const FIATS = {
   },
 
   MYR: {
+    type: "fiat" as const,
     code: "MYR",
     symbol: "RM",
     name: "Malaysian ringgit",
@@ -714,6 +814,7 @@ const FIATS = {
     country_codes: ["MY", "MYS"],
   },
   MZN: {
+    type: "fiat" as const,
     code: "MZN",
     symbol: "MT",
     name: "Mozambican metical",
@@ -721,6 +822,7 @@ const FIATS = {
     country_codes: ["MZ", "MOZ"],
   },
   NAD: {
+    type: "fiat" as const,
     code: "NAD",
     symbol: "$",
     name: "Namibian dollar",
@@ -728,6 +830,7 @@ const FIATS = {
     country_codes: ["NA", "NAM"],
   },
   NGN: {
+    type: "fiat" as const,
     code: "NGN",
     symbol: "₦",
     name: "Nigerian naira",
@@ -735,6 +838,7 @@ const FIATS = {
     country_codes: ["NG", "NGA"],
   },
   NIO: {
+    type: "fiat" as const,
     code: "NIO",
     symbol: "NIO",
     name: "Nicaraguan córdoba",
@@ -742,6 +846,7 @@ const FIATS = {
     country_codes: ["NI", "NIC"],
   },
   NOK: {
+    type: "fiat" as const,
     code: "NOK",
     symbol: "kr",
     name: "Norwegian krone",
@@ -749,6 +854,7 @@ const FIATS = {
     country_codes: ["NO", "NOR"],
   },
   NPR: {
+    type: "fiat" as const,
     code: "NPR",
     symbol: "₨",
     name: "Nepalese rupee",
@@ -756,6 +862,7 @@ const FIATS = {
     country_codes: ["NP", "NPL"],
   },
   NZD: {
+    type: "fiat" as const,
     code: "NZD",
     symbol: "$",
     name: "New Zealand dollar",
@@ -764,6 +871,7 @@ const FIATS = {
   },
 
   OMR: {
+    type: "fiat" as const,
     code: "OMR",
     symbol: "OMR",
     name: "Omani rial",
@@ -771,6 +879,7 @@ const FIATS = {
     country_codes: ["OM", "OMN"],
   },
   PAB: {
+    type: "fiat" as const,
     code: "PAB",
     symbol: "B/.",
     name: "Panamanian balboa",
@@ -778,6 +887,7 @@ const FIATS = {
     country_codes: ["PA", "PAN"],
   },
   PEN: {
+    type: "fiat" as const,
     code: "PEN",
     symbol: "S/.",
     name: "Peruvian sol",
@@ -785,6 +895,7 @@ const FIATS = {
     country_codes: ["PE", "PER"],
   },
   PGK: {
+    type: "fiat" as const,
     code: "PGK",
     symbol: "PGK",
     name: "Papua New Guinean kina",
@@ -792,6 +903,7 @@ const FIATS = {
     country_codes: ["PG", "PNG"],
   },
   PHP: {
+    type: "fiat" as const,
     code: "PHP",
     symbol: "₱",
     name: "Philippine peso",
@@ -799,6 +911,7 @@ const FIATS = {
     country_codes: ["PH", "PHL"],
   },
   PKR: {
+    type: "fiat" as const,
     code: "PKR",
     symbol: "₨",
     name: "Pakistani rupee",
@@ -806,6 +919,7 @@ const FIATS = {
     country_codes: ["PK", "PAK"],
   },
   PLN: {
+    type: "fiat" as const,
     code: "PLN",
     symbol: "zł",
     name: "Polish złoty",
@@ -813,6 +927,7 @@ const FIATS = {
     country_codes: ["PL", "POL"],
   },
   PYG: {
+    type: "fiat" as const,
     code: "PYG",
     symbol: "₲",
     name: "Paraguayan guaraní",
@@ -820,6 +935,7 @@ const FIATS = {
     country_codes: ["PY", "PRY"],
   },
   QAR: {
+    type: "fiat" as const,
     code: "QAR",
     symbol: "QR",
     name: "Qatari riyal",
@@ -827,6 +943,7 @@ const FIATS = {
     country_codes: ["QA", "QAT"],
   },
   RON: {
+    type: "fiat" as const,
     code: "RON",
     symbol: "L",
     name: "Romanian leu",
@@ -834,6 +951,7 @@ const FIATS = {
     country_codes: ["RO", "ROU"],
   },
   RSD: {
+    type: "fiat" as const,
     code: "RSD",
     symbol: "РСД",
     name: "Serbian dinar",
@@ -841,6 +959,7 @@ const FIATS = {
     country_codes: ["RS", "SRB"],
   },
   RUB: {
+    type: "fiat" as const,
     code: "RUB",
     symbol: "руб",
     name: "Russian rouble",
@@ -848,6 +967,7 @@ const FIATS = {
     country_codes: ["RU", "RUS"],
   },
   RWF: {
+    type: "fiat" as const,
     code: "RWF",
     symbol: "RWF",
     name: "Rwandan franc",
@@ -856,6 +976,7 @@ const FIATS = {
   },
 
   SAR: {
+    type: "fiat" as const,
     code: "SAR",
     symbol: "SR",
     name: "Saudi riyal",
@@ -863,6 +984,7 @@ const FIATS = {
     country_codes: ["SA", "SAU"],
   },
   SBD: {
+    type: "fiat" as const,
     code: "SBD",
     symbol: "SI$",
     name: "Solomon Islands dollar",
@@ -870,6 +992,7 @@ const FIATS = {
     country_codes: ["SB", "SLB"],
   },
   SCR: {
+    type: "fiat" as const,
     code: "SCR",
     symbol: "₨",
     name: "Seychellois rupee",
@@ -877,6 +1000,7 @@ const FIATS = {
     country_codes: ["SC", "SYC"],
   },
   SDG: {
+    type: "fiat" as const,
     code: "SDG",
     symbol: "SDG",
     name: "Sudanese pound",
@@ -884,6 +1008,7 @@ const FIATS = {
     country_codes: ["SD", "SDN"],
   },
   SEK: {
+    type: "fiat" as const,
     code: "SEK",
     symbol: "kr",
     name: "Swedish krona",
@@ -891,6 +1016,7 @@ const FIATS = {
     country_codes: ["SE", "SWE"],
   },
   SGD: {
+    type: "fiat" as const,
     code: "SGD",
     symbol: "S$",
     name: "Singapore dollar",
@@ -898,6 +1024,7 @@ const FIATS = {
     country_codes: ["SG", "SGP"],
   },
   SHP: {
+    type: "fiat" as const,
     code: "SHP",
     symbol: "£",
     name: "Saint Helena pound",
@@ -905,6 +1032,7 @@ const FIATS = {
     country_codes: ["SH", "SHN"],
   },
   SLL: {
+    type: "fiat" as const,
     code: "SLL",
     symbol: "SLL",
     name: "Sierra Leonean leone",
@@ -912,6 +1040,7 @@ const FIATS = {
     country_codes: ["SL", "SLE"],
   },
   SLE: {
+    type: "fiat" as const,
     code: "SLE",
     symbol: "SLE",
     name: "Sierra Leonean leone",
@@ -919,6 +1048,7 @@ const FIATS = {
     country_codes: ["SL", "SLE"],
   },
   SOS: {
+    type: "fiat" as const,
     code: "SOS",
     symbol: "Sh.So.",
     name: "Somali shilling",
@@ -926,6 +1056,7 @@ const FIATS = {
     country_codes: ["SO", "SOM"],
   },
   SRD: {
+    type: "fiat" as const,
     code: "SRD",
     symbol: "$",
     name: "Surinamese dollar",
@@ -933,6 +1064,7 @@ const FIATS = {
     country_codes: ["SR", "SUR"],
   },
   SSP: {
+    type: "fiat" as const,
     code: "SSP",
     symbol: "SSP",
     name: "South Sudanese pound",
@@ -940,6 +1072,7 @@ const FIATS = {
     country_codes: ["SS", "SSD"],
   },
   STD: {
+    type: "fiat" as const,
     code: "STD",
     symbol: "STD",
     name: "São Tomé & Príncipe dobra",
@@ -947,6 +1080,7 @@ const FIATS = {
     country_codes: ["ST", "STP"],
   },
   STN: {
+    type: "fiat" as const,
     code: "STN",
     symbol: "STN",
     name: "São Tomé & Príncipe dobra",
@@ -954,6 +1088,7 @@ const FIATS = {
     country_codes: ["ST", "STP"],
   },
   SVC: {
+    type: "fiat" as const,
     code: "SVC",
     symbol: "₡",
     name: "Salvadoran colón",
@@ -961,6 +1096,7 @@ const FIATS = {
     country_codes: ["SV", "SLV"],
   },
   SYP: {
+    type: "fiat" as const,
     code: "SYP",
     symbol: "£",
     name: "Syrian pound",
@@ -968,6 +1104,7 @@ const FIATS = {
     country_codes: ["SY", "SYR"],
   },
   SZL: {
+    type: "fiat" as const,
     code: "SZL",
     symbol: "SZL",
     name: "Swazi lilangeni",
@@ -975,6 +1112,7 @@ const FIATS = {
     country_codes: ["SZ", "SWZ"],
   },
   THB: {
+    type: "fiat" as const,
     code: "THB",
     symbol: "฿",
     name: "Thai baht",
@@ -982,6 +1120,7 @@ const FIATS = {
     country_codes: ["TH", "THA"],
   },
   TJS: {
+    type: "fiat" as const,
     code: "TJS",
     symbol: "TJS",
     name: "Tajikistani somoni",
@@ -989,6 +1128,7 @@ const FIATS = {
     country_codes: ["TJ", "TJK"],
   },
   TMT: {
+    type: "fiat" as const,
     code: "TMT",
     symbol: "TMT",
     name: "Turkmenistani manat",
@@ -996,6 +1136,7 @@ const FIATS = {
     country_codes: ["TM", "TKM"],
   },
   TND: {
+    type: "fiat" as const,
     code: "TND",
     symbol: "TND",
     name: "Tunisian dinar",
@@ -1003,6 +1144,7 @@ const FIATS = {
     country_codes: ["TN", "TUN"],
   },
   TOP: {
+    type: "fiat" as const,
     code: "TOP",
     symbol: "TOP",
     name: "Tongan pa'anga",
@@ -1010,6 +1152,7 @@ const FIATS = {
     country_codes: ["TO", "TON"],
   },
   TRY: {
+    type: "fiat" as const,
     code: "TRY",
     symbol: "TL",
     name: "Turkish lira",
@@ -1017,6 +1160,7 @@ const FIATS = {
     country_codes: ["TR", "TUR"],
   },
   TTD: {
+    type: "fiat" as const,
     code: "TTD",
     symbol: "TTD",
     name: "Trinidad and Tobago dollar",
@@ -1024,6 +1168,7 @@ const FIATS = {
     country_codes: ["TT", "TTO"],
   },
   TWD: {
+    type: "fiat" as const,
     code: "TWD",
     symbol: "NT$",
     name: "Taiwanese New Taiwan dollar",
@@ -1031,6 +1176,7 @@ const FIATS = {
     country_codes: ["TW", "TWN"],
   },
   TZS: {
+    type: "fiat" as const,
     code: "TZS",
     symbol: "tzs",
     name: "Tanzanian shilling",
@@ -1039,6 +1185,7 @@ const FIATS = {
   },
 
   UAH: {
+    type: "fiat" as const,
     code: "UAH",
     symbol: "₴",
     name: "Ukrainian hryvnia",
@@ -1046,6 +1193,7 @@ const FIATS = {
     country_codes: ["UA", "UKR"],
   },
   UGX: {
+    type: "fiat" as const,
     code: "UGX",
     symbol: "Ush",
     name: "Ugandan shilling",
@@ -1054,6 +1202,7 @@ const FIATS = {
   },
 
   UYU: {
+    type: "fiat" as const,
     code: "UYU",
     symbol: "$U",
     name: "Uruguayan peso",
@@ -1061,6 +1210,7 @@ const FIATS = {
     country_codes: ["UY", "URY"],
   },
   UYW: {
+    type: "fiat" as const,
     code: "UYW",
     symbol: "UYW",
     name: "Unidad Previsional",
@@ -1068,6 +1218,7 @@ const FIATS = {
     country_codes: ["UY", "URY"],
   },
   UZS: {
+    type: "fiat" as const,
     code: "UZS",
     symbol: "UZS",
     name: "Uzbekistani som",
@@ -1075,6 +1226,7 @@ const FIATS = {
     country_codes: ["UZ", "UZB"],
   },
   VES: {
+    type: "fiat" as const,
     code: "VES",
     symbol: "Bs.",
     name: "Venezuelan bolívar soberano",
@@ -1082,6 +1234,7 @@ const FIATS = {
     country_codes: ["VE", "VEN"],
   },
   VND: {
+    type: "fiat" as const,
     code: "VND",
     symbol: "VND",
     name: "Vietnamese dong",
@@ -1089,6 +1242,7 @@ const FIATS = {
     country_codes: ["VN", "VNM"],
   },
   VUV: {
+    type: "fiat" as const,
     code: "VUV",
     symbol: "VUV",
     name: "Vanuatu vatu",
@@ -1096,6 +1250,7 @@ const FIATS = {
     country_codes: ["VU", "VUT"],
   },
   WST: {
+    type: "fiat" as const,
     code: "WST",
     symbol: "WST",
     name: "Samoan tala",
@@ -1103,6 +1258,7 @@ const FIATS = {
     country_codes: ["WS", "WSM"],
   },
   XAF: {
+    type: "fiat" as const,
     code: "XAF",
     symbol: "XAF",
     name: "Central African CFA franc",
@@ -1110,6 +1266,7 @@ const FIATS = {
     country_codes: ["CF", "CAF"], // Used by multiple countries in CEMAC region
   },
   XCD: {
+    type: "fiat" as const,
     code: "XCD",
     symbol: "$",
     name: "East Caribbean dollar",
@@ -1117,6 +1274,7 @@ const FIATS = {
     country_codes: ["AG", "ATG"], // Includes multiple OECS members, example Antigua and Barbuda
   },
   XCG: {
+    type: "fiat" as const,
     code: "XCG",
     symbol: "Cg",
     name: "Caribbean Guilder",
@@ -1124,6 +1282,7 @@ const FIATS = {
     country_codes: ["BQ", "BES"],
   },
   XOF: {
+    type: "fiat" as const,
     code: "XOF",
     symbol: "XOF",
     name: "West African CFA franc",
@@ -1131,6 +1290,7 @@ const FIATS = {
     country_codes: ["SN", "SEN"], // Used by multiple countries in UEMOA
   },
   XPF: {
+    type: "fiat" as const,
     code: "XPF",
     symbol: "XPF",
     name: "CFP franc",
@@ -1138,6 +1298,7 @@ const FIATS = {
     country_codes: ["PF", "PYF"], // French Polynesia as example
   },
   YER: {
+    type: "fiat" as const,
     code: "YER",
     symbol: "﷼",
     name: "Yemeni rial",
@@ -1145,6 +1306,7 @@ const FIATS = {
     country_codes: ["YE", "YEM"],
   },
   ZAR: {
+    type: "fiat" as const,
     code: "ZAR",
     symbol: "R",
     name: "South African rand",
@@ -1152,6 +1314,7 @@ const FIATS = {
     country_codes: ["ZA", "ZAF"],
   },
   ZMW: {
+    type: "fiat" as const,
     code: "ZMW",
     symbol: "ZMW",
     name: "Zambian kwacha",
@@ -1159,6 +1322,7 @@ const FIATS = {
     country_codes: ["ZM", "ZMB"],
   },
   ZWG: {
+    type: "fiat" as const,
     code: "ZWG",
     symbol: "ZWG",
     name: "Zimbabwe Gold",
@@ -1170,6 +1334,7 @@ const FIATS = {
 const TEST_FIATS = {
   // 常用幣種
   EUR: {
+    type: "fiat" as const,
     code: "EUR",
     symbol: "€",
     name: "Euro",
@@ -1177,6 +1342,7 @@ const TEST_FIATS = {
     country_codes: ["EU", "EUR"],
   },
   GBP: {
+    type: "fiat" as const,
     code: "GBP",
     symbol: "£",
     name: "British pound",
@@ -1184,6 +1350,7 @@ const TEST_FIATS = {
     country_codes: ["GB", "GBR"],
   },
   USD: {
+    type: "fiat" as const,
     code: "USD",
     symbol: "$",
     name: "United States dollar",
@@ -1191,6 +1358,7 @@ const TEST_FIATS = {
     country_codes: ["US", "USA"],
   },
   INR: {
+    type: "fiat" as const,
     code: "INR",
     symbol: "₹",
     name: "Indian rupee",
@@ -1198,6 +1366,7 @@ const TEST_FIATS = {
     country_codes: ["IN", "IND"],
   },
   CAD: {
+    type: "fiat" as const,
     code: "CAD",
     symbol: "C$",
     name: "Canadian dollar",
@@ -1205,6 +1374,7 @@ const TEST_FIATS = {
     country_codes: ["CA", "CAN"],
   },
   AUD: {
+    type: "fiat" as const,
     code: "AUD",
     symbol: "A$",
     name: "Australian dollar",
@@ -1212,6 +1382,7 @@ const TEST_FIATS = {
     country_codes: ["AU", "AUS"],
   },
   CHF: {
+    type: "fiat" as const,
     code: "CHF",
     symbol: "SFr.",
     name: "Swiss franc",
@@ -1219,6 +1390,7 @@ const TEST_FIATS = {
     country_codes: ["CH", "CHE"],
   },
   MXN: {
+    type: "fiat" as const,
     code: "MXN",
     symbol: "Mex$",
     name: "Mexican peso",
@@ -1228,6 +1400,7 @@ const TEST_FIATS = {
 
   // 一般幣種，依字母排序
   AED: {
+    type: "fiat" as const,
     code: "AED",
     symbol: "د.إ",
     name: "United Arab Emirates dirham",
@@ -1235,6 +1408,7 @@ const TEST_FIATS = {
     country_codes: ["AE", "ARE"],
   },
   AFN: {
+    type: "fiat" as const,
     code: "AFN",
     symbol: "؋",
     name: "Afghanistan afghani",
@@ -1242,6 +1416,7 @@ const TEST_FIATS = {
     country_codes: ["AF", "AFG"],
   },
   ALL: {
+    type: "fiat" as const,
     code: "ALL",
     symbol: "Lek",
     name: "Albanian lek",
@@ -1249,6 +1424,7 @@ const TEST_FIATS = {
     country_codes: ["AL", "ALB"],
   },
   AMD: {
+    type: "fiat" as const,
     code: "AMD",
     symbol: "֏",
     name: "Armenian dram",
@@ -1256,6 +1432,7 @@ const TEST_FIATS = {
     country_codes: ["AM", "ARM"],
   },
   ANG: {
+    type: "fiat" as const,
     code: "ANG",
     symbol: "ƒ",
     name: "Netherlands Antillean guilder",
@@ -1263,6 +1440,7 @@ const TEST_FIATS = {
     country_codes: ["CW", "CUW"], // Curaçao uses ANG, also Sint Maarten (SX)
   },
   AOA: {
+    type: "fiat" as const,
     code: "AOA",
     symbol: "Kz",
     name: "Angolan kwanza",
@@ -1270,6 +1448,7 @@ const TEST_FIATS = {
     country_codes: ["AO", "AGO"],
   },
   ARS: {
+    type: "fiat" as const,
     code: "ARS",
     symbol: "$",
     name: "Argentine peso",
@@ -1278,6 +1457,7 @@ const TEST_FIATS = {
   },
 
   AWG: {
+    type: "fiat" as const,
     code: "AWG",
     symbol: "AWG",
     name: "Aruban florin",
@@ -1285,6 +1465,7 @@ const TEST_FIATS = {
     country_codes: ["AW", "ABW"],
   },
   AZN: {
+    type: "fiat" as const,
     code: "AZN",
     symbol: "man.",
     name: "Azerbaijani manat",

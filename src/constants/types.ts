@@ -1,18 +1,20 @@
 export type Crypto = {
-  type?: "crypto";
+  type: "crypto";
   code: string;
   name: string;
 };
 
 export type Fiat = {
-  type?: "fiat";
+  type: "fiat";
   code: string;
-  symbol: string;
+  symbol?: string;
   name: string;
-  country: string;
-  country_codes: string[];
+  country?: string;
+  country_codes?: string[];
 };
 
 export type Currency = Fiat | Crypto;
 
 export type CurrencyType = "fiat" | "crypto";
+
+export type ActiveCurrency = Currency & { __memoCode: string };

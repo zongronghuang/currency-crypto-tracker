@@ -1,1152 +1,540 @@
 const CRYPTOS = {
   // 常用幣種
-  BTC: {
-    code: "BTC",
-    name: "Bitcoin",
-  },
-  ETH: { code: "ETH", name: "Ethereum" },
-  USDT: {
-    code: "USDT",
-    name: "Tether",
-  },
-  USDC: {
-    code: "USDC",
-    name: "USD Coin",
-  },
-  XRP: {
-    code: "XRP",
-    name: "XRP",
-  },
-  ADA: { code: "ADA", name: "Cardano" },
+  BTC: { type: "crypto" as const, code: "BTC", name: "Bitcoin" },
+  ETH: { type: "crypto" as const, code: "ETH", name: "Ethereum" },
+  USDT: { type: "crypto" as const, code: "USDT", name: "Tether" },
+  USDC: { type: "crypto" as const, code: "USDC", name: "USD Coin" },
+  XRP: { type: "crypto" as const, code: "XRP", name: "XRP" },
+  ADA: { type: "crypto" as const, code: "ADA", name: "Cardano" },
 
   // 一般幣種，依字母排序
-  "1INCH": { code: "1INCH", name: "1inch Network" },
-  A8: { code: "A8", name: "Ancient8" },
-  AAVE: { code: "AAVE", name: "Aave" },
-  ABT: { code: "ABT", name: "Arcblock" },
-  ACH: { code: "ACH", name: "Alchemy Pay" },
-  ACS: { code: "ACS", name: "Access" },
-  ACX: { code: "ACX", name: "Across Protocol" },
+  "1INCH": { type: "crypto" as const, code: "1INCH", name: "1inch Network" },
+  A8: { type: "crypto" as const, code: "A8", name: "Ancient8" },
+  AAVE: { type: "crypto" as const, code: "AAVE", name: "Aave" },
+  ABT: { type: "crypto" as const, code: "ABT", name: "Arcblock" },
+  ACH: { type: "crypto" as const, code: "ACH", name: "Alchemy Pay" },
+  ACS: { type: "crypto" as const, code: "ACS", name: "Access" },
+  ACX: { type: "crypto" as const, code: "ACX", name: "Across Protocol" },
 
-  AERGO: { code: "AERGO", name: "Aergo" },
-  AERO: { code: "AERO", name: "Aerodrome Finance" },
-  AGLD: { code: "AGLD", name: "Adventure Gold" },
-  AIOZ: { code: "AIOZ", name: "AIOZ Network" },
-  AKT: { code: "AKT", name: "Akash Network" },
-  ALCX: { code: "ALCX", name: "Alchemix" },
-  ALEO: { code: "ALEO", name: "Aleo" },
-  ALEPH: { code: "ALEPH", name: "Aleph.im" },
-  ALGO: { code: "ALGO", name: "Algorand" },
-  ALICE: { code: "ALICE", name: "MyNeighborAlice" },
-  ALT: { code: "ALT", name: "Altlayer" },
-  AMP: { code: "AMP", name: "Amp" },
-  ANKR: { code: "ANKR", name: "Ankr" },
-  ANT: { code: "ANT", name: "Aragon" },
-  APE: { code: "APE", name: "ApeCoin" },
-  API3: { code: "API3", name: "Api3" },
-  APT: { code: "APT", name: "Aptos" },
-  ARB: { code: "ARB", name: "Arbitrum" },
-  ARKM: { code: "ARKM", name: "Arkham" },
-  ARPA: { code: "ARPA", name: "ARPA Chain" },
-  ASM: { code: "ASM", name: "Assemble Protocol" },
-  AST: { code: "AST", name: "AirSwap" },
-  ATA: { code: "ATA", name: "Automata" },
-  ATH: { code: "ATH", name: "Athens (ATH?)" /* not confirmed */ },
-  ATOM: { code: "ATOM", name: "Cosmos" /* ATOM is Cosmos */ },
-  AUCTION: { code: "AUCTION", name: "Auction" /* exact name may vary */ },
-  AUDIO: { code: "AUDIO", name: "Audius" },
-  AURORA: { code: "AURORA", name: "Aurora" },
-  AVAX: { code: "AVAX", name: "Avalanche" },
-  AVT: { code: "AVT", name: "ArtVerse Token" /* or AVT — check source */ },
-  AXL: { code: "AXL", name: "Axelar" },
-  AXS: { code: "AXS", name: "Axie Infinity" },
+  AERGO: { type: "crypto" as const, code: "AERGO", name: "Aergo" },
+  AERO: { type: "crypto" as const, code: "AERO", name: "Aerodrome Finance" },
+  AGLD: { type: "crypto" as const, code: "AGLD", name: "Adventure Gold" },
+  AIOZ: { type: "crypto" as const, code: "AIOZ", name: "AIOZ Network" },
+  AKT: { type: "crypto" as const, code: "AKT", name: "Akash Network" },
+  ALCX: { type: "crypto" as const, code: "ALCX", name: "Alchemix" },
+  ALEO: { type: "crypto" as const, code: "ALEO", name: "Aleo" },
+  ALEPH: { type: "crypto" as const, code: "ALEPH", name: "Aleph.im" },
+  ALGO: { type: "crypto" as const, code: "ALGO", name: "Algorand" },
+  ALICE: { type: "crypto" as const, code: "ALICE", name: "MyNeighborAlice" },
+  ALT: { type: "crypto" as const, code: "ALT", name: "Altlayer" },
+  AMP: { type: "crypto" as const, code: "AMP", name: "Amp" },
+  ANKR: { type: "crypto" as const, code: "ANKR", name: "Ankr" },
+  ANT: { type: "crypto" as const, code: "ANT", name: "Aragon" },
+  APE: { type: "crypto" as const, code: "APE", name: "ApeCoin" },
+  API3: { type: "crypto" as const, code: "API3", name: "Api3" },
+  APT: { type: "crypto" as const, code: "APT", name: "Aptos" },
+  ARB: { type: "crypto" as const, code: "ARB", name: "Arbitrum" },
+  ARKM: { type: "crypto" as const, code: "ARKM", name: "Arkham" },
+  ARPA: { type: "crypto" as const, code: "ARPA", name: "ARPA Chain" },
+  ASM: { type: "crypto" as const, code: "ASM", name: "Assemble Protocol" },
+  AST: { type: "crypto" as const, code: "AST", name: "AirSwap" },
+  ATA: { type: "crypto" as const, code: "ATA", name: "Automata" },
+  ATH: {
+    type: "crypto" as const,
+    code: "ATH",
+    name: "Athens (ATH?)" /* not confirmed */,
+  },
+  ATOM: {
+    type: "crypto" as const,
+    code: "ATOM",
+    name: "Cosmos" /* ATOM is Cosmos */,
+  },
+  AUCTION: {
+    type: "crypto" as const,
+    code: "AUCTION",
+    name: "Auction" /* exact name may vary */,
+  },
+  AUDIO: { type: "crypto" as const, code: "AUDIO", name: "Audius" },
+  AURORA: { type: "crypto" as const, code: "AURORA", name: "Aurora" },
+  AVAX: { type: "crypto" as const, code: "AVAX", name: "Avalanche" },
+  AVT: {
+    type: "crypto" as const,
+    code: "AVT",
+    name: "ArtVerse Token" /* or AVT — check source */,
+  },
+  AXL: { type: "crypto" as const, code: "AXL", name: "Axelar" },
+  AXS: { type: "crypto" as const, code: "AXS", name: "Axie Infinity" },
   B3: {
+    type: "crypto" as const,
     code: "B3",
     name: "B3 Coin", // lesser-known; project name used
   },
-  BADGER: {
-    code: "BADGER",
-    name: "Badger DAO",
-  },
-  BAL: {
-    code: "BAL",
-    name: "Balancer",
-  },
-  BAND: {
-    code: "BAND",
-    name: "Band Protocol",
-  },
-  BAT: {
-    code: "BAT",
-    name: "Basic Attention Token",
-  },
-  BCH: {
-    code: "BCH",
-    name: "Bitcoin Cash",
-  },
+  BADGER: { type: "crypto" as const, code: "BADGER", name: "Badger DAO" },
+  BAL: { type: "crypto" as const, code: "BAL", name: "Balancer" },
+  BAND: { type: "crypto" as const, code: "BAND", name: "Band Protocol" },
+  BAT: { type: "crypto" as const, code: "BAT", name: "Basic Attention Token" },
+  BCH: { type: "crypto" as const, code: "BCH", name: "Bitcoin Cash" },
   BERA: {
+    type: "crypto" as const,
     code: "BERA",
     name: "Berachain (BERA)", // chain native token
   },
-  BICO: {
-    code: "BICO",
-    name: "Biconomy",
-  },
-  BIGTIME: {
-    code: "BIGTIME",
-    name: "Big Time",
-  },
-  BIT: {
-    code: "BIT",
-    name: "BitDAO",
-  },
+  BICO: { type: "crypto" as const, code: "BICO", name: "Biconomy" },
+  BIGTIME: { type: "crypto" as const, code: "BIGTIME", name: "Big Time" },
+  BIT: { type: "crypto" as const, code: "BIT", name: "BitDAO" },
   BLAST: {
+    type: "crypto" as const,
     code: "BLAST",
     name: "Blast.io", // ecosystem token; most common name
   },
-  BLUR: {
-    code: "BLUR",
-    name: "Blur",
-  },
-  BLZ: {
-    code: "BLZ",
-    name: "Bluzelle",
-  },
-  BNT: {
-    code: "BNT",
-    name: "Bancor",
-  },
-  BOBA: {
-    code: "BOBA",
-    name: "Boba Network",
-  },
-  BOND: {
-    code: "BOND",
-    name: "BarnBridge",
-  },
-  BONK: {
-    code: "BONK",
-    name: "Bonk",
-  },
+  BLUR: { type: "crypto" as const, code: "BLUR", name: "Blur" },
+  BLZ: { type: "crypto" as const, code: "BLZ", name: "Bluzelle" },
+  BNT: { type: "crypto" as const, code: "BNT", name: "Bancor" },
+  BOBA: { type: "crypto" as const, code: "BOBA", name: "Boba Network" },
+  BOND: { type: "crypto" as const, code: "BOND", name: "BarnBridge" },
+  BONK: { type: "crypto" as const, code: "BONK", name: "Bonk" },
 
-  BTRST: {
-    code: "BTRST",
-    name: "Braintrust",
+  BTRST: { type: "crypto" as const, code: "BTRST", name: "Braintrust" },
+  BUSD: { type: "crypto" as const, code: "BUSD", name: "Binance USD" },
+  C98: { type: "crypto" as const, code: "C98", name: "Coin98" },
+  CBETH: {
+    type: "crypto" as const,
+    code: "CBETH",
+    name: "Coinbase Wrapped Staked ETH",
   },
-  BUSD: {
-    code: "BUSD",
-    name: "Binance USD",
+  CELR: { type: "crypto" as const, code: "CELR", name: "Celer Network" },
+  CGLD: { type: "crypto" as const, code: "CGLD", name: "Celo" },
+  CHZ: { type: "crypto" as const, code: "CHZ", name: "Chiliz" },
+  CLANKER: { type: "crypto" as const, code: "CLANKER", name: "Clanker" }, // rare/less-known — verify yourself
+  CLV: { type: "crypto" as const, code: "CLV", name: "Clover" },
+  COMP: { type: "crypto" as const, code: "COMP", name: "Compound" },
+  COOKIE: { type: "crypto" as const, code: "COOKIE", name: "Cookie DAO" }, // or "Cookie" token — may vary
+  CORECHAIN: { type: "crypto" as const, code: "CORECHAIN", name: "CoreChain" }, // less common token — verify
+  COTI: { type: "crypto" as const, code: "COTI", name: "COTI" },
+  COVAL: {
+    type: "crypto" as const,
+    code: "COVAL",
+    name: "Covalent Query Token",
   },
-  C98: { code: "C98", name: "Coin98" },
-  CBETH: { code: "CBETH", name: "Coinbase Wrapped Staked ETH" },
-  CELR: { code: "CELR", name: "Celer Network" },
-  CGLD: { code: "CGLD", name: "Celo" },
-  CHZ: { code: "CHZ", name: "Chiliz" },
-  CLANKER: { code: "CLANKER", name: "Clanker" }, // rare/less-known — verify yourself
-  CLV: { code: "CLV", name: "Clover" },
-  COMP: { code: "COMP", name: "Compound" },
-  COOKIE: { code: "COOKIE", name: "Cookie DAO" }, // or "Cookie" token — may vary
-  CORECHAIN: { code: "CORECHAIN", name: "CoreChain" }, // less common token — verify
-  COTI: { code: "COTI", name: "COTI" },
-  COVAL: { code: "COVAL", name: "Covalent Query Token" },
-  COW: { code: "COW", name: "CoW Protocol" },
-  CRO: { code: "CRO", name: "Cronos" },
-  CRPT: { code: "CRPT", name: "Cryptex" },
-  CRV: { code: "CRV", name: "Curve DAO Token" },
-  CTSI: { code: "CTSI", name: "Cartesi" },
-  CTX: { code: "CTX", name: "Cryptex (CTX)" },
-  CVC: { code: "CVC", name: "Civic" },
-  CVX: { code: "CVX", name: "Convex Finance" },
-  DAI: { code: "DAI", name: "Dai" },
-  DAR: { code: "DAR", name: "Mines of Dalarnia" },
-  DASH: { code: "DASH", name: "Dash" },
-  DDX: { code: "DDX", name: "DerivaDAO" },
-  DEGEN: { code: "DEGEN", name: "Degen" }, // multiple chains use DEGEN, but common name is "Degen"
-  DESO: { code: "DESO", name: "Decentralized Social" },
-  DEXT: { code: "DEXT", name: "DexTools" },
-  DIA: { code: "DIA", name: "DIA" },
-  DIMO: { code: "DIMO", name: "DIMO" },
-  DNT: { code: "DNT", name: "District0x" },
-  DOGE: { code: "DOGE", name: "Dogecoin" },
-  DOGINME: { code: "DOGINME", name: "Dog In Me" }, // meme token, name consistent across listings
-  DOT: { code: "DOT", name: "Polkadot" },
-  DREP: { code: "DREP", name: "Drep" },
-  DRIFT: { code: "DRIFT", name: "Drift Token" }, // used by Drift Protocol; naming varies but this is most common
-  DYP: { code: "DYP", name: "DeFi Yield Protocol" },
-  EDGE: { code: "EDGE", name: "Edge" }, // several small-cap tokens use EDGE; "Edge" is the canonical name
-  EGLD: { code: "EGLD", name: "MultiversX" }, // formerly Elrond
-  EIGEN: { code: "EIGEN", name: "Eigen" }, // EigenLayer restaking token
-  ELA: { code: "ELA", name: "Elastos" },
-  ENJ: { code: "ENJ", name: "Enjin Coin" },
-  ENS: { code: "ENS", name: "Ethereum Name Service" },
-  EOS: { code: "EOS", name: "EOS" },
-  ERN: { code: "ERN", name: "Ethernity Chain" },
-  ETC: { code: "ETC", name: "Ethereum Classic" },
+  COW: { type: "crypto" as const, code: "COW", name: "CoW Protocol" },
+  CRO: { type: "crypto" as const, code: "CRO", name: "Cronos" },
+  CRPT: { type: "crypto" as const, code: "CRPT", name: "Cryptex" },
+  CRV: { type: "crypto" as const, code: "CRV", name: "Curve DAO Token" },
+  CTSI: { type: "crypto" as const, code: "CTSI", name: "Cartesi" },
+  CTX: { type: "crypto" as const, code: "CTX", name: "Cryptex (CTX)" },
+  CVC: { type: "crypto" as const, code: "CVC", name: "Civic" },
+  CVX: { type: "crypto" as const, code: "CVX", name: "Convex Finance" },
+  DAI: { type: "crypto" as const, code: "DAI", name: "Dai" },
+  DAR: { type: "crypto" as const, code: "DAR", name: "Mines of Dalarnia" },
+  DASH: { type: "crypto" as const, code: "DASH", name: "Dash" },
+  DDX: { type: "crypto" as const, code: "DDX", name: "DerivaDAO" },
+  DEGEN: { type: "crypto" as const, code: "DEGEN", name: "Degen" }, // multiple chains use DEGEN, but common name is "Degen"
+  DESO: { type: "crypto" as const, code: "DESO", name: "Decentralized Social" },
+  DEXT: { type: "crypto" as const, code: "DEXT", name: "DexTools" },
+  DIA: { type: "crypto" as const, code: "DIA", name: "DIA" },
+  DIMO: { type: "crypto" as const, code: "DIMO", name: "DIMO" },
+  DNT: { type: "crypto" as const, code: "DNT", name: "District0x" },
+  DOGE: { type: "crypto" as const, code: "DOGE", name: "Dogecoin" },
+  DOGINME: { type: "crypto" as const, code: "DOGINME", name: "Dog In Me" }, // meme token, name consistent across listings
+  DOT: { type: "crypto" as const, code: "DOT", name: "Polkadot" },
+  DREP: { type: "crypto" as const, code: "DREP", name: "Drep" },
+  DRIFT: { type: "crypto" as const, code: "DRIFT", name: "Drift Token" }, // used by Drift Protocol; naming varies but this is most common
+  DYP: { type: "crypto" as const, code: "DYP", name: "DeFi Yield Protocol" },
+  EDGE: { type: "crypto" as const, code: "EDGE", name: "Edge" }, // several small-cap tokens use EDGE; "Edge" is the canonical name
+  EGLD: { type: "crypto" as const, code: "EGLD", name: "MultiversX" }, // formerly Elrond
+  EIGEN: { type: "crypto" as const, code: "EIGEN", name: "Eigen" }, // EigenLayer restaking token
+  ELA: { type: "crypto" as const, code: "ELA", name: "Elastos" },
+  ENJ: { type: "crypto" as const, code: "ENJ", name: "Enjin Coin" },
+  ENS: { type: "crypto" as const, code: "ENS", name: "Ethereum Name Service" },
+  EOS: { type: "crypto" as const, code: "EOS", name: "EOS" },
+  ERN: { type: "crypto" as const, code: "ERN", name: "Ethernity Chain" },
+  ETC: { type: "crypto" as const, code: "ETC", name: "Ethereum Classic" },
 
-  ETHFI: { code: "ETHFI", name: "ether.fi" },
-  EURC: { code: "EURC", name: "Euro Coin" }, // Circle EUR stablecoin
-  FAI: { code: "FAI", name: "FairAI" }, // multiple FAIs exist; FairAI is the widely recognized one
-  FARM: { code: "FARM", name: "Harvest Finance" },
-  FET: { code: "FET", name: "Fetch.ai" },
-  FIDA: { code: "FIDA", name: "Bonfida" },
-  FIL: { code: "FIL", name: "Filecoin" },
-  FIS: { code: "FIS", name: "StaFi" },
-  FLOKI: { code: "FLOKI", name: "Floki" },
-  FLOW: { code: "FLOW", name: "Flow" },
-  FLR: { code: "FLR", name: "Flare" },
-  FORT: { code: "FORT", name: "Forta" },
-  FORTH: { code: "FORTH", name: "Ampleforth Governance Token" },
-  FOX: { code: "FOX", name: "ShapeShift FOX Token" },
-  FX: { code: "FX", name: "Function X" },
+  ETHFI: { type: "crypto" as const, code: "ETHFI", name: "ether.fi" },
+  EURC: { type: "crypto" as const, code: "EURC", name: "Euro Coin" }, // Circle EUR stablecoin
+  FAI: { type: "crypto" as const, code: "FAI", name: "FairAI" }, // multiple FAIs exist; FairAI is the widely recognized one
+  FARM: { type: "crypto" as const, code: "FARM", name: "Harvest Finance" },
+  FET: { type: "crypto" as const, code: "FET", name: "Fetch.ai" },
+  FIDA: { type: "crypto" as const, code: "FIDA", name: "Bonfida" },
+  FIL: { type: "crypto" as const, code: "FIL", name: "Filecoin" },
+  FIS: { type: "crypto" as const, code: "FIS", name: "StaFi" },
+  FLOKI: { type: "crypto" as const, code: "FLOKI", name: "Floki" },
+  FLOW: { type: "crypto" as const, code: "FLOW", name: "Flow" },
+  FLR: { type: "crypto" as const, code: "FLR", name: "Flare" },
+  FORT: { type: "crypto" as const, code: "FORT", name: "Forta" },
+  FORTH: {
+    type: "crypto" as const,
+    code: "FORTH",
+    name: "Ampleforth Governance Token",
+  },
+  FOX: { type: "crypto" as const, code: "FOX", name: "ShapeShift FOX Token" },
+  FX: { type: "crypto" as const, code: "FX", name: "Function X" },
   G: {
+    type: "crypto" as const,
     code: "G",
     name: "Gravity", // The most recognized token using symbol G
   },
-  GAL: {
-    code: "GAL",
-    name: "Project Galxe",
-  },
-  GALA: {
-    code: "GALA",
-    name: "Gala",
-  },
-  GFI: {
-    code: "GFI",
-    name: "Goldfinch",
-  },
-  GHST: {
-    code: "GHST",
-    name: "Aavegotchi",
-  },
+  GAL: { type: "crypto" as const, code: "GAL", name: "Project Galxe" },
+  GALA: { type: "crypto" as const, code: "GALA", name: "Gala" },
+  GFI: { type: "crypto" as const, code: "GFI", name: "Goldfinch" },
+  GHST: { type: "crypto" as const, code: "GHST", name: "Aavegotchi" },
   GIGA: {
+    type: "crypto" as const,
     code: "GIGA",
     name: "Gigaverse", // multiple GIGA tokens exist; this is the primary one
   },
-  GLM: {
-    code: "GLM",
-    name: "Golem",
-  },
-  GMT: {
-    code: "GMT",
-    name: "STEPN",
-  },
-  GNO: {
-    code: "GNO",
-    name: "Gnosis",
-  },
+  GLM: { type: "crypto" as const, code: "GLM", name: "Golem" },
+  GMT: { type: "crypto" as const, code: "GMT", name: "STEPN" },
+  GNO: { type: "crypto" as const, code: "GNO", name: "Gnosis" },
   GNT: {
+    type: "crypto" as const,
     code: "GNT",
     name: "Golem (Legacy)", // replaced by GLM
   },
-  GODS: {
-    code: "GODS",
-    name: "Gods Unchained",
-  },
-  GRT: {
-    code: "GRT",
-    name: "The Graph",
-  },
-  GST: {
-    code: "GST",
-    name: "Green Satoshi Token",
-  },
-  GTC: {
-    code: "GTC",
-    name: "Gitcoin",
-  },
-  GUSD: {
-    code: "GUSD",
-    name: "Gemini Dollar",
-  },
+  GODS: { type: "crypto" as const, code: "GODS", name: "Gods Unchained" },
+  GRT: { type: "crypto" as const, code: "GRT", name: "The Graph" },
+  GST: { type: "crypto" as const, code: "GST", name: "Green Satoshi Token" },
+  GTC: { type: "crypto" as const, code: "GTC", name: "Gitcoin" },
+  GUSD: { type: "crypto" as const, code: "GUSD", name: "Gemini Dollar" },
   GYEN: {
+    type: "crypto" as const,
     code: "GYEN",
     name: "GYEN (GMO Japanese Yen Stablecoin)",
   },
-  HBAR: {
-    code: "HBAR",
-    name: "Hedera",
-  },
-  HFT: {
-    code: "HFT",
-    name: "Hashflow",
-  },
-  HIGH: {
-    code: "HIGH",
-    name: "Highstreet",
-  },
-  HNT: {
-    code: "HNT",
-    name: "Helium",
-  },
+  HBAR: { type: "crypto" as const, code: "HBAR", name: "Hedera" },
+  HFT: { type: "crypto" as const, code: "HFT", name: "Hashflow" },
+  HIGH: { type: "crypto" as const, code: "HIGH", name: "Highstreet" },
+  HNT: { type: "crypto" as const, code: "HNT", name: "Helium" },
   HONEY: {
+    type: "crypto" as const,
     code: "HONEY",
     name: "Honey Token", // used by several ecosystems; main one is Honey Finance
   },
-  HOPR: {
-    code: "HOPR",
-    name: "HOPR",
-  },
-  ICP: {
-    code: "ICP",
-    name: "Internet Computer",
-  },
-  IDEX: {
-    code: "IDEX",
-    name: "IDEX",
-  },
-  ILV: {
-    code: "ILV",
-    name: "Illuvium",
-  },
-  IMX: {
-    code: "IMX",
-    name: "Immutable",
-  },
-  INDEX: {
-    code: "INDEX",
-    name: "Index Coop",
-  },
-  INJ: {
-    code: "INJ",
-    name: "Injective",
-  },
-  INV: {
-    code: "INV",
-    name: "Inverse Finance",
-  },
-  IO: {
-    code: "IO",
-    name: "io.net",
-  },
-  IOTX: {
-    code: "IOTX",
-    name: "IoTeX",
-  },
+  HOPR: { type: "crypto" as const, code: "HOPR", name: "HOPR" },
+  ICP: { type: "crypto" as const, code: "ICP", name: "Internet Computer" },
+  IDEX: { type: "crypto" as const, code: "IDEX", name: "IDEX" },
+  ILV: { type: "crypto" as const, code: "ILV", name: "Illuvium" },
+  IMX: { type: "crypto" as const, code: "IMX", name: "Immutable" },
+  INDEX: { type: "crypto" as const, code: "INDEX", name: "Index Coop" },
+  INJ: { type: "crypto" as const, code: "INJ", name: "Injective" },
+  INV: { type: "crypto" as const, code: "INV", name: "Inverse Finance" },
+  IO: { type: "crypto" as const, code: "IO", name: "io.net" },
+  IOTX: { type: "crypto" as const, code: "IOTX", name: "IoTeX" },
   IP: {
+    type: "crypto" as const,
     code: "IP",
     name: "Particle Network (IP Token)", // Only major token with symbol IP
   },
-  JASMY: {
-    code: "JASMY",
-    name: "JasmyCoin",
-  },
-  JTO: {
-    code: "JTO",
-    name: "Jito",
-  },
-  JUP: {
-    code: "JUP",
-    name: "Jupiter",
-  },
-  KAITO: {
-    code: "KAITO",
-    name: "Kaito AI",
-  },
+  JASMY: { type: "crypto" as const, code: "JASMY", name: "JasmyCoin" },
+  JTO: { type: "crypto" as const, code: "JTO", name: "Jito" },
+  JUP: { type: "crypto" as const, code: "JUP", name: "Jupiter" },
+  KAITO: { type: "crypto" as const, code: "KAITO", name: "Kaito AI" },
   KARRAT: {
+    type: "crypto" as const,
     code: "KARRAT",
     name: "KARRAT", // Gaming ecosystem token
   },
-  KAVA: {
-    code: "KAVA",
-    name: "Kava",
-  },
-  KEEP: {
-    code: "KEEP",
-    name: "Keep Network",
-  },
+  KAVA: { type: "crypto" as const, code: "KAVA", name: "Kava" },
+  KEEP: { type: "crypto" as const, code: "KEEP", name: "Keep Network" },
   KERNEL: {
+    type: "crypto" as const,
     code: "KERNEL",
     name: "Kernel", // small-cap token, listed on niche markets
   },
   KEYCAT: {
+    type: "crypto" as const,
     code: "KEYCAT",
     name: "Keycat", // meme-token ecosystem
   },
-  KNC: {
-    code: "KNC",
-    name: "Kyber Network Crystal",
-  },
-  KRL: {
-    code: "KRL",
-    name: "Kryll",
-  },
-  KSM: {
-    code: "KSM",
-    name: "Kusama",
-  },
+  KNC: { type: "crypto" as const, code: "KNC", name: "Kyber Network Crystal" },
+  KRL: { type: "crypto" as const, code: "KRL", name: "Kryll" },
+  KSM: { type: "crypto" as const, code: "KSM", name: "Kusama" },
   L3: {
+    type: "crypto" as const,
     code: "L3",
     name: "Layer3", // L3 token
   },
-  LCX: {
-    code: "LCX",
-    name: "LCX",
-  },
-  LDO: {
-    code: "LDO",
-    name: "Lido DAO",
-  },
-  LINK: {
-    code: "LINK",
-    name: "Chainlink",
-  },
-  LIT: {
-    code: "LIT",
-    name: "Litentry",
-  },
+  LCX: { type: "crypto" as const, code: "LCX", name: "LCX" },
+  LDO: { type: "crypto" as const, code: "LDO", name: "Lido DAO" },
+  LINK: { type: "crypto" as const, code: "LINK", name: "Chainlink" },
+  LIT: { type: "crypto" as const, code: "LIT", name: "Litentry" },
   LOKA: {
+    type: "crypto" as const,
     code: "LOKA",
     name: "League of Kingdoms Arena",
   },
-  LOOM: {
-    code: "LOOM",
-    name: "Loom Network",
-  },
-  LPT: {
-    code: "LPT",
-    name: "Livepeer",
-  },
-  LQTY: {
-    code: "LQTY",
-    name: "Liquity",
-  },
-  LRC: {
-    code: "LRC",
-    name: "Loopring",
-  },
+  LOOM: { type: "crypto" as const, code: "LOOM", name: "Loom Network" },
+  LPT: { type: "crypto" as const, code: "LPT", name: "Livepeer" },
+  LQTY: { type: "crypto" as const, code: "LQTY", name: "Liquity" },
+  LRC: { type: "crypto" as const, code: "LRC", name: "Loopring" },
   LRDS: {
+    type: "crypto" as const,
     code: "LRDS",
     name: "Lords", // token for crypto game ecosystem
   },
   LSETH: {
+    type: "crypto" as const,
     code: "LSETH",
     name: "Liquid Staked ETH", // similar to swETH, cbETH—generic staked ETH wrapper token
   },
-  LTC: {
-    code: "LTC",
-    name: "Litecoin",
-  },
+  LTC: { type: "crypto" as const, code: "LTC", name: "Litecoin" },
   MAGIC: {
+    type: "crypto" as const,
     code: "MAGIC",
     name: "MAGIC (Treasure DAO)",
   },
-  MANA: {
-    code: "MANA",
-    name: "Decentraland",
-  },
-  MANTLE: {
-    code: "MANTLE",
-    name: "Mantle",
-  },
-  MASK: {
-    code: "MASK",
-    name: "Mask Network",
-  },
-  MATH: {
-    code: "MATH",
-    name: "MATH",
-  },
-  MATIC: {
-    code: "MATIC",
-    name: "Polygon",
-  },
-  MCO2: {
-    code: "MCO2",
-    name: "Moss Carbon Credit",
-  },
-  MDT: {
-    code: "MDT",
-    name: "Measurable Data Token",
-  },
-  ME: {
-    code: "ME",
-    name: "Magic Eden Token",
-  },
-  MEDIA: {
-    code: "MEDIA",
-    name: "Media Network",
-  },
-  METIS: {
-    code: "METIS",
-    name: "Metis",
-  },
-  MINA: {
-    code: "MINA",
-    name: "Mina Protocol",
-  },
-  MIR: {
-    code: "MIR",
-    name: "Mirror Protocol",
-  },
-  MKR: {
-    code: "MKR",
-    name: "Maker",
-  },
+  MANA: { type: "crypto" as const, code: "MANA", name: "Decentraland" },
+  MANTLE: { type: "crypto" as const, code: "MANTLE", name: "Mantle" },
+  MASK: { type: "crypto" as const, code: "MASK", name: "Mask Network" },
+  MATH: { type: "crypto" as const, code: "MATH", name: "MATH" },
+  MATIC: { type: "crypto" as const, code: "MATIC", name: "Polygon" },
+  MCO2: { type: "crypto" as const, code: "MCO2", name: "Moss Carbon Credit" },
+  MDT: { type: "crypto" as const, code: "MDT", name: "Measurable Data Token" },
+  ME: { type: "crypto" as const, code: "ME", name: "Magic Eden Token" },
+  MEDIA: { type: "crypto" as const, code: "MEDIA", name: "Media Network" },
+  METIS: { type: "crypto" as const, code: "METIS", name: "Metis" },
+  MINA: { type: "crypto" as const, code: "MINA", name: "Mina Protocol" },
+  MIR: { type: "crypto" as const, code: "MIR", name: "Mirror Protocol" },
+  MKR: { type: "crypto" as const, code: "MKR", name: "Maker" },
   MLN: {
+    type: "crypto" as const,
     code: "MLN",
     name: "Enzyme (formerly Melon)",
   },
-  MNDE: {
-    code: "MNDE",
-    name: "Marinade",
-  },
-  MOBILE: {
-    code: "MOBILE",
-    name: "Helium Mobile",
-  },
-  MOG: {
-    code: "MOG",
-    name: "Mog Coin",
-  },
-  MONA: {
-    code: "MONA",
-    name: "Monavale",
-  },
+  MNDE: { type: "crypto" as const, code: "MNDE", name: "Marinade" },
+  MOBILE: { type: "crypto" as const, code: "MOBILE", name: "Helium Mobile" },
+  MOG: { type: "crypto" as const, code: "MOG", name: "Mog Coin" },
+  MONA: { type: "crypto" as const, code: "MONA", name: "Monavale" },
   MOODENG: {
+    type: "crypto" as const,
     code: "MOODENG",
     name: "Moo Deng", // meme token
   },
-  MORPHO: {
-    code: "MORPHO",
-    name: "Morpho",
-  },
+  MORPHO: { type: "crypto" as const, code: "MORPHO", name: "Morpho" },
   MOVE: {
+    type: "crypto" as const,
     code: "MOVE",
     name: "Move Token", // used by on-chain social projects
   },
-  MPL: {
-    code: "MPL",
-    name: "Maple",
-  },
-  MSOL: {
-    code: "MSOL",
-    name: "Marinade Staked SOL",
-  },
-  MTL: {
-    code: "MTL",
-    name: "Metal DAO",
-  },
-  MULTI: {
-    code: "MULTI",
-    name: "Multichain",
-  },
-  MUSD: {
-    code: "MUSD",
-    name: "mStable USD",
-  },
-  MUSE: {
-    code: "MUSE",
-    name: "Muse (NFT20)",
-  },
-  MXC: {
-    code: "MXC",
-    name: "MXC",
-  },
-  NCT: {
-    code: "NCT",
-    name: "NFTCraft",
-  },
-  NEAR: {
-    code: "NEAR",
-    name: "NEAR Protocol",
-  },
-  NEON: {
-    code: "NEON",
-    name: "Neon EVM",
-  },
-  NEST: {
-    code: "NEST",
-    name: "Nest Protocol",
-  },
-  NKN: {
-    code: "NKN",
-    name: "NKN",
-  },
-  NMR: {
-    code: "NMR",
-    name: "Numeraire",
-  },
-  NU: {
-    code: "NU",
-    name: "NuCypher",
-  },
-  OCEAN: {
-    code: "OCEAN",
-    name: "Ocean Protocol",
-  },
-  OGN: {
-    code: "OGN",
-    name: "Origin Protocol",
-  },
-  OMG: {
-    code: "OMG",
-    name: "OMG Network",
-  },
+  MPL: { type: "crypto" as const, code: "MPL", name: "Maple" },
+  MSOL: { type: "crypto" as const, code: "MSOL", name: "Marinade Staked SOL" },
+  MTL: { type: "crypto" as const, code: "MTL", name: "Metal DAO" },
+  MULTI: { type: "crypto" as const, code: "MULTI", name: "Multichain" },
+  MUSD: { type: "crypto" as const, code: "MUSD", name: "mStable USD" },
+  MUSE: { type: "crypto" as const, code: "MUSE", name: "Muse (NFT20)" },
+  MXC: { type: "crypto" as const, code: "MXC", name: "MXC" },
+  NCT: { type: "crypto" as const, code: "NCT", name: "NFTCraft" },
+  NEAR: { type: "crypto" as const, code: "NEAR", name: "NEAR Protocol" },
+  NEON: { type: "crypto" as const, code: "NEON", name: "Neon EVM" },
+  NEST: { type: "crypto" as const, code: "NEST", name: "Nest Protocol" },
+  NKN: { type: "crypto" as const, code: "NKN", name: "NKN" },
+  NMR: { type: "crypto" as const, code: "NMR", name: "Numeraire" },
+  NU: { type: "crypto" as const, code: "NU", name: "NuCypher" },
+  OCEAN: { type: "crypto" as const, code: "OCEAN", name: "Ocean Protocol" },
+  OGN: { type: "crypto" as const, code: "OGN", name: "Origin Protocol" },
+  OMG: { type: "crypto" as const, code: "OMG", name: "OMG Network" },
   OMNI: {
+    type: "crypto" as const,
     code: "OMNI",
     name: "Omni", // less common token, confirm project
   },
-  ONDO: {
-    code: "ONDO",
-    name: "Ondo",
-  },
-  OOKI: {
-    code: "OOKI",
-    name: "Ooki DAO",
-  },
-  OP: {
-    code: "OP",
-    name: "Optimism",
-  },
-  ORCA: {
-    code: "ORCA",
-    name: "Orca",
-  },
-  ORN: {
-    code: "ORN",
-    name: "Orion Protocol",
-  },
-  OSMO: {
-    code: "OSMO",
-    name: "Osmosis",
-  },
-  OXT: {
-    code: "OXT",
-    name: "Orchid",
-  },
-  PAX: {
-    code: "PAX",
-    name: "Paxos Standard",
-  },
-  PAXG: {
-    code: "PAXG",
-    name: "PAX Gold",
-  },
-  PENDLE: {
-    code: "PENDLE",
-    name: "Pendle",
-  },
-  PENGU: {
-    code: "PENGU",
-    name: "Penguin Finance",
-  },
-  PEPE: {
-    code: "PEPE",
-    name: "Pepe",
-  },
-  PERP: {
-    code: "PERP",
-    name: "Perpetual Protocol",
-  },
+  ONDO: { type: "crypto" as const, code: "ONDO", name: "Ondo" },
+  OOKI: { type: "crypto" as const, code: "OOKI", name: "Ooki DAO" },
+  OP: { type: "crypto" as const, code: "OP", name: "Optimism" },
+  ORCA: { type: "crypto" as const, code: "ORCA", name: "Orca" },
+  ORN: { type: "crypto" as const, code: "ORN", name: "Orion Protocol" },
+  OSMO: { type: "crypto" as const, code: "OSMO", name: "Osmosis" },
+  OXT: { type: "crypto" as const, code: "OXT", name: "Orchid" },
+  PAX: { type: "crypto" as const, code: "PAX", name: "Paxos Standard" },
+  PAXG: { type: "crypto" as const, code: "PAXG", name: "PAX Gold" },
+  PENDLE: { type: "crypto" as const, code: "PENDLE", name: "Pendle" },
+  PENGU: { type: "crypto" as const, code: "PENGU", name: "Penguin Finance" },
+  PEPE: { type: "crypto" as const, code: "PEPE", name: "Pepe" },
+  PERP: { type: "crypto" as const, code: "PERP", name: "Perpetual Protocol" },
   PIRATE: {
+    type: "crypto" as const,
     code: "PIRATE",
     name: "Pirate", // meme / niche token — verify
   },
-  PLA: {
-    code: "PLA",
-    name: "PlayDapp",
-  },
-  PLU: {
-    code: "PLU",
-    name: "Pluton",
-  },
-  PNG: {
-    code: "PNG",
-    name: "Pangolin",
-  },
+  PLA: { type: "crypto" as const, code: "PLA", name: "PlayDapp" },
+  PLU: { type: "crypto" as const, code: "PLU", name: "Pluton" },
+  PNG: { type: "crypto" as const, code: "PNG", name: "Pangolin" },
   PNUT: {
+    type: "crypto" as const,
     code: "PNUT",
     name: "PNetwork", // verify — some sources vary
   },
-  POL: {
-    code: "POL",
-    name: "Polymesh",
-  },
-  POLS: {
-    code: "POLS",
-    name: "Polkastarter",
-  },
-  POLY: {
-    code: "POLY",
-    name: "Polymath",
-  },
-  POND: {
-    code: "POND",
-    name: "Marlin",
-  },
+  POL: { type: "crypto" as const, code: "POL", name: "Polymesh" },
+  POLS: { type: "crypto" as const, code: "POLS", name: "Polkastarter" },
+  POLY: { type: "crypto" as const, code: "POLY", name: "Polymath" },
+  POND: { type: "crypto" as const, code: "POND", name: "Marlin" },
   POPCAT: {
+    type: "crypto" as const,
     code: "POPCAT",
     name: "Popcat Token", // meme token — verify
   },
-  POWR: {
-    code: "POWR",
-    name: "Power Ledger",
-  },
+  POWR: { type: "crypto" as const, code: "POWR", name: "Power Ledger" },
   PRCL: {
+    type: "crypto" as const,
     code: "PRCL",
     name: "PRCL", // token unconfirmed; please verify
   },
   PRIME: {
+    type: "crypto" as const,
     code: "PRIME",
     name: "Prime", // generic name; check contract / chain for clarity
   },
   PRO: {
+    type: "crypto" as const,
     code: "PRO",
     name: "PRO", // ambiguous symbol; verify for correct token
   },
   PROMPT: {
+    type: "crypto" as const,
     code: "PROMPT",
     name: "PROMPT", // likely niche token — verify
   },
-  PRQ: {
-    code: "PRQ",
-    name: "PARSIQ",
-  },
-  PUNDIX: {
-    code: "PUNDIX",
-    name: "Pundi X Token",
-  },
-  PYR: {
-    code: "PYR",
-    name: "Rari Governance Token",
-  },
-  PYTH: {
-    code: "PYTH",
-    name: "Pyth Network",
-  },
-  PYUSD: {
-    code: "PYUSD",
-    name: "Pyth USD",
-  },
-  QQI: {
-    code: "QI",
-    name: "BENQI",
-  },
-  QNT: {
-    code: "QNT",
-    name: "Quant",
-  },
-  QSP: {
-    code: "QSP",
-    name: "Quantstamp",
-  },
-  QUICK: {
-    code: "QUICK",
-    name: "Quickswap",
-  },
-  RAD: {
-    code: "RAD",
-    name: "Radicle",
-  },
-  RAI: {
-    code: "RAI",
-    name: "RAI Reflex Index",
-  },
-  RARE: {
-    code: "RARE",
-    name: "SuperRare",
-  },
-  RARI: {
-    code: "RARI",
-    name: "Rarible",
-  },
-  RBN: {
-    code: "RBN",
-    name: "Ribbon Finance",
-  },
+  PRQ: { type: "crypto" as const, code: "PRQ", name: "PARSIQ" },
+  PUNDIX: { type: "crypto" as const, code: "PUNDIX", name: "Pundi X Token" },
+  PYR: { type: "crypto" as const, code: "PYR", name: "Rari Governance Token" },
+  PYTH: { type: "crypto" as const, code: "PYTH", name: "Pyth Network" },
+  PYUSD: { type: "crypto" as const, code: "PYUSD", name: "Pyth USD" },
+  QQI: { type: "crypto" as const, code: "QI", name: "BENQI" },
+  QNT: { type: "crypto" as const, code: "QNT", name: "Quant" },
+  QSP: { type: "crypto" as const, code: "QSP", name: "Quantstamp" },
+  QUICK: { type: "crypto" as const, code: "QUICK", name: "Quickswap" },
+  RAD: { type: "crypto" as const, code: "RAD", name: "Radicle" },
+  RAI: { type: "crypto" as const, code: "RAI", name: "RAI Reflex Index" },
+  RARE: { type: "crypto" as const, code: "RARE", name: "SuperRare" },
+  RARI: { type: "crypto" as const, code: "RARI", name: "Rarible" },
+  RBN: { type: "crypto" as const, code: "RBN", name: "Ribbon Finance" },
   RED: {
+    type: "crypto" as const,
     code: "RED",
     name: "Red Token", // multiple tokens use RED; confirm if needed
   },
-  REN: {
-    code: "REN",
-    name: "Ren",
-  },
-  RENDER: {
-    code: "RENDER",
-    name: "Render",
-  },
-  REP: {
-    code: "REP",
-    name: "Augur",
-  },
-  REQ: {
-    code: "REQ",
-    name: "Request",
-  },
+  REN: { type: "crypto" as const, code: "REN", name: "Ren" },
+  RENDER: { type: "crypto" as const, code: "RENDER", name: "Render" },
+  REP: { type: "crypto" as const, code: "REP", name: "Augur" },
+  REQ: { type: "crypto" as const, code: "REQ", name: "Request" },
   REZ: {
+    type: "crypto" as const,
     code: "REZ",
     name: "Renzo", // REZ = Renzo Restaked ETH (liquid restaking)
   },
-  RGT: {
-    code: "RGT",
-    name: "Rari Governance Token",
-  },
-  RLC: {
-    code: "RLC",
-    name: "iExec RLC",
-  },
-  RLY: {
-    code: "RLY",
-    name: "Rally",
-  },
-  RNDR: {
-    code: "RNDR",
-    name: "Render",
-  },
-  RONIN: {
-    code: "RONIN",
-    name: "Ronin",
-  },
-  ROSE: {
-    code: "ROSE",
-    name: "Oasis Network",
-  },
-  RPL: {
-    code: "RPL",
-    name: "Rocket Pool",
-  },
-  RSR: {
-    code: "RSR",
-    name: "Reserve Rights",
-  },
-  SAFE: {
-    code: "SAFE",
-    name: "Safe",
-  },
-  SAND: {
-    code: "SAND",
-    name: "The Sandbox",
-  },
-  SD: {
-    code: "SD",
-    name: "Stader",
-  },
-  SEAM: {
-    code: "SEAM",
-    name: "Seamless Protocol",
-  },
-  SEI: {
-    code: "SEI",
-    name: "Sei",
-  },
-  SHDW: {
-    code: "SHDW",
-    name: "Shadow Token",
-  },
-  SHIB: {
-    code: "SHIB",
-    name: "Shiba Inu",
-  },
-  SHPING: {
-    code: "SHPING",
-    name: "SHPING",
-  },
-  SKL: {
-    code: "SKL",
-    name: "SKALE",
-  },
-  SNT: {
-    code: "SNT",
-    name: "Status",
-  },
-  SNX: {
-    code: "SNX",
-    name: "Synthetix",
-  },
-  SOL: {
-    code: "SOL",
-    name: "Solana",
-  },
-  SPA: {
-    code: "SPA",
-    name: "Sperax",
-  },
-  SPELL: {
-    code: "SPELL",
-    name: "Spell Token",
-  },
-  STG: {
-    code: "STG",
-    name: "Stargate Finance",
-  },
-  STORJ: {
-    code: "STORJ",
-    name: "Storj",
-  },
-  STRK: {
-    code: "STRK",
-    name: "Starknet",
-  },
-  STX: {
-    code: "STX",
-    name: "Stacks",
-  },
-  SUI: {
-    code: "SUI",
-    name: "Sui",
-  },
-  SUKU: {
-    code: "SUKU",
-    name: "SUKU",
-  },
-  SUPER: {
-    code: "SUPER",
-    name: "SuperVerse",
-  },
-  SUSHI: {
-    code: "SUSHI",
-    name: "SushiSwap",
-  },
-  SWELL: {
-    code: "SWELL",
-    name: "Swell Network",
-  },
-  SWFTC: {
-    code: "SWFTC",
-    name: "SwftCoin",
-  },
-  SXT: {
-    code: "SXT",
-    name: "SportsX",
-  },
-  SYLO: {
-    code: "SYLO",
-    name: "Sylo",
-  },
-  SYN: {
-    code: "SYN",
-    name: "Synapse",
-  },
-  SYRUP: {
-    code: "SYRUP",
-    name: "Syrup",
-  },
-  T: {
-    code: "T",
-    name: "Threshold",
-  },
-  TAO: {
-    code: "TAO",
-    name: "Bittensor",
-  },
-  TIA: {
-    code: "TIA",
-    name: "Celestia",
-  },
-  TIME: {
-    code: "TIME",
-    name: "Chrono.tech",
-  },
-  TNSR: {
-    code: "TNSR",
-    name: "Tensor",
-  },
-  TONE: {
-    code: "TONE",
-    name: "TE-FOOD (TONE)",
-  },
-  TOSHI: {
-    code: "TOSHI",
-    name: "Toshi",
-  },
-  TRAC: {
-    code: "TRAC",
-    name: "OriginTrail",
-  },
-  TRB: {
-    code: "TRB",
-    name: "Tellor",
-  },
-  TRIBE: {
-    code: "TRIBE",
-    name: "Tribe",
-  },
-  TRU: {
-    code: "TRU",
-    name: "TrueFi",
-  },
-  TRUMP: {
-    code: "TRUMP",
-    name: "MAGA (TRUMP)",
-  },
-  TURBO: {
-    code: "TURBO",
-    name: "Turbo",
-  },
-  TVK: {
-    code: "TVK",
-    name: "Terra Virtua Kolect",
-  },
-  UMA: {
-    code: "UMA",
-    name: "UMA",
-  },
-  UNFI: {
-    code: "UNFI",
-    name: "Unifi Protocol DAO",
-  },
-  UNI: {
-    code: "UNI",
-    name: "Uniswap",
-  },
-  UPI: {
-    code: "UPI",
-    name: "Pawtocol",
-  },
+  RGT: { type: "crypto" as const, code: "RGT", name: "Rari Governance Token" },
+  RLC: { type: "crypto" as const, code: "RLC", name: "iExec RLC" },
+  RLY: { type: "crypto" as const, code: "RLY", name: "Rally" },
+  RNDR: { type: "crypto" as const, code: "RNDR", name: "Render" },
+  RONIN: { type: "crypto" as const, code: "RONIN", name: "Ronin" },
+  ROSE: { type: "crypto" as const, code: "ROSE", name: "Oasis Network" },
+  RPL: { type: "crypto" as const, code: "RPL", name: "Rocket Pool" },
+  RSR: { type: "crypto" as const, code: "RSR", name: "Reserve Rights" },
+  SAFE: { type: "crypto" as const, code: "SAFE", name: "Safe" },
+  SAND: { type: "crypto" as const, code: "SAND", name: "The Sandbox" },
+  SD: { type: "crypto" as const, code: "SD", name: "Stader" },
+  SEAM: { type: "crypto" as const, code: "SEAM", name: "Seamless Protocol" },
+  SEI: { type: "crypto" as const, code: "SEI", name: "Sei" },
+  SHDW: { type: "crypto" as const, code: "SHDW", name: "Shadow Token" },
+  SHIB: { type: "crypto" as const, code: "SHIB", name: "Shiba Inu" },
+  SHPING: { type: "crypto" as const, code: "SHPING", name: "SHPING" },
+  SKL: { type: "crypto" as const, code: "SKL", name: "SKALE" },
+  SNT: { type: "crypto" as const, code: "SNT", name: "Status" },
+  SNX: { type: "crypto" as const, code: "SNX", name: "Synthetix" },
+  SOL: { type: "crypto" as const, code: "SOL", name: "Solana" },
+  SPA: { type: "crypto" as const, code: "SPA", name: "Sperax" },
+  SPELL: { type: "crypto" as const, code: "SPELL", name: "Spell Token" },
+  STG: { type: "crypto" as const, code: "STG", name: "Stargate Finance" },
+  STORJ: { type: "crypto" as const, code: "STORJ", name: "Storj" },
+  STRK: { type: "crypto" as const, code: "STRK", name: "Starknet" },
+  STX: { type: "crypto" as const, code: "STX", name: "Stacks" },
+  SUI: { type: "crypto" as const, code: "SUI", name: "Sui" },
+  SUKU: { type: "crypto" as const, code: "SUKU", name: "SUKU" },
+  SUPER: { type: "crypto" as const, code: "SUPER", name: "SuperVerse" },
+  SUSHI: { type: "crypto" as const, code: "SUSHI", name: "SushiSwap" },
+  SWELL: { type: "crypto" as const, code: "SWELL", name: "Swell Network" },
+  SWFTC: { type: "crypto" as const, code: "SWFTC", name: "SwftCoin" },
+  SXT: { type: "crypto" as const, code: "SXT", name: "SportsX" },
+  SYLO: { type: "crypto" as const, code: "SYLO", name: "Sylo" },
+  SYN: { type: "crypto" as const, code: "SYN", name: "Synapse" },
+  SYRUP: { type: "crypto" as const, code: "SYRUP", name: "Syrup" },
+  T: { type: "crypto" as const, code: "T", name: "Threshold" },
+  TAO: { type: "crypto" as const, code: "TAO", name: "Bittensor" },
+  TIA: { type: "crypto" as const, code: "TIA", name: "Celestia" },
+  TIME: { type: "crypto" as const, code: "TIME", name: "Chrono.tech" },
+  TNSR: { type: "crypto" as const, code: "TNSR", name: "Tensor" },
+  TONE: { type: "crypto" as const, code: "TONE", name: "TE-FOOD (TONE)" },
+  TOSHI: { type: "crypto" as const, code: "TOSHI", name: "Toshi" },
+  TRAC: { type: "crypto" as const, code: "TRAC", name: "OriginTrail" },
+  TRB: { type: "crypto" as const, code: "TRB", name: "Tellor" },
+  TRIBE: { type: "crypto" as const, code: "TRIBE", name: "Tribe" },
+  TRU: { type: "crypto" as const, code: "TRU", name: "TrueFi" },
+  TRUMP: { type: "crypto" as const, code: "TRUMP", name: "MAGA (TRUMP)" },
+  TURBO: { type: "crypto" as const, code: "TURBO", name: "Turbo" },
+  TVK: { type: "crypto" as const, code: "TVK", name: "Terra Virtua Kolect" },
+  UMA: { type: "crypto" as const, code: "UMA", name: "UMA" },
+  UNFI: { type: "crypto" as const, code: "UNFI", name: "Unifi Protocol DAO" },
+  UNI: { type: "crypto" as const, code: "UNI", name: "Uniswap" },
+  UPI: { type: "crypto" as const, code: "UPI", name: "Pawtocol" },
 
-  UST: {
-    code: "UST",
-    name: "TerraUSD (Legacy)",
-  },
-  VARA: {
-    code: "VARA",
-    name: "Vara Network",
-  },
-  VELO: {
-    code: "VELO",
-    name: "Velo",
-  },
-  VET: {
-    code: "VET",
-    name: "VeChain",
-  },
-  VGX: {
-    code: "VGX",
-    name: "Voyager Token",
-  },
-  VOXEL: {
-    code: "VOXEL",
-    name: "Voxies",
-  },
-  VTHO: {
-    code: "VTHO",
-    name: "VeThor Token",
-  },
-  VVV: {
-    code: "VVV",
-    name: "Poison Finance (VVV)",
-  },
-  WAMPL: {
-    code: "WAMPL",
-    name: "Wrapped Ampleforth",
-  },
+  UST: { type: "crypto" as const, code: "UST", name: "TerraUSD (Legacy)" },
+  VARA: { type: "crypto" as const, code: "VARA", name: "Vara Network" },
+  VELO: { type: "crypto" as const, code: "VELO", name: "Velo" },
+  VET: { type: "crypto" as const, code: "VET", name: "VeChain" },
+  VGX: { type: "crypto" as const, code: "VGX", name: "Voyager Token" },
+  VOXEL: { type: "crypto" as const, code: "VOXEL", name: "Voxies" },
+  VTHO: { type: "crypto" as const, code: "VTHO", name: "VeThor Token" },
+  VVV: { type: "crypto" as const, code: "VVV", name: "Poison Finance (VVV)" },
+  WAMPL: { type: "crypto" as const, code: "WAMPL", name: "Wrapped Ampleforth" },
   WAXL: {
+    type: "crypto" as const,
     code: "WAXL",
     name: "Axelar Wrapped (WAXL)",
   },
-  WBTC: {
-    code: "WBTC",
-    name: "Wrapped Bitcoin",
-  },
-  WCFG: {
-    code: "WCFG",
-    name: "Wrapped Centrifuge",
-  },
-  WELL: {
-    code: "WELL",
-    name: "Moonwell",
-  },
-  WIF: {
-    code: "WIF",
-    name: "Dogwifhat",
-  },
-  WLD: {
-    code: "WLD",
-    name: "Worldcoin",
-  },
+  WBTC: { type: "crypto" as const, code: "WBTC", name: "Wrapped Bitcoin" },
+  WCFG: { type: "crypto" as const, code: "WCFG", name: "Wrapped Centrifuge" },
+  WELL: { type: "crypto" as const, code: "WELL", name: "Moonwell" },
+  WIF: { type: "crypto" as const, code: "WIF", name: "Dogwifhat" },
+  WLD: { type: "crypto" as const, code: "WLD", name: "Worldcoin" },
   WLUNA: {
+    type: "crypto" as const,
     code: "WLUNA",
     name: "Wrapped LUNA (Legacy)",
   },
-  XCN: {
-    code: "XCN",
-    name: "Onyxcoin",
-  },
-  XLM: {
-    code: "XLM",
-    name: "Stellar",
-  },
+  XCN: { type: "crypto" as const, code: "XCN", name: "Onyxcoin" },
+  XLM: { type: "crypto" as const, code: "XLM", name: "Stellar" },
 
-  XTZ: {
-    code: "XTZ",
-    name: "Tezos",
-  },
-  XYO: {
-    code: "XYO",
-    name: "XYO",
-  },
-  YFI: {
-    code: "YFI",
-    name: "yearn.finance",
-  },
-  YFII: {
-    code: "YFII",
-    name: "DFI.Money",
-  },
-  ZEC: {
-    code: "ZEC",
-    name: "Zcash",
-  },
-  ZEN: {
-    code: "ZEN",
-    name: "Horizen",
-  },
-  ZETA: {
-    code: "ZETA",
-    name: "ZetaMarkets",
-  },
-  ZETACHAIN: {
-    code: "ZETACHAIN",
-    name: "ZetaChain",
-  },
-  ZK: {
-    code: "ZK",
-    name: "Polyhedra Network (ZK)",
-  },
-  ZORA: {
-    code: "ZORA",
-    name: "Zora",
-  },
-  ZRO: {
-    code: "ZRO",
-    name: "LayerZero",
-  },
-  ZRX: {
-    code: "ZRX",
-    name: "0x Protocol",
-  },
+  XTZ: { type: "crypto" as const, code: "XTZ", name: "Tezos" },
+  XYO: { type: "crypto" as const, code: "XYO", name: "XYO" },
+  YFI: { type: "crypto" as const, code: "YFI", name: "yearn.finance" },
+  YFII: { type: "crypto" as const, code: "YFII", name: "DFI.Money" },
+  ZEC: { type: "crypto" as const, code: "ZEC", name: "Zcash" },
+  ZEN: { type: "crypto" as const, code: "ZEN", name: "Horizen" },
+  ZETA: { type: "crypto" as const, code: "ZETA", name: "ZetaMarkets" },
+  ZETACHAIN: { type: "crypto" as const, code: "ZETACHAIN", name: "ZetaChain" },
+  ZK: { type: "crypto" as const, code: "ZK", name: "Polyhedra Network (ZK)" },
+  ZORA: { type: "crypto" as const, code: "ZORA", name: "Zora" },
+  ZRO: { type: "crypto" as const, code: "ZRO", name: "LayerZero" },
+  ZRX: { type: "crypto" as const, code: "ZRX", name: "0x Protocol" },
 };
 
 const TEST_CRYPTOS = {
   // 常用幣種
-  BTC: {
-    code: "BTC",
-    name: "Bitcoin",
-  },
-  ETH: { code: "ETH", name: "Ethereum" },
-  USDT: {
-    code: "USDT",
-    name: "Tether",
-  },
-  USDC: {
-    code: "USDC",
-    name: "USD Coin",
-  },
-  XRP: {
-    code: "XRP",
-    name: "XRP",
-  },
-  ADA: { code: "ADA", name: "Cardano" },
+  BTC: { type: "crypto" as const, code: "BTC", name: "Bitcoin" },
+  ETH: { type: "crypto" as const, code: "ETH", name: "Ethereum" },
+  USDT: { type: "crypto" as const, code: "USDT", name: "Tether" },
+  USDC: { type: "crypto" as const, code: "USDC", name: "USD Coin" },
+  XRP: { type: "crypto" as const, code: "XRP", name: "XRP" },
+  ADA: { type: "crypto" as const, code: "ADA", name: "Cardano" },
 
   // 一般幣種，依字母排序
-  "1INCH": { code: "1INCH", name: "1inch Network" },
-  A8: { code: "A8", name: "Ancient8" },
-  AAVE: { code: "AAVE", name: "Aave" },
-  ABT: { code: "ABT", name: "Arcblock" },
-  ACH: { code: "ACH", name: "Alchemy Pay" },
-  ACS: { code: "ACS", name: "Access" },
-  ACX: { code: "ACX", name: "Across Protocol" },
+  "1INCH": { type: "crypto" as const, code: "1INCH", name: "1inch Network" },
+  A8: { type: "crypto" as const, code: "A8", name: "Ancient8" },
+  AAVE: { type: "crypto" as const, code: "AAVE", name: "Aave" },
+  ABT: { type: "crypto" as const, code: "ABT", name: "Arcblock" },
+  ACH: { type: "crypto" as const, code: "ACH", name: "Alchemy Pay" },
+  ACS: { type: "crypto" as const, code: "ACS", name: "Access" },
+  ACX: { type: "crypto" as const, code: "ACX", name: "Across Protocol" },
 };
 
 const data = process.env.NODE_ENV === "test" ? TEST_CRYPTOS : CRYPTOS;
