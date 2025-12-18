@@ -539,4 +539,8 @@ const TEST_CRYPTOS = {
 
 const data = process.env.NODE_ENV === "test" ? TEST_CRYPTOS : CRYPTOS;
 
-export { data as CRYPTOS };
+type CryptoName = keyof typeof data;
+
+const CRYPTO_NAMES = Object.keys(data) as CryptoName[];
+
+export { data as CRYPTOS, CRYPTO_NAMES, type CryptoName };

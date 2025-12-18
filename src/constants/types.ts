@@ -1,10 +1,13 @@
-export type Crypto = {
+import type { FiatName } from "./fiat-currency-list";
+import type { CryptoName } from "./crypto-currency-list";
+
+type Crypto = {
   type: "crypto";
   code: string;
   name: string;
 };
 
-export type Fiat = {
+type Fiat = {
   type: "fiat";
   code: string;
   symbol?: string;
@@ -13,8 +16,23 @@ export type Fiat = {
   country_codes?: string[];
 };
 
-export type Currency = Fiat | Crypto;
+type Currency = Fiat | Crypto;
 
-export type CurrencyType = "fiat" | "crypto";
+type CurrencyType = "fiat" | "crypto";
 
-export type ActiveCurrency = Currency & { __memoCode: string };
+type CurrencyName = FiatName | CryptoName;
+
+type ActiveCurrency = Currency & {
+  __memoCode: string;
+};
+
+export type {
+  Currency,
+  CurrencyType,
+  CurrencyName,
+  ActiveCurrency,
+  Fiat,
+  Crypto,
+  FiatName,
+  CryptoName,
+};
