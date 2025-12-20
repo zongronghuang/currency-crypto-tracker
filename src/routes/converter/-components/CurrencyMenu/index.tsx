@@ -68,8 +68,6 @@ export default function CurrencyMenu({
   // handlers
   function handleSearchChange(event: ChangeEvent<HTMLInputElement>) {
     const sanitizedTerm = sanitizeSearchTerm(event.target.value);
-    if (!sanitizedTerm.length) return;
-
     const dataSource = dataSources[activeCurrency!.type];
     const filteredData = dataSource.filter((data) =>
       isSearchMatch(sanitizedTerm, data),
