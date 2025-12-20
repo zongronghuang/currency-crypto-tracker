@@ -54,6 +54,9 @@ export default defineConfig([
       ],
       // TypeScript + Zod is sufficient; no need of PropTypes
       "react/prop-types": "off",
+
+      // Error should be of any type
+      "@typescript-eslint/no-explicit-any": "off",
     },
   },
 ]);
