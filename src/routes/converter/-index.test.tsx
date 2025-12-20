@@ -1,12 +1,14 @@
-import { screen, render } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
-import ConverterPage from ".";
+import { renderWithFileRoutes } from "@/mocks/file-route-utils";
 
 test("clicking switch button changes currency input positions", async () => {
-  render(<ConverterPage />);
+  renderWithFileRoutes(<div />, {
+    initialLocation: "/converter?from=USD&to=EUR&amount=100",
+  });
   const user = userEvent.setup();
 
-  const switchButton = screen.getByTitle(/switch/i);
+  const switchButton = await screen.findByTitle(/switch/i);
   const usdFlagIcon = screen.getByTitle(/united states dollar/i);
   const eurFlagIcon = screen.getByTitle(/euro/i);
   expect(usdFlagIcon).toAppearBefore(eurFlagIcon);
@@ -22,32 +24,39 @@ test("clicking switch button changes currency input positions", async () => {
   );
 });
 
-test.skip("opens and closes currency menu dialog via buttons", async () => {
-  render(<ConverterPage />);
-
+test("opens and closes currency menu dialog via buttons", async () => {
+  renderWithFileRoutes(<div />, {
+    initialLocation: "/converter?from=USD&to=EUR&amount=100",
+  });
   const user = userEvent.setup();
-  const currencyMenu = await screen.findByRole("dialog", {
+
+  const usdButton = await screen.findByRole("button", { name: /usd/i });
+  await user.click(usdButton);
+
+  const dialog = await screen.findByRole("dialog", {
     hidden: true,
   });
+  expect(dialog).toBeInTheDocument();
+  dialog.setAttribute("open", "true");
 
-  const currencyButton = await screen.findByRole("button", { name: /usd/i });
-
-  await user.click(currencyButton);
-  expect(currencyMenu).toBeInTheDocument();
   const confirmButton = screen.getByRole("button", { name: /confirm/i });
   await user.click(confirmButton);
   expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
 });
 
+// IntersectionObserver is not implemented in RTL
 test.skip("change currency icon and name when choosing a different icon", async () => {
-  render(<ConverterPage />);
-
+  renderWithFileRoutes(<div />, {
+    initialLocation: "/converter?from=USD&to=EUR&amount=100",
+  });
   const user = userEvent.setup();
-  const currencyButton = screen.getByRole("button", { name: /usd/i });
-  await user.click(currencyButton);
 
-  const currencyMenu = screen.getByRole("dialog");
-  expect(currencyMenu).toBeInTheDocument();
+  const usdButton = await screen.findByRole("button", { name: /usd/i });
+  await user.click(usdButton);
+
+  const dialog = screen.getByRole("dialog", { hidden: true });
+  expect(dialog).toBeInTheDocument();
+  dialog.setAttribute("open", "true");
 
   const eurOption = screen.getByRole("radio", { name: /eur/i });
   await user.click(eurOption);

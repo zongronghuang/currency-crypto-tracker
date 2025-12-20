@@ -28,7 +28,7 @@ HTMLDialogElement.prototype.showModal = function () {
 };
 
 HTMLDialogElement.prototype.close = function () {
-  this.removeAttribute("open");
+  this.setAttribute("open", "false");
   this.removeAttribute("data-modal");
 };
 

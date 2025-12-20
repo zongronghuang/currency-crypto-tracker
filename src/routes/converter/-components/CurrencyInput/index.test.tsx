@@ -1,28 +1,12 @@
-import { screen, render } from "@testing-library/react";
-import CurrencyInput from ".";
-import type { RefObject } from "react";
+import { screen } from "@testing-library/react";
+import { renderWithFileRoutes } from "@/mocks/file-route-utils";
 
-test("currency input shows received data correctly", () => {
-  const mockDialogRef = { current: {} } as RefObject<HTMLDialogElement | null>;
-  const mockTargetCurrencyRef = { current: "USD" } as RefObject<string>;
-  const mockCurrencyData = {
-    type: "fiat" as const,
-    code: "USD",
-    symbol: "$",
-    name: "United States dollar",
-    country: "United States of America",
-    country_codes: ["US", "USA"],
-  };
+test("currency input shows received data correctly", async () => {
+  renderWithFileRoutes(<div />, {
+    initialLocation: "/converter?from=USD&to=EUR&amount=100",
+  });
 
-  render(
-    <CurrencyInput
-      currencyData={mockCurrencyData}
-      dialogRef={mockDialogRef}
-      targetCurrencyRef={mockTargetCurrencyRef}
-    />,
-  );
-
-  const label = screen.getByRole("button", { name: /usd/i });
+  const label = await screen.findByRole("button", { name: /usd/i });
   expect(label).toBeInTheDocument();
 
   const countryFlag = screen.getByRole("img", {
@@ -30,6 +14,6 @@ test("currency input shows received data correctly", () => {
   });
   expect(countryFlag).toBeInTheDocument();
 
-  const input = screen.getByRole("textbox");
-  expect(input).toHaveValue("");
+  const input = screen.getAllByRole("textbox")[0];
+  expect(input).toHaveValue("100");
 });
