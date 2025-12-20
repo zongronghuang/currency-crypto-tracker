@@ -150,127 +150,76 @@ describe("calibrateNumeral()", () => {
     const validNumber5 = "1000000";
     expect(calibrateNumeral(validNumber5, locale)).toBe("1.000.000");
   });
-
-  test("convert US numbers to US numbers with locale option object", () => {
-    const validNumber1 = "0.2";
-    const locales = {
-      to: "en-US",
-      from: "en-US",
-    };
-
-    expect(calibrateNumeral(validNumber1, locales)).toBe("0.2");
-
-    const validNumber2 = "1,000.00";
-    expect(calibrateNumeral(validNumber2, locales)).toBe("1,000");
-
-    const validNumber3 = "1000";
-    expect(calibrateNumeral(validNumber3, locales)).toBe("1,000");
-
-    const validNumber4 = "1,000,000.00";
-    expect(calibrateNumeral(validNumber4, locales)).toBe("1,000,000");
-
-    const validNumber5 = "1000000";
-    expect(calibrateNumeral(validNumber5, locales)).toBe("1,000,000");
-  });
-
-  test("convert EU numbers to EU numbers with locale option object", () => {
-    const locales = {
-      to: "de-DE",
-      from: "de-DE",
-    };
-
-    const validNumber1 = "0,2";
-    expect(calibrateNumeral(validNumber1, locales)).toBe("0,2");
-
-    const validNumber2 = "1.000,00";
-    expect(calibrateNumeral(validNumber2, locales)).toBe("1.000");
-
-    const validNumber3 = "1000";
-    expect(calibrateNumeral(validNumber3, locales)).toBe("1.000");
-
-    const validNumber4 = "1.000.000,00";
-    expect(calibrateNumeral(validNumber4, locales)).toBe("1.000.000");
-
-    const validNumber5 = "1000000";
-    expect(calibrateNumeral(validNumber5, locales)).toBe("1.000.000");
-  });
-
-  test("convert US numbers to EU numbers with locale option object", () => {
-    const locales = {
-      from: "en-US",
-      to: "de-DE",
-    };
-
-    const validNumber1 = "0.2";
-    expect(calibrateNumeral(validNumber1, locales)).toBe("0,2");
-
-    const validNumber2 = "1,000.00";
-    expect(calibrateNumeral(validNumber2, locales)).toBe("1.000");
-
-    const validNumber3 = "1000";
-    expect(calibrateNumeral(validNumber3, locales)).toBe("1.000");
-
-    const validNumber4 = "1,000,000.00";
-    expect(calibrateNumeral(validNumber4, locales)).toBe("1.000.000");
-
-    const validNumber5 = "1000000";
-    expect(calibrateNumeral(validNumber5, locales)).toBe("1.000.000");
-  });
-
-  test("convert EU numbers to US numbers with local option object", () => {
-    const locales = {
-      from: "de-DE",
-      to: "en-US",
-    };
-
-    const validNumber1 = "0,2";
-    expect(calibrateNumeral(validNumber1, locales)).toBe("0.2");
-
-    const validNumber2 = "1.000,00";
-    expect(calibrateNumeral(validNumber2, locales)).toBe("1,000");
-
-    const validNumber3 = "1000";
-    expect(calibrateNumeral(validNumber3, locales)).toBe("1,000");
-
-    const validNumber4 = "1.000.000,00";
-    expect(calibrateNumeral(validNumber4, locales)).toBe("1,000,000");
-
-    const validNumber5 = "1000000";
-    expect(calibrateNumeral(validNumber5, locales)).toBe("1,000,000");
-  });
 });
 
 describe("__private_fns__", () => {
-  test("sanitizeNumeral()", () => {
-    const { sanitizeNumeral } = __private_fns__;
+  test("getUserLocale()", () => {
+    const { getUserLocale } = __private_fns__;
+
+    // mock for lack of navigator language(s); fallback to en-US
+    Object.defineProperty(navigator, "language", {
+      value: "",
+      configurable: true, // Required to redefine the property multiple times
+    });
+    Object.defineProperty(navigator, "languages", {
+      value: [],
+      configurable: true,
+    });
+    expect(getUserLocale()).toBe("en-US");
+
+    // mock for en-GB
+    Object.defineProperty(navigator, "language", {
+      value: "en-GB",
+      configurable: true,
+    });
+    Object.defineProperty(navigator, "languages", {
+      value: ["en-GB", "en-US"],
+      configurable: true,
+    });
+    expect(getUserLocale()).toBe("en-GB");
+
+    // mock for de-DE
+    Object.defineProperty(navigator, "language", {
+      value: "de-DE",
+      configurable: true,
+    });
+    Object.defineProperty(navigator, "languages", {
+      value: ["de-DE", "en-US"],
+      configurable: true,
+    });
+    expect(getUserLocale()).toBe("de-DE");
+  });
+
+  test("getComputableNumeral()", () => {
+    const { getComputableNumeral } = __private_fns__;
     const usLocale = "en-US";
     const euLocale = "de-DE";
 
     // 正常數字轉換
     const numeral1 = "1,234.567";
-    expect(sanitizeNumeral(numeral1, usLocale)).toBe("1234.567");
+    expect(getComputableNumeral(numeral1, usLocale)).toBe("1234.567");
 
     const numeral2 = "1.234,567";
-    expect(sanitizeNumeral(numeral2, euLocale)).toBe("1234.567");
+    expect(getComputableNumeral(numeral2, euLocale)).toBe("1234.567");
 
     // 移除不同位數的不合法字元
     const numeral3 = "@,2!4.a-&";
-    expect(sanitizeNumeral(numeral3, usLocale)).toBe("24");
+    expect(getComputableNumeral(numeral3, usLocale)).toBe("24.");
 
     const numeral4 = "@.2!4,a-&";
-    expect(sanitizeNumeral(numeral4, euLocale)).toBe("24");
+    expect(getComputableNumeral(numeral4, euLocale)).toBe("24.");
 
     const numeral5 = "@,2!4.a-7";
-    expect(sanitizeNumeral(numeral5, usLocale)).toBe("24.7");
+    expect(getComputableNumeral(numeral5, usLocale)).toBe("24.7");
 
     const numeral6 = "@.2!4,a-7";
-    expect(sanitizeNumeral(numeral6, euLocale)).toBe("24.7");
+    expect(getComputableNumeral(numeral6, euLocale)).toBe("24.7");
 
     const numeral7 = "@,=!#.a-7";
-    expect(sanitizeNumeral(numeral7, usLocale)).toBe("0.7");
+    expect(getComputableNumeral(numeral7, usLocale)).toBe(".7");
 
     const numeral8 = "@.=!#,a-7";
-    expect(sanitizeNumeral(numeral8, euLocale)).toBe("0.7");
+    expect(getComputableNumeral(numeral8, euLocale)).toBe(".7");
   });
 
   test("getSeparators()", () => {

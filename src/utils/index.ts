@@ -74,52 +74,40 @@ export function validateComponentProps(
   }
 }
 
-type LocaleOption =
-  | {
-      to: string; // source locale
-      from: string; // target locale 不同幣別間轉換
-    }
-  | string; // 'de-DE' 同幣別轉換
-
-export function calibrateNumeral(
-  numeral: string,
-  localeOption: LocaleOption = "en-US",
-) {
-  if (typeof localeOption === "string") {
-    const safeNumeral = sanitizeNumeral(numeral, localeOption);
-    const localizedNumeral = localizeNumeral(safeNumeral, localeOption);
-
-    return localizedNumeral;
-  } else {
-    const { to: toLocale, from: fromLocale } = localeOption;
-    const safeNumeral = sanitizeNumeral(numeral, fromLocale);
-    const localizedNumeral = localizeNumeral(safeNumeral, toLocale);
-
-    return localizedNumeral;
-  }
+export function calibrateNumeral(numeral: string, localeOption?: string) {
+  const userLocale = localeOption || getUserLocale();
+  const computableNumeral = getComputableNumeral(numeral, userLocale);
+  const localizedNumeral = localizeNumeral(computableNumeral, userLocale);
+  return localizedNumeral;
 }
 
 export const __private_fns__ = {
-  sanitizeNumeral,
+  getUserLocale,
+  getComputableNumeral,
   getSeparators,
   localizeNumeral,
 };
 // 修改成程式能自由轉換成 number 型別的字串
-function sanitizeNumeral(numeral: string, fromLocale: string) {
+export function getComputableNumeral(
+  numeral: string,
+  fromLocale: string = "en-US",
+) {
   // 去除不合法字元，只保留 0-9 和小數符號
   const { decimalSign } = getSeparators(fromLocale);
-  const lastDecimalId = numeral.lastIndexOf(decimalSign);
-
-  const invalidCharRegex = /[^0-9]/g;
-  let safeNumeral = numeral.replace(invalidCharRegex, "");
+  const invalidCharRegex = new RegExp(`[^0-9${decimalSign}]`, "g");
+  let computableNumeral = numeral.replace(invalidCharRegex, "");
+  const lastDecimalId = computableNumeral.lastIndexOf(decimalSign);
   // 沒有小數點，代表為整數
-  if (lastDecimalId === -1) return safeNumeral;
+  if (lastDecimalId === -1) return computableNumeral;
 
-  const integer = numeral.slice(0, lastDecimalId).replace(invalidCharRegex, "");
-  const float = numeral.slice(lastDecimalId).replace(invalidCharRegex, "");
-  safeNumeral = Number(`${integer}.${float}`).toString();
-
-  return safeNumeral;
+  const integer = computableNumeral
+    .slice(0, lastDecimalId)
+    .replace(/[^0-9]/g, "");
+  const float = computableNumeral
+    .slice(lastDecimalId)
+    .replace(decimalSign, ".");
+  computableNumeral = `${integer}${float}`;
+  return computableNumeral;
 }
 
 function getSeparators(fromLocale: string) {
@@ -131,9 +119,29 @@ function getSeparators(fromLocale: string) {
 }
 
 function localizeNumeral(amount: string, toLocale: string) {
+  // 如果 amount 是 '0000', 仍要回傳 '0000'
+  // 方便使用者補上開頭數字，不須從頭輸入所有數字
+  if (+amount === 0) {
+    const tempAmount = "1" + amount; // 開頭'1'會從回傳字串中移除
+    const localizedTempAmount = new Intl.NumberFormat(toLocale, {
+      maximumFractionDigits: 2,
+      numberingSystem: "latn",
+    }).format(+tempAmount);
+
+    return localizedTempAmount.slice(1);
+  }
+
   return new Intl.NumberFormat(toLocale, {
     maximumFractionDigits: 2, // 最多兩位浮點數 (自動四捨五入進位)
     numberingSystem: "latn",
     // trailingZeroDisplay: 'auto' // (default) 自動移除 trailing zeros
   }).format(+amount);
+}
+
+function getUserLocale() {
+  const hasBrowserLocales =
+    navigator.languages && navigator.languages.length > 0;
+
+  if (hasBrowserLocales) return navigator.languages[0];
+  return navigator.language || "en-US";
 }
