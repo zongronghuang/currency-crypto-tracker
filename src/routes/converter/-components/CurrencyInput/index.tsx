@@ -1,4 +1,6 @@
 import {
+  useState,
+  useEffect,
   type ChangeEvent,
   type Dispatch,
   type RefObject,
@@ -6,11 +8,17 @@ import {
 } from "react";
 import { z } from "zod";
 import { FiatIcon, CryptoIcon } from "../CurrencyIcon";
-import { validateComponentProps } from "@/utils";
+import {
+  validateComponentProps,
+  calibrateNumeral,
+  getComputableNumeral,
+} from "@/utils";
 import type { ActiveCurrency } from "@/constants/types";
 
 const CurrencyInputSchema = z.object({
-  isPivotal: z.boolean().optional(),
+  isBaseCurrency: z.boolean().optional(),
+  amountNumeral: z.string(),
+  exchangeRate: z.string(),
   currencyData: z.object({
     type: z.enum(["fiat", "crypto"]),
     code: z.string(),
@@ -22,14 +30,19 @@ const CurrencyInputSchema = z.object({
 type CurrencyInputProps = z.infer<typeof CurrencyInputSchema> & {
   dialogRef: RefObject<HTMLDialogElement | null>;
   setActiveCurrency: Dispatch<SetStateAction<ActiveCurrency | null>>;
+  setAmountNumerals: Dispatch<SetStateAction<[string, string]>>;
 };
 
 export default function CurrencyInput({
-  isPivotal = false,
+  isBaseCurrency = false,
+  amountNumeral,
+  exchangeRate,
   dialogRef,
   currencyData,
   setActiveCurrency,
+  setAmountNumerals,
 }: CurrencyInputProps) {
+  const [localAmountNumeral, setLocalAmountNumeral] = useState(amountNumeral);
   const identifier = `${currencyData.type}-${currencyData.name}`;
 
   const IconImage =
@@ -49,9 +62,14 @@ export default function CurrencyInput({
       />
     );
 
+  useEffect(() => {
+    setLocalAmountNumeral(calibrateNumeral(amountNumeral));
+  }, [amountNumeral]);
+
   validateComponentProps(CurrencyInputSchema, {
-    isPivotal,
+    amountNumeral,
     currencyData,
+    exchangeRate,
   });
 
   return (
@@ -75,13 +93,24 @@ export default function CurrencyInput({
         </button>
       </label>
       <input
-        className="block w-full min-w-2/3 rounded-sm p-2 outline outline-gray-400 focus:outline-2 focus:outline-gray-500"
+        className="block w-full min-w-2/3 rounded-sm p-2 outline outline-gray-400 focus:outline-2 focus:outline-blue-500"
         id={identifier}
         type="text"
         inputMode="numeric"
+        value={localAmountNumeral}
         onChange={(event: ChangeEvent<HTMLInputElement>) =>
-          console.log("value", event.target.value)
+          setLocalAmountNumeral(getComputableNumeral(event.target.value))
         }
+        onBlur={() => {
+          const newAmount = getComputableNumeral(localAmountNumeral);
+          const oppositeAmount = isBaseCurrency
+            ? (+newAmount * +exchangeRate).toString()
+            : (+newAmount / +exchangeRate).toString();
+          const updatedAmounts: [string, string] = isBaseCurrency
+            ? [calibrateNumeral(newAmount), calibrateNumeral(oppositeAmount)]
+            : [calibrateNumeral(oppositeAmount), calibrateNumeral(newAmount)];
+          setAmountNumerals(updatedAmounts);
+        }}
       />
     </div>
   );
