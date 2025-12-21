@@ -1,6 +1,7 @@
 import { request } from "./request";
 import type { FiatName, CryptoName } from "@/constants/types";
 
+// https://www.alphavantage.co/documentation/#currency-exchange
 export const getExchangeRate = (
   fromCurrency: FiatName | CryptoName,
   toCurrency: FiatName | CryptoName,
