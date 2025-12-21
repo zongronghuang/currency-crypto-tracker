@@ -1,16 +1,20 @@
-import { useState, useRef, useEffect, Suspense, lazy, Activity } from "react";
+import { useState, useRef, Suspense, lazy, Activity } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 import CurrencyInput from "./-components/CurrencyInput";
 import { getExchangeRate } from "@/apis";
+import { calibrateNumeral } from "@/utils";
 import { FIATS, FIAT_NAMES } from "@/constants/fiat-currency-list";
 import { CRYPTO_NAMES, CRYPTOS } from "@/constants/crypto-currency-list";
 import type {
-  Currency,
   ActiveCurrency,
   FiatName,
   CryptoName,
+  CurrencyName,
 } from "@/constants/types";
+
+const CurrencyMenu = lazy(() => import("./-components/CurrencyMenu"));
 
 const ConverterSearchSchema = z.object({
   from: z.enum([...FIAT_NAMES, ...CRYPTO_NAMES]).catch("USD"),
@@ -23,75 +27,61 @@ export const Route = createFileRoute("/converter/")({
   validateSearch: ConverterSearchSchema,
 });
 
-const CurrencyMenu = lazy(() => import("./-components/CurrencyMenu"));
-
 export default function ConverterPage() {
   const { to, from, amount } = Route.useSearch();
-  const fromCurrency = FIATS[from as FiatName] || CRYPTOS[from as CryptoName];
-  const toCurrency = FIATS[to as FiatName] || CRYPTOS[to as CryptoName];
-  const [currencies, setCurrencies] = useState<[Currency, Currency]>([
-    fromCurrency,
-    toCurrency,
-  ]);
   const [activeCurrency, setActiveCurrency] = useState<ActiveCurrency | null>(
     null,
   );
-  const [exchangeRateInfo, setExchangeRateInfo] = useState({
-    exchangeRate: "",
-    lastRefreshed: "",
-  });
   const [amountNumerals, setAmountNumerals] = useState<[string, string]>([
     amount?.toString() || "0",
     "0",
   ]);
   const dialogRef = useRef<HTMLDialogElement>(null);
   const navigate = useNavigate({ from: Route.fullPath });
+  const fromCurrency = FIATS[from as FiatName] || CRYPTOS[from as CryptoName];
+  const toCurrency = FIATS[to as FiatName] || CRYPTOS[to as CryptoName];
+  console.log("from", fromCurrency.code, "to", toCurrency.code);
+
+  const { data, isPending } = useQuery({
+    queryKey: [fromCurrency.code, toCurrency.code],
+    queryFn: () =>
+      getExchangeRate(
+        fromCurrency.code as CurrencyName,
+        toCurrency.code as CurrencyName,
+      ),
+  });
+  const exchangeRate = isPending
+    ? "0"
+    : calibrateNumeral(
+        data["Realtime Currency Exchange Rate"]["5. Exchange Rate"],
+      );
+  const lastRefreshed = isPending
+    ? ""
+    : data["Realtime Currency Exchange Rate"]["6. Last Refreshed"];
 
   function swapCurrencies() {
-    setCurrencies(([a, b]) => [b, a]);
     navigate({
       search: (prev) => ({ ...prev, to: prev.from, from: prev.to }),
     });
   }
 
-  useEffect(() => {
-    getExchangeRateFn();
-
-    async function getExchangeRateFn() {
-      try {
-        const data = await getExchangeRate(from, to);
-        const exchangeRate =
-          data["Realtime Currency Exchange Rate"]["5. Exchange Rate"];
-        const lastRefreshed =
-          data["Realtime Currency Exchange Rate"]["6. Last Refreshed"];
-        setExchangeRateInfo({
-          exchangeRate,
-          lastRefreshed,
-        });
-
-        setAmountNumerals((prev) => [
-          prev[0],
-          (+prev[0] * +exchangeRate).toString(),
-        ]);
-      } catch (error: any) {
-        console.error("[exchange rate]", error.toString());
-      }
-    }
-  }, [from, to, amount]);
-
   return (
     <main>
       <p>
-        Last update: <time>{exchangeRateInfo.lastRefreshed}</time>
+        1 {fromCurrency.code} = {exchangeRate}
+        {toCurrency.code}
+      </p>
+      <p>
+        Last update: <time>{lastRefreshed}</time>
       </p>
 
       <CurrencyInput
         isBaseCurrency={true}
         amountNumeral={amountNumerals[0]}
-        exchangeRate={exchangeRateInfo.exchangeRate}
+        exchangeRate={exchangeRate}
         dialogRef={dialogRef}
         setActiveCurrency={setActiveCurrency}
-        currencyData={currencies[0]}
+        currencyData={fromCurrency}
         setAmountNumerals={setAmountNumerals}
       />
 
@@ -99,10 +89,10 @@ export default function ConverterPage() {
 
       <CurrencyInput
         amountNumeral={amountNumerals[1]}
-        exchangeRate={exchangeRateInfo.exchangeRate}
+        exchangeRate={exchangeRate}
         dialogRef={dialogRef}
         setActiveCurrency={setActiveCurrency}
-        currencyData={currencies[1]}
+        currencyData={toCurrency}
         setAmountNumerals={setAmountNumerals}
       />
 
@@ -110,7 +100,6 @@ export default function ConverterPage() {
         <Activity mode="visible">
           <CurrencyMenu
             ref={dialogRef}
-            setCurrencies={setCurrencies}
             activeCurrency={activeCurrency}
             setActiveCurrency={setActiveCurrency}
           />
