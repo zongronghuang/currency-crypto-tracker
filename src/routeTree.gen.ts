@@ -9,50 +9,69 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from "./routes/__root";
-import { Route as AboutRouteImport } from "./routes/about";
+import { Route as ConverterIndexRouteImport } from "./routes/converter/index";
+import { Route as TrendsChar123VisualChar125RouteImport } from "./routes/trends/{-$visual}";
 
-const AboutRoute = AboutRouteImport.update({
-  id: "/about",
-  path: "/about",
+const ConverterIndexRoute = ConverterIndexRouteImport.update({
+  id: "/converter/",
+  path: "/converter/",
   getParentRoute: () => rootRouteImport,
 } as any);
+const TrendsChar123VisualChar125Route =
+  TrendsChar123VisualChar125RouteImport.update({
+    id: "/trends/{-$visual}",
+    path: "/trends/{-$visual}",
+    getParentRoute: () => rootRouteImport,
+  } as any);
 
 export interface FileRoutesByFullPath {
-  "/about": typeof AboutRoute;
+  "/trends/{-$visual}": typeof TrendsChar123VisualChar125Route;
+  "/converter": typeof ConverterIndexRoute;
 }
 export interface FileRoutesByTo {
-  "/about": typeof AboutRoute;
+  "/trends/{-$visual}": typeof TrendsChar123VisualChar125Route;
+  "/converter": typeof ConverterIndexRoute;
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
-  "/about": typeof AboutRoute;
+  "/trends/{-$visual}": typeof TrendsChar123VisualChar125Route;
+  "/converter/": typeof ConverterIndexRoute;
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/about";
+  fullPaths: "/trends/{-$visual}" | "/converter";
   fileRoutesByTo: FileRoutesByTo;
-  to: "/about";
-  id: "__root__" | "/about";
+  to: "/trends/{-$visual}" | "/converter";
+  id: "__root__" | "/trends/{-$visual}" | "/converter/";
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  AboutRoute: typeof AboutRoute;
+  TrendsChar123VisualChar125Route: typeof TrendsChar123VisualChar125Route;
+  ConverterIndexRoute: typeof ConverterIndexRoute;
 }
 
 declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    "/about": {
-      id: "/about";
-      path: "/about";
-      fullPath: "/about";
-      preLoaderRoute: typeof AboutRouteImport;
+    "/converter/": {
+      id: "/converter/";
+      path: "/converter";
+      fullPath: "/converter";
+      preLoaderRoute: typeof ConverterIndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/trends/{-$visual}": {
+      id: "/trends/{-$visual}";
+      path: "/trends/{-$visual}";
+      fullPath: "/trends/{-$visual}";
+      preLoaderRoute: typeof TrendsChar123VisualChar125RouteImport;
       parentRoute: typeof rootRouteImport;
     };
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  AboutRoute: AboutRoute,
+  TrendsChar123VisualChar125Route: TrendsChar123VisualChar125Route,
+  ConverterIndexRoute: ConverterIndexRoute,
 };
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

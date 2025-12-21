@@ -1,12 +1,36 @@
 import { StrictMode } from "react";
 import ReactDOM from "react-dom/client";
 import { RouterProvider, createRouter } from "@tanstack/react-router";
-
-// Import the generated route tree
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+// import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+// import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { routeTree } from "./routeTree.gen";
+import { worker } from "./mocks/browser";
 
-// Create a new router instance
-const router = createRouter({ routeTree });
+/**
+ * run msw as mock API server for dev
+ * */
+if (process.env.NODE_ENV === "development") {
+  await worker.start();
+}
+
+/**
+ * set up TanStack Query
+ */
+const queryClient = new QueryClient();
+
+/**
+ * set up TanStack Router
+ */
+const router = createRouter({
+  routeTree,
+  context: { queryClient },
+  defaultPreload: "intent",
+  // Since we're using React Query, we don't want loader calls to ever be stale
+  // This will ensure that the loader is always called when the route is preloaded or visited
+  defaultPreloadStaleTime: 0,
+  scrollRestoration: true,
+});
 
 // Register the router instance for type safety
 declare module "@tanstack/react-router" {
@@ -21,7 +45,11 @@ if (!rootElement.innerHTML) {
   const root = ReactDOM.createRoot(rootElement);
   root.render(
     <StrictMode>
-      <RouterProvider router={router} />
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+      </QueryClientProvider>
+      {/* <TanStackRouterDevtools initialIsOpen={false} router={router} /> */}
     </StrictMode>,
   );
 }

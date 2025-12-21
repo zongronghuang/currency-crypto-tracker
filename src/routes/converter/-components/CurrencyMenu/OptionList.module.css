@@ -1,0 +1,10 @@
+@reference "tailwindcss";
+
+.optionList > span[role="alert"] {
+  display: block;
+}
+
+/* optionList 內任何 li 元素出現時，alert 元素隱藏 */
+.optionList > li ~ span[role="alert"] {
+  display: none;
+}
