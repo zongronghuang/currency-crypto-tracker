@@ -7,6 +7,7 @@ import {
   type SetStateAction,
 } from "react";
 import { createPortal } from "react-dom";
+import { useNavigate } from "@tanstack/react-router";
 import { z } from "zod";
 import clsx from "clsx";
 import OptionList from "./OptionList";
@@ -18,7 +19,12 @@ import {
 } from "@/utils";
 import { FIATS } from "@/constants/fiat-currency-list";
 import { CRYPTOS } from "@/constants/crypto-currency-list";
-import type { Currency, CurrencyType, ActiveCurrency } from "@/constants/types";
+import type {
+  Currency,
+  CurrencyType,
+  ActiveCurrency,
+  CurrencyName,
+} from "@/constants/types";
 
 const dataSources = {
   fiat: Object.values(FIATS),
@@ -31,7 +37,6 @@ const CurrencyMenuSchema = z.object({
 
 type CurrencyMenuProps = z.infer<typeof CurrencyMenuSchema> & {
   ref: RefObject<HTMLDialogElement | null>;
-  setCurrencies: Dispatch<SetStateAction<[Currency, Currency]>>;
   activeCurrency?: ActiveCurrency | null;
   setActiveCurrency: Dispatch<SetStateAction<ActiveCurrency | null>>;
 };
@@ -49,11 +54,13 @@ type SearchMatches = {
 
 export default function CurrencyMenu({
   ref,
-  setCurrencies,
+  // setCurrencies,
   activeCurrency,
   setActiveCurrency,
+  // updateSearchCurrency,
   open = false,
 }: CurrencyMenuProps) {
+  const navigate = useNavigate({ from: "/converter" });
   const [pageCollection, setPageCollection] = useState<PageCollection>({
     data: [],
     pageNo: 1,
@@ -104,10 +111,9 @@ export default function CurrencyMenu({
       currencyOption! as keyof typeof dataSource
     ] as Currency;
 
-    setCurrencies((prev) =>
-      prev[0].code === activeCurrency?.__memoCode
-        ? [currencyData, prev[1]]
-        : [prev[0], currencyData],
+    updateSearchCurrency(
+      currencyData.code as CurrencyName,
+      activeCurrency!.__memoCode!,
     );
 
     ref.current!.close();
@@ -140,6 +146,22 @@ export default function CurrencyMenu({
       hasMore: true,
     });
     setActiveCurrency(null);
+  }
+
+  function updateSearchCurrency(
+    newCurrencyCode: CurrencyName,
+    activeCurrencyMemoCode: CurrencyName,
+  ) {
+    navigate({
+      search: (prev: {
+        from: CurrencyName;
+        to: CurrencyName;
+        amount?: number;
+      }) =>
+        prev.from === activeCurrencyMemoCode
+          ? { ...prev, from: newCurrencyCode }
+          : { ...prev, to: newCurrencyCode },
+    });
   }
 
   validateComponentProps(CurrencyMenuSchema, { open });

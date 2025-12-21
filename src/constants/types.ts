@@ -23,7 +23,7 @@ type CurrencyType = "fiat" | "crypto";
 type CurrencyName = FiatName | CryptoName;
 
 type ActiveCurrency = Currency & {
-  __memoCode: string;
+  __memoCode?: FiatName | CryptoName;
 };
 
 export type {
