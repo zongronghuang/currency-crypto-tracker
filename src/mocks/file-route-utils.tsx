@@ -1,7 +1,6 @@
 /**
  * https://tanstack.com/router/latest/docs/framework/react/how-to/test-file-based-routing
  */
-
 import React from "react";
 import { render, type RenderOptions } from "@testing-library/react";
 import {
@@ -9,9 +8,19 @@ import {
   RouterProvider,
   createMemoryHistory,
 } from "@tanstack/react-router";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // Import the generated route tree
 import { routeTree } from "../routeTree.gen";
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // ✅ turns retries off to avoid test timeout
+      retry: false,
+    },
+  },
+});
 
 // Create test router with generated route tree
 export function createTestRouterFromFiles(initialLocation = "/") {
@@ -22,7 +31,13 @@ export function createTestRouterFromFiles(initialLocation = "/") {
     }),
     context: {
       // Add any required context for your routes
+      queryClient,
     },
+    defaultPreload: "intent",
+    // Since we're using React Query, we don't want loader calls to ever be stale
+    // This will ensure that the loader is always called when the route is preloaded or visited
+    defaultPreloadStaleTime: 0,
+    scrollRestoration: true,
   });
 
   return router;
@@ -51,7 +66,11 @@ export function renderWithFileRoutes(
   });
 
   function Wrapper() {
-    return <RouterProvider router={router} />;
+    return (
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
+    );
   }
 
   return {
