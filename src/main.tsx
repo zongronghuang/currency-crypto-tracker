@@ -8,9 +8,9 @@ import { routeTree } from "./routeTree.gen";
 import { worker } from "./mocks/browser";
 
 /**
- * run msw as mock API server for dev
+ * run msw as mock API server for dev/test environments
  * */
-if (process.env.NODE_ENV === "development") {
+if (["development", "test"].includes(process.env.NODE_ENV!)) {
   await worker.start();
 }
 
