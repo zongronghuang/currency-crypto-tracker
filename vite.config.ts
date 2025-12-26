@@ -23,6 +23,12 @@ export default defineConfig({
     environment: "jsdom",
     css: true,
     setupFiles: ["./src/setupTests.ts"],
+    exclude: [
+      "**/node_modules/**",
+      "**/.git/**",
+      "**/e2e/**/*.{ts,tsx}",
+      "**/*.e2e.{test,spec}.{ts,tsx}",
+    ],
   },
   resolve: {
     alias: {
