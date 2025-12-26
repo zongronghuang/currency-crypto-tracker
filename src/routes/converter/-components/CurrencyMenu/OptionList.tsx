@@ -116,7 +116,7 @@ function FiatOption({ isActive, optionData, onChange }: CurrencyOptionProps) {
           name="fiat-option"
           onChange={onChange}
           checked={isActive}
-          className="appearance-none"
+          className="opacity-0"
         />
       </label>
     </li>
@@ -150,7 +150,7 @@ function CryptoOption({ isActive, optionData, onChange }: CurrencyOptionProps) {
           name="crypto-option"
           onChange={onChange}
           checked={isActive}
-          className="appearance-none"
+          className="opacity-0"
         />
       </label>
     </li>

@@ -13,7 +13,7 @@ import {
   calibrateNumeral,
   getComputableNumeral,
 } from "@/utils";
-import type { ActiveCurrency } from "@/constants/types";
+import type { ActiveCurrency, CurrencyName } from "@/constants/types";
 
 const CurrencyInputSchema = z.object({
   isBaseCurrency: z.boolean().optional(),
@@ -83,7 +83,7 @@ export default function CurrencyInput({
           onClick={() => {
             setActiveCurrency({
               ...currencyData,
-              __memoCode: currencyData.code,
+              __memoCode: currencyData.code as CurrencyName,
             });
             dialogRef.current?.showModal();
           }}

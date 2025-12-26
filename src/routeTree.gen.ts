@@ -10,43 +10,32 @@
 
 import { Route as rootRouteImport } from "./routes/__root";
 import { Route as ConverterIndexRouteImport } from "./routes/converter/index";
-import { Route as TrendsChar123VisualChar125RouteImport } from "./routes/trends/{-$visual}";
 
 const ConverterIndexRoute = ConverterIndexRouteImport.update({
   id: "/converter/",
   path: "/converter/",
   getParentRoute: () => rootRouteImport,
 } as any);
-const TrendsChar123VisualChar125Route =
-  TrendsChar123VisualChar125RouteImport.update({
-    id: "/trends/{-$visual}",
-    path: "/trends/{-$visual}",
-    getParentRoute: () => rootRouteImport,
-  } as any);
 
 export interface FileRoutesByFullPath {
-  "/trends/{-$visual}": typeof TrendsChar123VisualChar125Route;
   "/converter": typeof ConverterIndexRoute;
 }
 export interface FileRoutesByTo {
-  "/trends/{-$visual}": typeof TrendsChar123VisualChar125Route;
   "/converter": typeof ConverterIndexRoute;
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport;
-  "/trends/{-$visual}": typeof TrendsChar123VisualChar125Route;
   "/converter/": typeof ConverterIndexRoute;
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/trends/{-$visual}" | "/converter";
+  fullPaths: "/converter";
   fileRoutesByTo: FileRoutesByTo;
-  to: "/trends/{-$visual}" | "/converter";
-  id: "__root__" | "/trends/{-$visual}" | "/converter/";
+  to: "/converter";
+  id: "__root__" | "/converter/";
   fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  TrendsChar123VisualChar125Route: typeof TrendsChar123VisualChar125Route;
   ConverterIndexRoute: typeof ConverterIndexRoute;
 }
 
@@ -59,18 +48,10 @@ declare module "@tanstack/react-router" {
       preLoaderRoute: typeof ConverterIndexRouteImport;
       parentRoute: typeof rootRouteImport;
     };
-    "/trends/{-$visual}": {
-      id: "/trends/{-$visual}";
-      path: "/trends/{-$visual}";
-      fullPath: "/trends/{-$visual}";
-      preLoaderRoute: typeof TrendsChar123VisualChar125RouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  TrendsChar123VisualChar125Route: TrendsChar123VisualChar125Route,
   ConverterIndexRoute: ConverterIndexRoute,
 };
 export const routeTree = rootRouteImport
