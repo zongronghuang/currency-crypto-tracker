@@ -9,6 +9,7 @@ import tseslint from "typescript-eslint";
 import vitestLint from "eslint-plugin-vitest";
 import testingLibraryLint from "eslint-plugin-testing-library";
 import tanstackQueryLint from "@tanstack/eslint-plugin-query";
+import playwrightLint from "eslint-plugin-playwright";
 import { defineConfig, globalIgnores } from "eslint/config";
 
 export default defineConfig([
@@ -30,8 +31,20 @@ export default defineConfig([
   jsxA11yLint.flatConfigs.recommended,
   jestDomLint.configs["flat/recommended"],
   vitestLint.configs.recommended,
-  testingLibraryLint.configs["flat/react"],
   tanstackQueryLint.configs["flat/recommended"],
+  {
+    files: ["**/*.test.{ts,tsx}", "**/*.spec.{ts,tsx}"],
+    ignores: ["**/e2e/**"],
+    plugins: {
+      "testing-library": testingLibraryLint.configs["flat/react"],
+    },
+  },
+  {
+    files: ["**/e2e/**/*.{ts,tsx}", "**/*.e2e.{test,spec}.{ts,tsx}"],
+    plugins: {
+      playwright: playwrightLint.configs["flat/recommended"],
+    },
+  },
   {
     settings: {
       react: {

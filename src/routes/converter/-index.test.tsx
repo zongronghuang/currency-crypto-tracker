@@ -1,6 +1,7 @@
 import { screen } from "@testing-library/react";
 import { userEvent } from "@testing-library/user-event";
 import { renderWithFileRoutes } from "@/mocks/file-route-utils";
+import { calibrateNumeral, getComputableNumeral } from "@/utils";
 
 test("clicking switch button changes currency input positions", async () => {
   renderWithFileRoutes(<div />, {
@@ -24,49 +25,73 @@ test("clicking switch button changes currency input positions", async () => {
   );
 });
 
-// IntersectionObserver 不存在於 RTL，表單資料不全，無法順利更新並關閉 dialog
-test.skip("opens and closes currency menu dialog via buttons", async () => {
+test("amount data in the url passes to the top currency and gets converted in the bottom currency", async () => {
   renderWithFileRoutes(<div />, {
     initialLocation: "/converter?from=USD&to=EUR&amount=100",
   });
-  const user = userEvent.setup();
 
-  const dialog = await screen.findByRole("dialog", {
-    hidden: true,
-  });
-  expect(dialog).toBeInTheDocument();
-  expect(dialog).not.toHaveAttribute("open");
+  const paragraphs = await screen.findAllByRole("paragraph");
+  const exchangeRateInfo = paragraphs[0];
+  const exchangeRate = exchangeRateInfo!
+    .textContent!.replace(/1 USD = /, "")
+    .replace(/EUR/, "");
 
-  const usdButton = await screen.findByRole("button", { name: /usd/i });
-  await user.click(usdButton);
-  expect(dialog).toHaveAttribute("open", "true");
+  const currencyInputs = await screen.findAllByRole("textbox");
+  const usdInput = currencyInputs[0];
+  expect(usdInput).toHaveValue("100");
 
-  const confirmButton = screen.getByRole("button", { name: /confirm/i });
-  await user.click(confirmButton);
-  expect(dialog).toHaveAttribute("open", "false");
+  const eurInput = currencyInputs[1] as HTMLInputElement;
+  const expectedAmount = 100 * +getComputableNumeral(exchangeRate);
+  const eurValue = getComputableNumeral(eurInput.value);
+  expect(+eurValue).toBeCloseTo(+expectedAmount);
 });
 
-// IntersectionObserver is not implemented in RTL
-test.skip("change currency icon and name when choosing a different icon", async () => {
+test("updated amount in the first currency gets converted in the other currency", async () => {
   renderWithFileRoutes(<div />, {
     initialLocation: "/converter?from=USD&to=EUR&amount=100",
   });
   const user = userEvent.setup();
 
-  const usdButton = await screen.findByRole("button", { name: /usd/i });
-  await user.click(usdButton);
+  const paragraphs = await screen.findAllByRole("paragraph");
+  const exchangeRateInfo = paragraphs[0];
+  const exchangeRate = exchangeRateInfo!
+    .textContent!.replace(/1 USD = /, "")
+    .replace(/EUR/, "");
 
-  const dialog = screen.getByRole("dialog", { hidden: true });
-  expect(dialog).toBeInTheDocument();
-  dialog.setAttribute("open", "true");
+  const currencyInputs = await screen.findAllByRole("textbox");
+  const usdInput = currencyInputs[0];
+  await user.type(usdInput, "0");
+  await user.tab(); // triggers input blur to update opposite currency
+  expect(usdInput).toHaveValue("1,000");
 
-  const eurOption = screen.getByRole("radio", { name: /eur/i });
-  await user.click(eurOption);
+  const eurInput = currencyInputs[1] as HTMLInputElement;
+  const expectedAmount = 1000 * +getComputableNumeral(exchangeRate);
+  const eurValue = getComputableNumeral(eurInput.value);
+  expect(+eurValue).toBeCloseTo(+expectedAmount);
+});
 
-  const confirmButton = screen.getByRole("button", { name: /confirm/i });
-  await user.click(confirmButton);
+test("updated amount in second currency gets converted in the other currency", async () => {
+  renderWithFileRoutes(<div />, {
+    initialLocation: "/converter?from=USD&to=EUR&amount=100",
+  });
+  const user = userEvent.setup();
 
-  expect(screen.queryByRole("dialog")).not.toBeInTheDocument();
+  const paragraphs = await screen.findAllByRole("paragraph");
+  const exchangeRateInfo = paragraphs[0];
+  const exchangeRate = exchangeRateInfo!
+    .textContent!.replace(/1 USD = /, "")
+    .replace(/EUR/, "");
 
-  expect(screen.getByRole("button", { name: /eur/i })).toBeInTheDocument();
+  const currencyInputs = await screen.findAllByRole("textbox");
+
+  const eurInput = currencyInputs[1] as HTMLInputElement;
+  await user.type(eurInput, "0");
+  await user.tab(); // triggers input blur to update opposite currency
+  const eurValue = (+exchangeRate * 1000).toString();
+  expect(eurInput).toHaveValue(calibrateNumeral(eurValue));
+
+  const usdInput = currencyInputs[0] as HTMLInputElement;
+  const usdValue = +getComputableNumeral(usdInput.value);
+  const expectedAmount = +eurValue / +exchangeRate;
+  expect(usdValue).toBeCloseTo(expectedAmount);
 });

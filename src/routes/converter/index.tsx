@@ -1,18 +1,13 @@
-import { useState, useRef, Suspense, lazy, Activity } from "react";
+import { useState, useRef, useEffect, Suspense, lazy, Activity } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 import CurrencyInput from "./-components/CurrencyInput";
 import { getExchangeRate } from "@/apis";
-import { calibrateNumeral } from "@/utils";
+import { getComputableNumeral } from "@/utils";
 import { FIATS, FIAT_NAMES } from "@/constants/fiat-currency-list";
 import { CRYPTO_NAMES, CRYPTOS } from "@/constants/crypto-currency-list";
-import type {
-  ActiveCurrency,
-  FiatName,
-  CryptoName,
-  CurrencyName,
-} from "@/constants/types";
+import type { ActiveCurrency, FiatName, CryptoName } from "@/constants/types";
 
 const CurrencyMenu = lazy(() => import("./-components/CurrencyMenu"));
 
@@ -29,41 +24,46 @@ export const Route = createFileRoute("/converter/")({
 
 export default function ConverterPage() {
   const { to, from, amount } = Route.useSearch();
-  const [activeCurrency, setActiveCurrency] = useState<ActiveCurrency | null>(
-    null,
-  );
+  const navigate = useNavigate({ from: Route.fullPath });
   const [amountNumerals, setAmountNumerals] = useState<[string, string]>([
     amount?.toString() || "0",
     "0",
   ]);
   const dialogRef = useRef<HTMLDialogElement>(null);
-  const navigate = useNavigate({ from: Route.fullPath });
-  const fromCurrency = FIATS[from as FiatName] || CRYPTOS[from as CryptoName];
-  const toCurrency = FIATS[to as FiatName] || CRYPTOS[to as CryptoName];
-  console.log("from", fromCurrency.code, "to", toCurrency.code);
-
   const { data, isPending } = useQuery({
-    queryKey: [fromCurrency.code, toCurrency.code],
-    queryFn: () =>
-      getExchangeRate(
-        fromCurrency.code as CurrencyName,
-        toCurrency.code as CurrencyName,
-      ),
+    queryKey: [from, to],
+    queryFn: () => getExchangeRate(from, to),
   });
   const exchangeRate = isPending
     ? "0"
-    : calibrateNumeral(
+    : getComputableNumeral(
         data["Realtime Currency Exchange Rate"]["5. Exchange Rate"],
       );
   const lastRefreshed = isPending
     ? ""
     : data["Realtime Currency Exchange Rate"]["6. Last Refreshed"];
+  const [activeCurrency, setActiveCurrency] = useState<ActiveCurrency | null>(
+    null,
+  );
+  const fromCurrency = FIATS[from as FiatName] || CRYPTOS[from as CryptoName];
+  const toCurrency = FIATS[to as FiatName] || CRYPTOS[to as CryptoName];
 
   function swapCurrencies() {
     navigate({
       search: (prev) => ({ ...prev, to: prev.from, from: prev.to }),
     });
   }
+
+  useEffect(() => {
+    updateOppositeNumeral();
+
+    function updateOppositeNumeral() {
+      const oppositeAmountNumeral = amount
+        ? (amount * +exchangeRate).toString()
+        : "0";
+      setAmountNumerals((prev) => [prev[0], oppositeAmountNumeral]);
+    }
+  }, [amount, exchangeRate]);
 
   return (
     <main>
@@ -88,6 +88,7 @@ export default function ConverterPage() {
       <SwitchButton onClick={swapCurrencies} />
 
       <CurrencyInput
+        // amountNumeral={amountNumerals[1]}
         amountNumeral={amountNumerals[1]}
         exchangeRate={exchangeRate}
         dialogRef={dialogRef}

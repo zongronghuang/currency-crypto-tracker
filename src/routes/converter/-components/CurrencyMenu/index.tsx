@@ -197,7 +197,7 @@ export default function CurrencyMenu({
                 name="currency-type"
                 checked={activeCurrency?.type === "fiat"}
                 onChange={handleTypeChange}
-                className="appearance-none"
+                className="opacity-0"
               />
             </label>
 
@@ -214,7 +214,7 @@ export default function CurrencyMenu({
                 name="currency-type"
                 checked={activeCurrency?.type === "crypto"}
                 onChange={handleTypeChange}
-                className="appearance-none"
+                className="opacity-0"
               />
             </label>
           </div>
