@@ -1,7 +1,8 @@
+import { track, abortByApiUrl } from "./abort-controller-manager";
+
 type RequestOptions = {
   headers: HeadersInit;
-  body?: unknown;
-  signal?: AbortSignal;
+  body?: object | string;
 };
 
 async function retrieve(
@@ -10,6 +11,9 @@ async function retrieve(
   options?: RequestOptions,
 ) {
   try {
+    const controller = new AbortController();
+    track(controller, url, options?.body);
+
     const response = await fetch(new URL(url).href, {
       method,
       headers: {
@@ -17,7 +21,7 @@ async function retrieve(
         ...options?.headers,
       },
       body: JSON.stringify(options?.body),
-      signal: options?.signal,
+      signal: controller.signal,
     });
 
     if (!response.ok)
@@ -25,8 +29,10 @@ async function retrieve(
 
     return response.json();
   } catch (error: any) {
-    console.error(error.toString());
-    throw error; // rethrow error for specific handling
+    if (error.name === "AbortError") return console.log(`[Aborted] ${url}`);
+
+    abortByApiUrl(url);
+    throw error; // rethrow error for custom handling
   }
 }
 
