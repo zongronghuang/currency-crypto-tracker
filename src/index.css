@@ -9,3 +9,8 @@
     scrollbar-width: none; /* For Firefox */
   }
 }
+
+#root {
+  height: 100dvh;
+  background-color: white;
+}
