@@ -2,7 +2,7 @@ import { useEffect, useRef, type Dispatch, type SetStateAction } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "@tanstack/react-router";
 import clsx from "clsx";
-import styles from "./SideMenu.module.css";
+import styles from "./index.module.css";
 
 const pageLinks = [
   { to: "/converter", label: "Converter" },
@@ -26,23 +26,28 @@ export default function SideMenu({
   const backdropRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    if (isSideMenuOpen) backdropRef.current?.focus();
+    else backdropRef.current?.blur();
+  }, [isSideMenuOpen]);
+
+  useEffect(() => {
     if (!isSwipeable) return;
 
-    const backdrop = backdropRef.current as HTMLDivElement;
-    const sideMenu = sideMenuRef.current as HTMLDivElement;
-    const sideMenuWidth = +getComputedStyle(sideMenu).width.replace("px", ""); // px
-    const minSwipeDistance = 30; // px
-
+    const sideMenuWidth = Number(
+      getComputedStyle(sideMenuRef.current!).width.replace("px", ""),
+    ); // px
+    const minSwipeDistance = 30; // px (touch gesture criterion)
     let touchStartX: number | null = null;
     let touchMoveX = 0;
 
     function handleTouchStart(event: TouchEvent) {
       const currentX = event.changedTouches[0].clientX;
-      const triggerArea = 10; // px
-      const isWithinTriggerArea = currentX <= triggerArea;
+      const triggerArea = 40; // px
+      const isWithinTriggerArea =
+        currentX <= triggerArea || currentX >= sideMenuWidth;
       if (!isWithinTriggerArea) return;
 
-      touchStartX = event.changedTouches[0].clientX;
+      touchStartX = Math.min(currentX, sideMenuWidth);
     }
 
     function handleTouchMove(event: TouchEvent) {
@@ -67,29 +72,20 @@ export default function SideMenu({
         const maxAlpha = 0.5;
         const currentAlpha = (currentX / sideMenuWidth) * maxAlpha;
         const alpha = Math.min(currentAlpha, maxAlpha);
-        backdrop.style.backgroundColor = `rgb(0 0 0 / ${alpha})`;
+        backdropRef.current!.style.backgroundColor = `rgb(0 0 0 / ${alpha})`;
 
+        // backdrop z-index
+        backdropRef.current!.style.zIndex = "10";
+
+        // side menu transition
+        sideMenuRef.current!.style.transitionDuration = "0s";
+
+        // side menu translation
         const isExpanding = currentX - touchStartX! >= 0;
-        if (isExpanding) {
-          // backdrop
-          backdrop.style.zIndex = "10";
-
-          // menu
-          sideMenu.style.transitionDuration = "0s";
-          const xTranslation = Math.min(-1 * sideMenuWidth + currentX, 0);
-          sideMenu.style.transform = `translateX(${xTranslation}px)`;
-        } else {
-          // backdrop
-          backdrop.style.zIndex = "-1";
-
-          // menu
-          sideMenu.style.transitionDuration = "0s";
-          const xTranslation = Math.max(
-            sideMenuWidth - currentX,
-            sideMenuWidth * -1,
-          );
-          sideMenu.style.transform = `translateX(${xTranslation}px)`;
-        }
+        const xTranslation = isExpanding
+          ? Math.min(-1 * sideMenuWidth + currentX, 0)
+          : Math.max(currentX - sideMenuWidth, sideMenuWidth * -1);
+        sideMenuRef.current!.style.transform = `translateX(${xTranslation}px)`;
       }
     }
 
@@ -102,8 +98,8 @@ export default function SideMenu({
       const isSwipeGesture = Math.abs(currentX - touchStartX) >= swipeDistance;
       if (!isSwipeGesture) return;
 
-      sideMenu.style = "";
-      backdrop.style = "";
+      sideMenuRef.current!.style = "";
+      backdropRef.current!.style = "";
       touchStartX = null;
       const shouldExpand =
         sideMenuWidth / 2 <= currentX && currentX <= sideMenuWidth;
@@ -127,10 +123,6 @@ export default function SideMenu({
       ref={backdropRef}
       role="menu"
       className={clsx(isSideMenuOpen && "open", styles.backdrop)}
-      onPointerDown={(event) => {
-        event.stopPropagation();
-        setIsSideMenuOpen(false);
-      }}
     >
       <nav
         ref={sideMenuRef}
@@ -143,8 +135,8 @@ export default function SideMenu({
                 className="block p-3 text-2xl font-bold outline"
                 to={link.to}
                 preload="intent"
-                activeProps={{ className: "font-bold bg-blue-600" }}
                 onClick={(event) => event.stopPropagation()}
+                activeProps={{ className: "font-bold bg-blue-600" }}
               >
                 {link.label}
               </Link>
@@ -152,6 +144,11 @@ export default function SideMenu({
           ))}
         </ul>
       </nav>
+
+      <button
+        className="h-full grow bg-transparent"
+        onClick={() => setIsSideMenuOpen(false)}
+      />
     </div>,
     document.body,
   );
