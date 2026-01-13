@@ -14,11 +14,11 @@
     "prepare": "husky"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
+    "./src/**/*.{js,jsx,ts,tsx}": [
       "eslint",
       "prettier --write"
     ],
-    "*.{test,spec}.?(c|m)[jt]s?(x)": [
+    "./src/**/*.{test,spec}.?(c|m)[jt]s?(x)": [
       "pnpm run test"
     ],
     "*.{css,scss}": [
