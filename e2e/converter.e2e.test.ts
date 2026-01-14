@@ -55,13 +55,13 @@ test("change currency with another fiat currency from the menu", async ({
     includeHidden: true,
   });
 
-  await expect(dialog).toBeVisible();
+  await expect(dialog).toBeVisible({ visible: true });
 
-  await page.getByRole("list").evaluate((e) => (e.scrollTop += 500));
+  await dialog.getByRole("list").evaluate((e) => (e.scrollTop += 500));
 
-  await page.getByRole("listitem").filter({ hasText: /amd/i }).click();
+  await dialog.getByRole("listitem").filter({ hasText: /amd/i }).click();
 
-  await page.getByRole("button", { name: /confirm/i }).click();
+  await dialog.getByRole("button", { name: /confirm/i }).click();
 
   await expect(page.getByRole("button", { name: /usd/i })).not.toBeVisible();
 
@@ -85,15 +85,15 @@ test("change currency with another crypto currency from the menu", async ({
     includeHidden: true,
   });
 
-  await expect(dialog).toBeVisible();
+  await expect(dialog).toBeVisible({ visible: true });
 
-  await page.getByRole("radio", { name: /crypto/i }).click();
+  await dialog.getByRole("radio", { name: /crypto/i }).click();
 
-  await page.getByRole("list").evaluate((e) => (e.scrollTop += 500));
+  await dialog.getByRole("list").evaluate((e) => (e.scrollTop += 500));
 
-  await page.getByRole("radio", { name: /aero/i }).check();
+  await dialog.getByRole("radio", { name: /aero/i }).check();
 
-  await page.getByRole("button", { name: /confirm/i }).click();
+  await dialog.getByRole("button", { name: /confirm/i }).click();
 
   await expect(page.getByRole("button", { name: /usd/i })).not.toBeVisible();
 
@@ -117,19 +117,19 @@ test("typing in search input returns partial fiat matches by country name or fia
     includeHidden: true,
   });
 
-  await expect(dialog).toBeVisible();
+  await expect(dialog).toBeVisible({ visible: true });
 
-  await page.getByRole("searchbox").fill("us");
+  await dialog.getByRole("searchbox").fill("us");
 
-  await expect(page.getByRole("listitem")).toHaveCount(4);
+  await expect(dialog.getByRole("listitem")).toHaveCount(4);
 
-  await page.getByRole("searchbox").fill("usd");
+  await dialog.getByRole("searchbox").fill("usd");
 
-  await expect(page.getByRole("listitem")).toHaveCount(1);
+  await expect(dialog.getByRole("listitem")).toHaveCount(1);
 
-  await page.getByRole("searchbox").fill("usdx");
+  await dialog.getByRole("searchbox").fill("usdx");
 
-  await expect(page.getByRole("listitem")).toHaveCount(0);
+  await expect(dialog.getByRole("listitem")).toHaveCount(0);
 });
 
 test("typing in search input returns partial crypto matches by country name or crypto name", async ({
@@ -147,21 +147,21 @@ test("typing in search input returns partial crypto matches by country name or c
     includeHidden: true,
   });
 
-  await expect(dialog).toBeVisible();
+  await expect(dialog).toBeVisible({ visible: true });
 
-  await page.getByRole("radio", { name: /crypto/i }).click();
+  await dialog.getByRole("radio", { name: /crypto/i }).click();
 
-  await page.getByRole("searchbox").fill("usd");
+  await dialog.getByRole("searchbox").fill("usd");
 
-  await expect(page.getByRole("listitem")).toHaveCount(7);
+  await expect(dialog.getByRole("listitem")).toHaveCount(7);
 
-  await page.getByRole("searchbox").fill("usdt");
+  await dialog.getByRole("searchbox").fill("usdt");
 
-  await expect(page.getByRole("listitem")).toHaveCount(1);
+  await expect(dialog.getByRole("listitem")).toHaveCount(1);
 
-  await page.getByRole("searchbox").fill("usdtx");
+  await dialog.getByRole("searchbox").fill("usdtx");
 
-  await expect(page.getByRole("listitem")).toHaveCount(0);
+  await expect(dialog.getByRole("listitem")).toHaveCount(0);
 });
 
 test("show full list of fiat options when search input gets cleared", async ({
@@ -179,16 +179,16 @@ test("show full list of fiat options when search input gets cleared", async ({
     includeHidden: true,
   });
 
-  await expect(dialog).toBeVisible();
+  await expect(dialog).toBeVisible({ visible: true });
 
   const nonexistentFiat = "xxxxx";
-  await page.getByRole("searchbox").fill(nonexistentFiat);
+  await dialog.getByRole("searchbox").fill(nonexistentFiat);
 
-  const count1 = await page.getByRole("listitem").count();
+  const count1 = await dialog.getByRole("listitem").count();
 
-  await page.getByRole("searchbox").clear();
+  await dialog.getByRole("searchbox").clear();
 
-  const count2 = await page.getByRole("listitem").count();
+  const count2 = await dialog.getByRole("listitem").count();
 
   expect(count1).toBeLessThan(count2);
 });
@@ -208,18 +208,18 @@ test("show full list of crypto options when search input gets cleared", async ({
     includeHidden: true,
   });
 
-  await expect(dialog).toBeVisible();
+  await expect(dialog).toBeVisible({ visible: true });
 
-  await page.getByRole("radio", { name: /crypto/i }).click();
+  await dialog.getByRole("radio", { name: /crypto/i }).click();
 
   const nonexistentCrypto = "xxxxx";
-  await page.getByRole("searchbox").fill(nonexistentCrypto);
+  await dialog.getByRole("searchbox").fill(nonexistentCrypto);
 
-  const count1 = await page.getByRole("listitem").count();
+  const count1 = await dialog.getByRole("listitem").count();
 
-  await page.getByRole("searchbox").clear();
+  await dialog.getByRole("searchbox").clear();
 
-  const count2 = await page.getByRole("listitem").count();
+  const count2 = await dialog.getByRole("listitem").count();
 
   expect(count1).toBeLessThan(count2);
 });

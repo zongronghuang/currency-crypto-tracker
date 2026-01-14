@@ -1,4 +1,4 @@
-import { screen } from "@testing-library/react";
+import { screen, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { renderWithFileRoutes } from "@/mocks/file-route-utils";
 
@@ -69,7 +69,7 @@ describe("pop-up currency menu", () => {
     const fiatOption = screen.getByRole("radio", { name: /fiat/i });
     const cryptoOption = screen.getByRole("radio", { name: /crypto/i });
 
-    const list = screen.getByRole("list");
+    const list = within(dialog).getByRole("list");
     expect(list).toHaveClass(/fiat/i);
 
     await user.click(cryptoOption);
