@@ -10,7 +10,7 @@ export default function Toolbar({ setIsSideMenuOpen }: ToolbarProps) {
   const title = location.pathname.split("/")[1];
 
   return (
-    <nav className="flex items-center justify-between px-5 py-3 outline-1 outline-black">
+    <nav className="sticky top-0 left-0 z-5 flex w-full items-center justify-between bg-white px-5 py-3 shadow-md">
       <button
         type="button"
         className="w-1/5 text-center outline outline-black"
