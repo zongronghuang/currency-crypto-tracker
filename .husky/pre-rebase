@@ -20,5 +20,5 @@ if [ "$upstream_branch" = "main" ] || [ "$upstream_branch" = "master" ]; then
 fi
 
 # allow rebase to continue
-echo "✅  [REBASE READY]"
+echo "✅  [REBASE COMPLETE]"
 echo ""

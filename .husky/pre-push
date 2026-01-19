@@ -17,5 +17,5 @@ eslint
 
 pnpm run test
 
-echo "✅  [PUSH READY]"
+echo "✅  [PUSH COMPLETE]"
 echo ""
