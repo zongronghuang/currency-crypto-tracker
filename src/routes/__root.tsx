@@ -13,7 +13,7 @@ function RootComponent() {
   return (
     <>
       <Toolbar setIsSideMenuOpen={setIsSideMenuOpen} />
-      <main className="p-5">
+      <main className="bg-white px-5 py-5">
         <Outlet />
       </main>
       <SideMenu
