@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
-import Toolbar from "./-components/Toolbar";
+import HeaderBar from "./-components/HeaderBar";
 import SideMenu from "./-components/SideMenu";
 
 export const Route = createRootRoute({
@@ -12,7 +12,7 @@ function RootComponent() {
 
   return (
     <>
-      <Toolbar setIsSideMenuOpen={setIsSideMenuOpen} />
+      <HeaderBar setIsSideMenuOpen={setIsSideMenuOpen} />
       <main className="bg-white px-5 py-5">
         <Outlet />
       </main>
