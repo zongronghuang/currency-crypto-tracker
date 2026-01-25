@@ -8,9 +8,11 @@ import {
   type FormEvent,
 } from "react";
 import dayjs from "dayjs";
+import clsx from "clsx";
 import { FIAT_NAMES, FIATS } from "@/constants/fiat-currency-list";
 import { CRYPTO_NAMES, CRYPTOS } from "@/constants/crypto-currency-list";
 import { type GetNewsParams } from "@/apis";
+import styles from "./index.module.css";
 
 const topicList = [
   "life_sciences",
@@ -72,7 +74,11 @@ export default function NewsFilters({
 
   return (
     <nav className="w-full overflow-y-scroll">
-      <form action="" className="flex flex-col gap-4" onSubmit={handleSubmit}>
+      <form
+        action=""
+        className={clsx(styles.newsFilters, "flex flex-col gap-4")}
+        onSubmit={handleSubmit}
+      >
         <DateRangeField dateRange={[filters.startDate, filters.endDate]} />
         <TickersField tickers={filters.tickers} />
         <TopicsField topics={filters.topics} />
