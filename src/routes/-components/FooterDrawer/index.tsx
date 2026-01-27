@@ -1,4 +1,4 @@
-import { type ReactNode } from "react";
+import { type ReactNode, useEffect } from "react";
 import { createPortal } from "react-dom";
 import clsx from "clsx";
 import styles from "./index.module.css";
@@ -13,6 +13,13 @@ export default function FooterDrawer({
   onClose,
   children,
 }: FooterDrawerProps) {
+  useEffect(() => {
+    if (open) document.body.style.overflowY = "clip";
+    return () => {
+      document.body.style.removeProperty("overflow-y");
+    };
+  }, [open]);
+
   return createPortal(
     <div className={clsx(open && "open", styles.footerDrawerBackdrop)}>
       <button
