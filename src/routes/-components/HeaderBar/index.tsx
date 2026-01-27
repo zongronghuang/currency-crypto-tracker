@@ -12,7 +12,7 @@ export default function HeaderBar({ setIsSideMenuOpen }: HeaderBarProps) {
   return (
     <header
       role="banner"
-      className="sticky top-0 left-0 z-1 flex w-full items-center justify-between bg-white px-5 py-3 shadow-md"
+      className="sticky top-0 left-0 z-10 flex w-full items-center justify-between bg-white px-5 py-3 shadow-md"
     >
       <button
         type="button"
