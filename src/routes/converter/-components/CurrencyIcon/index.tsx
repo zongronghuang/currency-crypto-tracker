@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { z } from "zod";
 import { CircleFlag } from "react-circle-flags";
 import { validateComponentProps } from "@/utils";
@@ -53,9 +52,7 @@ export const CryptoIcon = ({
   loading = "lazy",
   backupSrc = "src/assets/fallback_crypto.svg",
 }: IconProps) => {
-  const [cryptoIconSrc, setCryptoIconSrc] = useState(
-    `src/assets/color/${code.toLowerCase()}.svg`,
-  );
+  const cryptoIconSrc = `src/assets/color/${code.toLowerCase()}.svg`;
 
   validateComponentProps(IconSchema, {
     code,
@@ -75,8 +72,9 @@ export const CryptoIcon = ({
       src={cryptoIconSrc}
       fetchPriority={fetchPriority}
       loading={loading}
-      onError={() => {
-        setCryptoIconSrc(backupSrc);
+      onError={(event) => {
+        const image = event.target as HTMLImageElement;
+        image.src = backupSrc;
       }}
     />
   );
