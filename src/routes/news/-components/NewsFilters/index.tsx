@@ -300,29 +300,27 @@ function TopicsField({ topics }: { topics: GetNewsParams["topics"] }) {
         Select all
       </label>
 
-      <div className="col-span-full max-h-32 overflow-scroll rounded-sm border border-gray-600/70">
-        <ul>
-          {topicList.map((t) => (
-            <li key={t}>
-              <label
-                htmlFor={t}
-                className="flex items-center justify-between p-1 checked:bg-blue-600 checked:text-white hover:bg-blue-200"
-              >
-                {t.replace(/_/g, " ")}
-                <input
-                  id={t}
-                  type="checkbox"
-                  value={t}
-                  name="topics"
-                  defaultChecked={topics.includes(t)}
-                  checked={internalTopics.includes(t)}
-                  onChange={handleTopicSelection}
-                />
-              </label>
-            </li>
-          ))}
-        </ul>
-      </div>
+      <ul className="no-scrollbar col-span-full max-h-32 overflow-scroll rounded-sm border border-gray-600/70">
+        {topicList.map((t) => (
+          <li key={t}>
+            <label
+              htmlFor={t}
+              className="flex items-center justify-between p-1 checked:bg-blue-600 checked:text-white hover:bg-blue-200"
+            >
+              {t.replace(/_/g, " ")}
+              <input
+                id={t}
+                type="checkbox"
+                value={t}
+                name="topics"
+                defaultChecked={topics.includes(t)}
+                checked={internalTopics.includes(t)}
+                onChange={handleTopicSelection}
+              />
+            </label>
+          </li>
+        ))}
+      </ul>
     </fieldset>
   );
 }
