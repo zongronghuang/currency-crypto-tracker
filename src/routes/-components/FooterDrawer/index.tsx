@@ -21,8 +21,12 @@ export default function FooterDrawer({
   }, [open]);
 
   return createPortal(
-    <div className={clsx(open && "open", styles.footerDrawerBackdrop)}>
+    <div
+      aria-label="footer drawer"
+      className={clsx(open && "open", styles.footerDrawerBackdrop)}
+    >
       <button
+        aria-label="close drawer button"
         className={styles.footerDrawerCloseBtn}
         onClick={(event) => {
           event.stopPropagation();
