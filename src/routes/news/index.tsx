@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
 import { z } from "zod";
 import dayjs from "dayjs";
-import { getNews, type GetNewsParams } from "@/apis";
+import { getNews, type NewsFilters } from "@/apis";
 import useIntersectionObserver from "@/hooks/useIntersectionObserver";
 import NewsCard, { type Feed } from "./-components/NewsCard";
 import FooterBar from "../-components/FooterBar";
@@ -38,13 +38,13 @@ export const Route = createFileRoute("/news/")({
 function RouteComponent() {
   const { currency } = Route.useSearch();
 
-  const defaultFilters: GetNewsParams = {
-    tickers: ["BTC", "USD"],
-    sort: "LATEST",
-    topics: [],
-    limit: 50,
+  const defaultFilters: NewsFilters = {
     startDate: dayjs().format("YYYY-MM-DD"),
     endDate: dayjs().format("YYYY-MM-DD"),
+    tickers: ["BTC", "USD"],
+    topics: [],
+    sort: "LATEST",
+    limit: 50,
   };
   if (typeof currency === "string") defaultFilters.tickers = [currency];
   if (Array.isArray(currency)) defaultFilters.tickers = currency;
@@ -126,6 +126,8 @@ function RouteComponent() {
       <FooterBar>
         <div className="flex h-12 items-center justify-center text-center">
           <button
+            aria-label="open drawer button"
+            aria-expanded={isDrawerOpen}
             disabled={!isSuccess}
             className="text-4xl font-bold disabled:opacity-45"
             onClick={(event) => {
@@ -141,7 +143,11 @@ function RouteComponent() {
       <FooterDrawer open={isDrawerOpen} onClose={() => setIsDrawerOpen(false)}>
         <Suspense>
           <Activity mode="visible">
-            <NewsFilters filters={filters} setFilters={setFilters} />
+            <NewsFilters
+              filters={filters}
+              setFilters={setFilters}
+              onClose={() => setIsDrawerOpen(false)}
+            />
           </Activity>
         </Suspense>
       </FooterDrawer>

@@ -14,7 +14,7 @@ export const getExchangeRate = (
   );
 
 // https://www.alphavantage.co/documentation/#news-sentiment
-const GetNewsParamsSchema = z.object({
+const NewsFiltersSchema = z.object({
   tickers: z.array(z.enum([...FIAT_NAMES, ...CRYPTO_NAMES])),
   topics: z.array(
     z.enum([
@@ -40,7 +40,7 @@ const GetNewsParamsSchema = z.object({
   sort: z.enum(["LATEST", "EARLIEST", "RELEVANCE"]),
   limit: z.number().int().positive().min(1).max(1000),
 });
-export type GetNewsParams = z.infer<typeof GetNewsParamsSchema>;
+export type NewsFilters = z.infer<typeof NewsFiltersSchema>;
 
 export const getNews = ({
   tickers,
@@ -49,8 +49,8 @@ export const getNews = ({
   endDate,
   sort,
   limit,
-}: GetNewsParams) => {
-  const result = GetNewsParamsSchema.safeParse({
+}: NewsFilters) => {
+  const result = NewsFiltersSchema.safeParse({
     tickers,
     topics,
     startDate,
