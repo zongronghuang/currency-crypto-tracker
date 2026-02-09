@@ -11,7 +11,7 @@ import dayjs from "dayjs";
 import clsx from "clsx";
 import { FIAT_NAMES, FIATS } from "@/constants/fiat-currency-list";
 import { CRYPTO_NAMES, CRYPTOS } from "@/constants/crypto-currency-list";
-import { type GetNewsParams } from "@/apis";
+import { type NewsFilters } from "@/apis";
 import styles from "./index.module.css";
 
 const topicList = [
@@ -34,15 +34,19 @@ const topicList = [
 
 const sortingStrategies = ["LATEST", "EARLIEST", "RELEVANCE"] as const;
 
-const FILTERS_STORAGE_KEY = "applied_filters";
-
 export default function NewsFilters({
   filters,
   setFilters,
+  onClose,
 }: {
-  filters: GetNewsParams;
-  setFilters: Dispatch<SetStateAction<GetNewsParams>>;
+  filters: NewsFilters;
+  setFilters: Dispatch<SetStateAction<NewsFilters>>;
+  onClose: () => void;
 }) {
+  const [internalFilters, setInternalFilters] = useState(filters);
+  const [isEditing, setIsEditing] = useState(false);
+  const cachedFiltersRef = useRef(JSON.parse(JSON.stringify(filters)));
+
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formdata = new FormData(event.currentTarget);
@@ -50,26 +54,24 @@ export default function NewsFilters({
       ...Object.fromEntries(formdata),
       topics: formdata.getAll("topics").sort(),
       tickers: formdata.getAll("tickers").sort(),
-      limit: filters.limit,
-    } as GetNewsParams;
+      limit: +formdata.get("limit")!,
+    } as NewsFilters;
 
-    sessionStorage.setItem(FILTERS_STORAGE_KEY, JSON.stringify(newFilters));
     setFilters(newFilters);
+    setInternalFilters(newFilters);
+    setIsEditing(false);
+    cachedFiltersRef.current = newFilters;
+    onClose();
   };
 
   const revertForm = () => {
-    const lastApplied = JSON.parse(
-      sessionStorage.getItem(FILTERS_STORAGE_KEY)!,
-    );
-
-    setFilters(lastApplied);
+    setFilters(cachedFiltersRef.current);
+    setInternalFilters(cachedFiltersRef.current);
+    setIsEditing(false);
   };
 
   useEffect(() => {
-    // store first-time filters for use when user clicks cancel button
-    sessionStorage.setItem(FILTERS_STORAGE_KEY, JSON.stringify(filters));
-
-    return () => sessionStorage.removeItem(FILTERS_STORAGE_KEY);
+    cachedFiltersRef.current = JSON.parse(JSON.stringify(filters));
   }, [filters]);
 
   return (
@@ -78,11 +80,25 @@ export default function NewsFilters({
         action=""
         className={clsx(styles.newsFilters, "flex flex-col gap-4")}
         onSubmit={handleSubmit}
+        onChange={() => setIsEditing(true)}
       >
-        <DateRangeField dateRange={[filters.startDate, filters.endDate]} />
-        <TickersField tickers={filters.tickers} />
-        <TopicsField topics={filters.topics} />
-        <SortByField sort={filters.sort} />
+        <DateRangeField
+          dateRange={[internalFilters.startDate, internalFilters.endDate]}
+          setInternalFilters={setInternalFilters}
+        />
+        <TickersField
+          tickers={internalFilters.tickers}
+          setInternalFilters={setInternalFilters}
+        />
+        <TopicsField
+          topics={internalFilters.topics}
+          setInternalFilters={setInternalFilters}
+        />
+        <SortByField
+          sort={internalFilters.sort}
+          setInternalFilters={setInternalFilters}
+        />
+        <LimitField limit={internalFilters.limit} />
 
         <div className="flex justify-between">
           <button
@@ -94,8 +110,9 @@ export default function NewsFilters({
           </button>
 
           <button
+            disabled={!isEditing}
             type="submit"
-            className="w-4/9 rounded-lg bg-blue-600 py-1 text-lg text-white outline-blue-600"
+            className="w-4/9 rounded-lg bg-blue-600 py-1 text-lg text-white outline-blue-600 disabled:opacity-50"
           >
             Apply
           </button>
@@ -107,8 +124,10 @@ export default function NewsFilters({
 
 function DateRangeField({
   dateRange,
+  setInternalFilters,
 }: {
-  dateRange: [GetNewsParams["startDate"], GetNewsParams["endDate"]];
+  dateRange: [NewsFilters["startDate"], NewsFilters["endDate"]];
+  setInternalFilters: Dispatch<SetStateAction<NewsFilters>>;
 }) {
   const today = dayjs().format("YYYY-MM-DD");
   const startDateRef = useRef<HTMLInputElement>(null);
@@ -124,21 +143,26 @@ function DateRangeField({
         type="date"
         name="startDate"
         max={today}
-        defaultValue={dateRange[0]}
+        value={dateRange[0]}
         className="col-span-2"
         onChange={(event) => {
-          const shouldSwitchDates =
+          startDateRef.current?.setCustomValidity("");
+          endDateRef.current?.setCustomValidity("");
+
+          const isBadOrder =
             dayjs(event.target.value).unix() >
             dayjs(endDateRef.current!.value).unix();
-          if (shouldSwitchDates) {
+          if (isBadOrder) {
             startDateRef.current?.setCustomValidity(
               "Start date should be earlier or equal to end date",
             );
             startDateRef.current?.reportValidity();
-          } else {
-            startDateRef.current?.setCustomValidity("");
-            endDateRef.current?.setCustomValidity("");
+            return;
           }
+          setInternalFilters((prev) => ({
+            ...prev,
+            startDate: event.target.value,
+          }));
         }}
       />
       <span className="col-span-1 text-center">&#8594;</span>
@@ -147,30 +171,40 @@ function DateRangeField({
         type="date"
         name="endDate"
         max={today}
-        defaultValue={dateRange[1]}
+        value={dateRange[1]}
         className="col-span-2"
         onChange={(event) => {
-          const shouldSwitchDates =
+          startDateRef.current?.setCustomValidity("");
+          endDateRef.current?.setCustomValidity("");
+
+          const isBadOrder =
             dayjs(startDateRef.current!.value).unix() >
             dayjs(event.target.value).unix();
-          if (shouldSwitchDates) {
+          if (isBadOrder) {
             endDateRef.current?.setCustomValidity(
               "End date should be later than or equal to start date",
             );
             endDateRef.current?.reportValidity();
-          } else {
-            startDateRef.current?.setCustomValidity("");
-            endDateRef.current?.setCustomValidity("");
+            return;
           }
+          setInternalFilters((prev) => ({
+            ...prev,
+            endDate: event.target.value,
+          }));
         }}
       />
     </fieldset>
   );
 }
 
-function TickersField({ tickers }: { tickers: GetNewsParams["tickers"] }) {
-  type Ticker = GetNewsParams["tickers"][number];
-  const [internalTickers, setInternalTickers] = useState([...tickers]);
+function TickersField({
+  tickers,
+  setInternalFilters,
+}: {
+  tickers: NewsFilters["tickers"];
+  setInternalFilters: Dispatch<SetStateAction<NewsFilters>>;
+}) {
+  type Ticker = NewsFilters["tickers"][number];
   const inputRef = useRef<HTMLInputElement>(null);
   const maxNumOfTickers = 3;
 
@@ -179,8 +213,8 @@ function TickersField({ tickers }: { tickers: GetNewsParams["tickers"] }) {
     if (!ticker) return;
 
     const isValidTicker = ticker in FIATS || ticker in CRYPTOS;
-    const isMaxReached = internalTickers.length >= maxNumOfTickers;
-    const isAlreadySelected = internalTickers.includes(ticker);
+    const isMaxReached = tickers.length >= maxNumOfTickers;
+    const isAlreadySelected = tickers.includes(ticker);
 
     let message = "";
     if (isAlreadySelected) message = "This ticker is already selected";
@@ -193,11 +227,17 @@ function TickersField({ tickers }: { tickers: GetNewsParams["tickers"] }) {
       return;
     }
 
-    setInternalTickers((prev) => [...prev, ticker]);
+    setInternalFilters((prev) => ({
+      ...prev,
+      tickers: prev.tickers.concat(ticker),
+    }));
   };
 
   const removeInternalTicker = (t: Ticker) =>
-    setInternalTickers((prev) => prev.filter((ticker) => ticker !== t));
+    setInternalFilters((prev) => ({
+      ...prev,
+      tickers: prev.tickers.filter((ticker) => ticker !== t),
+    }));
 
   return (
     <fieldset>
@@ -233,13 +273,19 @@ function TickersField({ tickers }: { tickers: GetNewsParams["tickers"] }) {
       </div>
 
       <ul className="col-span-full flex gap-2">
-        {internalTickers.map((t) => (
+        {tickers.map((t) => (
           <li
             key={t}
             className="w-fit rounded-md bg-green-600 px-2 leading-loose text-white"
           >
             {t}
-            <input hidden type="text" name="tickers" defaultValue={t} />
+            <input
+              hidden
+              type="text"
+              name="tickers"
+              value={t}
+              onChange={() => null}
+            />
             <button
               type="button"
               className="ml-2 transition-all"
@@ -254,31 +300,39 @@ function TickersField({ tickers }: { tickers: GetNewsParams["tickers"] }) {
   );
 }
 
-function TopicsField({ topics }: { topics: GetNewsParams["topics"] }) {
+function TopicsField({
+  topics,
+  setInternalFilters,
+}: {
+  topics: NewsFilters["topics"];
+  setInternalFilters: Dispatch<SetStateAction<NewsFilters>>;
+}) {
   type Topic = (typeof topicList)[number];
-  const [internalTopics, setInternalTopics] = useState([...topics]);
   const selectAllRef = useRef<HTMLInputElement>(null);
-  const isAllSelected = internalTopics.length === topicList.length;
+  const isAllSelected = topics.length === topicList.length;
 
   const handleTopicSelection = (event: ChangeEvent<HTMLInputElement>) => {
     const topic = event.target.value as Topic;
-    const updatedInternalTopics = internalTopics.includes(topic)
-      ? internalTopics.filter((v) => v !== topic)
-      : [...internalTopics, topic];
-    setInternalTopics(updatedInternalTopics);
+    const updatedTopics = topics.includes(topic)
+      ? topics.filter((v) => v !== topic)
+      : [...topics, topic];
+    setInternalFilters((prev) => ({ ...prev, topics: updatedTopics }));
   };
 
   const handleAllSelection = () =>
-    setInternalTopics(isAllSelected ? [] : [...topicList]);
+    setInternalFilters((prev) => ({
+      ...prev,
+      topics: isAllSelected ? [] : [...topicList],
+    }));
 
   useEffect(() => {
     setIndeterminate();
     function setIndeterminate() {
       const isIndeterminate =
-        internalTopics.length > 0 && internalTopics.length < topicList.length;
+        topics.length > 0 && topics.length < topicList.length;
       selectAllRef.current!.indeterminate = isIndeterminate;
     }
-  }, [internalTopics.length]);
+  }, [topics.length]);
 
   return (
     <fieldset className="grid auto-rows-auto grid-cols-2 capitalize">
@@ -300,7 +354,7 @@ function TopicsField({ topics }: { topics: GetNewsParams["topics"] }) {
         Select all
       </label>
 
-      <ul className="no-scrollbar col-span-full max-h-32 overflow-scroll rounded-sm border border-gray-600/70">
+      <ul className="col-span-full max-h-32 overflow-scroll rounded-sm border border-gray-600/70">
         {topicList.map((t) => (
           <li key={t}>
             <label
@@ -313,8 +367,7 @@ function TopicsField({ topics }: { topics: GetNewsParams["topics"] }) {
                 type="checkbox"
                 value={t}
                 name="topics"
-                defaultChecked={topics.includes(t)}
-                checked={internalTopics.includes(t)}
+                checked={topics.includes(t)}
                 onChange={handleTopicSelection}
               />
             </label>
@@ -325,7 +378,13 @@ function TopicsField({ topics }: { topics: GetNewsParams["topics"] }) {
   );
 }
 
-function SortByField({ sort }: { sort: GetNewsParams["sort"] }) {
+function SortByField({
+  sort,
+  setInternalFilters,
+}: {
+  sort: NewsFilters["sort"];
+  setInternalFilters: Dispatch<SetStateAction<NewsFilters>>;
+}) {
   return (
     <fieldset className="grid auto-rows-auto grid-cols-3 gap-2 capitalize">
       <legend className="col-span-full mb-1 text-sm font-bold uppercase">
@@ -338,12 +397,30 @@ function SortByField({ sort }: { sort: GetNewsParams["sort"] }) {
             type="radio"
             name="sort"
             value={s}
-            defaultChecked={s === sort}
+            checked={s === sort}
             className="mr-0.5"
+            onChange={() =>
+              setInternalFilters((prev) => ({ ...prev, sort: s }))
+            }
           />
           {s.toLocaleLowerCase()}
         </label>
       ))}
+    </fieldset>
+  );
+}
+
+function LimitField({
+  limit,
+  hidden = true,
+}: {
+  limit: NewsFilters["limit"];
+  hidden?: boolean;
+}) {
+  return (
+    <fieldset hidden={hidden}>
+      <legend>Limit</legend>
+      <input type="number" name="limit" value={limit}></input>
     </fieldset>
   );
 }
