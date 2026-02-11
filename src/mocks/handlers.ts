@@ -1,4 +1,4 @@
-import { http, HttpResponse } from "msw";
+import { http, HttpResponse, delay } from "msw";
 import { mockNews } from "./mockData";
 
 export const handlers = [
@@ -26,7 +26,8 @@ export const handlers = [
     });
   }),
 
-  http.get("https://api.example.com/news", () => {
+  http.get("https://api.example.com/news", async () => {
+    await delay(1000);
     return HttpResponse.json(mockNews);
   }),
 ];
