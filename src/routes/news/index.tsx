@@ -88,6 +88,7 @@ function RouteComponent() {
 
   return (
     <div
+      aria-label="news list"
       ref={rootRef}
       onScroll={(event) => {
         const list = event.target as HTMLDivElement;
