@@ -73,8 +73,8 @@ export const CryptoIcon = ({
       fetchPriority={fetchPriority}
       loading={loading}
       onError={(event) => {
-        const image = event.target as HTMLImageElement;
-        image.src = backupSrc;
+        event.currentTarget.onerror = null;
+        event.currentTarget.src = backupSrc;
       }}
     />
   );

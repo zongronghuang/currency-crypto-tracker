@@ -34,8 +34,8 @@ export default function NewsCard({
             src={feed?.banner_image || fallbackBannerImage}
             alt=""
             onError={(event) => {
-              const image = event.target as HTMLImageElement;
-              image.src = fallbackBannerImage;
+              event.currentTarget.onerror = null;
+              event.currentTarget.src = fallbackBannerImage;
             }}
           />
           <aside className="absolute bottom-0 left-0 flex w-full flex-wrap justify-start gap-1 p-0.5">
