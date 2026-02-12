@@ -78,6 +78,7 @@ export default function NewsFilters({
     <nav className="w-full overflow-y-scroll">
       <form
         action=""
+        aria-label="news filters"
         className={clsx(styles.newsFilters, "flex flex-col gap-4")}
         onSubmit={handleSubmit}
         onChange={() => setIsEditing(true)}
@@ -283,8 +284,8 @@ function TickersField({
               hidden
               type="text"
               name="tickers"
-              value={t}
-              onChange={() => null}
+              defaultValue={t}
+              readOnly
             />
             <button
               type="button"
@@ -420,7 +421,7 @@ function LimitField({
   return (
     <fieldset hidden={hidden}>
       <legend>Limit</legend>
-      <input type="number" name="limit" value={limit}></input>
+      <input type="number" name="limit" defaultValue={limit}></input>
     </fieldset>
   );
 }
