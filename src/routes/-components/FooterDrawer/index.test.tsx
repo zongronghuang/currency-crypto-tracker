@@ -13,12 +13,15 @@ test("footer drawer opens via a click on the button in the footer bar, and close
 
   const footer = screen.getByRole("contentinfo");
   const openButton = within(footer).getByLabelText(/open drawer button/i);
+  await waitFor(() => expect(openButton).toBeEnabled(), { timeout: 1500 });
+
   await user.click(openButton);
-  waitFor(() => expect(footerDrawer).toHaveClass("open"));
+  await waitFor(async () => expect(footerDrawer).toHaveClass("open"));
 
   const closeButton = within(footerDrawer).getByLabelText(
     "close drawer button",
   );
+
   await user.click(closeButton);
-  waitFor(() => expect(footerDrawer).not.toHaveClass("open"));
+  await waitFor(() => expect(footerDrawer).not.toHaveClass("open"));
 });
