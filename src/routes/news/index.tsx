@@ -86,6 +86,9 @@ function RouteComponent() {
     },
   });
 
+  const scrollToTop = () =>
+    rootRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+
   return (
     <div
       aria-label="news list"
@@ -113,16 +116,7 @@ function RouteComponent() {
         <small>No more results</small>
       </div>
 
-      <button
-        aria-label="back to top"
-        hidden={!isBackButtonVisible}
-        onClick={() =>
-          rootRef.current?.scrollTo({ top: 0, behavior: "smooth" })
-        }
-        className="fixed right-2 bottom-15 z-15 h-10 w-10 -rotate-90 rounded-full bg-blue-500 text-3xl font-bold text-white shadow-[0_0_3px_2px_rgba(200,200,200,0.5)]"
-      >
-        &#10132;
-      </button>
+      <BackToTopButton hidden={!isBackButtonVisible} onClick={scrollToTop} />
 
       <FooterBar>
         <div className="flex h-12 items-center justify-center text-center">
@@ -153,5 +147,24 @@ function RouteComponent() {
         </Suspense>
       </FooterDrawer>
     </div>
+  );
+}
+
+function BackToTopButton({
+  hidden,
+  onClick,
+}: {
+  hidden: boolean;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      aria-label="back to top"
+      hidden={hidden}
+      onClick={onClick}
+      className="fixed right-2 bottom-15 z-15 h-10 w-10 -rotate-90 rounded-full bg-blue-500 text-3xl font-bold text-white shadow-[0_0_3px_2px_rgba(200,200,200,0.5)]"
+    >
+      &#10132;
+    </button>
   );
 }
