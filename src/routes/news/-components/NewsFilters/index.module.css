@@ -1,3 +1,8 @@
+.newsFilters * {
+  /* add this to work around JSdom issue */
+  pointer-events: auto;
+}
+
 .newsFilters:has(input:invalid) button[type="submit"] {
   opacity: 0.5;
 }
