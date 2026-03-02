@@ -9,6 +9,7 @@ import useIntersectionObserver from "@/hooks/useIntersectionObserver";
 import NewsCard, { type Feed } from "./-components/NewsCard";
 import FooterBar from "../-components/FooterBar";
 import FooterDrawer from "../-components/FooterDrawer";
+import Alert from "../-components/Alert";
 import { FIAT_NAMES } from "@/constants/fiat-currency-list";
 import { CRYPTO_NAMES } from "@/constants/crypto-currency-list";
 import { sliceListByPage } from "@/utils";
@@ -52,7 +53,7 @@ function RouteComponent() {
   const [filters, setFilters] = useState({ ...defaultFilters });
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isBackButtonVisible, setIsBackButtonVisible] = useState(false);
-  const { data, isLoading, isSuccess } = useQuery({
+  const { data, isLoading, isSuccess, isError } = useQuery({
     queryKey: ["news", filters],
     queryFn: () => getNews(filters),
   });
@@ -71,7 +72,7 @@ function RouteComponent() {
       if (!entry.isIntersecting || !newsCollection.hasMore || !isSuccess)
         return;
 
-      const { pageData, hasMore } = sliceListByPage({
+      const { pageData, hasMore, maxPageNo } = sliceListByPage({
         list: data.feed,
         pageNo: newsCollection.pageNo,
       });
@@ -82,12 +83,23 @@ function RouteComponent() {
         hasMore,
       }));
 
-      if (!hasMore) targetRef.current?.classList.remove("invisible");
+      // 已渲染所有 news cards
+      // 不包含找不到符合 filter 的新聞 (API 回傳空陣列)
+      if (!hasMore && maxPageNo > 0)
+        targetRef.current?.classList.remove("invisible");
     },
   });
 
   const scrollToTop = () =>
     rootRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+
+  if (isError)
+    return (
+      <Alert
+        title="Something Wrong"
+        description="Refresh the page or try again later."
+      />
+    );
 
   return (
     <div
@@ -106,10 +118,12 @@ function RouteComponent() {
           <NewsCard isSkeleton={true} />
           <NewsCard isSkeleton={true} />
         </>
-      ) : (
+      ) : newsCollection.news.length ? (
         newsCollection.news.map((f: Feed) => (
           <NewsCard key={f.title} feed={f} />
         ))
+      ) : (
+        <Alert title="No News Found" description="Change your news filters." />
       )}
 
       <div ref={targetRef} className="invisible mt-1 text-center opacity-50">
