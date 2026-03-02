@@ -248,13 +248,18 @@ function TickersField({
           &nbsp; (max {maxNumOfTickers} tickers)
         </strong>
       </legend>
+
+      <p className="mb-1 text-xs text-gray-600">
+        Find news matching all selected tickers at the same time.
+      </p>
+
       <div className="mb-2 flex items-center justify-between leading-loose">
         <input
           ref={inputRef}
           list="currency-list"
           type="text"
           placeholder="Select or enter currency name"
-          className="w-5/6 rounded-tl-sm rounded-bl-sm border border-gray-600/70 pl-1"
+          className="w-5/6 rounded-tl-sm rounded-bl-sm border border-gray-600/70 pl-1 uppercase placeholder:text-sm placeholder:normal-case"
         />
         <datalist id="currency-list">
           {FIAT_NAMES.map((f) => (
@@ -340,6 +345,10 @@ function TopicsField({
       <legend className="col-span-full mb-1 text-sm font-bold uppercase">
         Topics
       </legend>
+
+      <p className="col-span-full mb-1 text-xs text-gray-600 normal-case">
+        Find news matching all selected topics at the same time.
+      </p>
 
       <label
         htmlFor="all"
