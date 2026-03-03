@@ -53,7 +53,7 @@ function RouteComponent() {
   const [filters, setFilters] = useState({ ...defaultFilters });
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isBackButtonVisible, setIsBackButtonVisible] = useState(false);
-  const { data, isLoading, isSuccess, isError } = useQuery({
+  const { data, isSuccess, isPending, isError } = useQuery({
     queryKey: ["news", filters],
     queryFn: () => getNews(filters),
   });
@@ -95,10 +95,7 @@ function RouteComponent() {
 
   if (isError)
     return (
-      <Alert
-        title="Something Wrong"
-        description="Refresh the page or try again later."
-      />
+      <Alert title="Oops" description="Refresh the page or try again later." />
     );
 
   return (
@@ -112,7 +109,7 @@ function RouteComponent() {
       }}
       className={clsx(styles.list, "no-scrollbar h-dvh overflow-y-scroll pt-5")}
     >
-      {isLoading ? (
+      {isPending ? (
         <>
           <NewsCard isSkeleton={true} />
           <NewsCard isSkeleton={true} />
