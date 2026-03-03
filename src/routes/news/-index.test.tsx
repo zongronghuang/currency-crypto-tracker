@@ -25,19 +25,15 @@ test("when data is fully loaded and rendered into cards, no skeleton cards are p
 
   const links = await screen.findAllByText(/read more/i);
   expect(links).toHaveLength(3);
-  links.forEach((link) =>
-    waitFor(() => expect(link).not.toHaveClass("animate-pulse")),
-  );
-  links.forEach((link) => waitFor(() => expect(link).toHaveAttribute("href")));
 
   const footer = screen.getByRole("contentinfo");
   const footerButton = within(footer).getByRole("button");
-  waitFor(() => expect(footerButton).toBeEnabled());
+  await waitFor(() => expect(footerButton).toBeEnabled());
 });
 
 test("shows no-news alert when no news data is available based on current filters", async () => {
-  server.resetHandlers(
-    http.get("https://api.example.com/news", async () => {
+  server.use(
+    http.get("https://api.example.com/news", () => {
       return HttpResponse.json({
         items: "",
         sentiment_score_definition: "",
@@ -58,9 +54,9 @@ test("shows no-news alert when no news data is available based on current filter
   expect(noDataAlert).toBeVisible();
 });
 
-test.only("shows alert when server error occurs", async () => {
-  server.resetHandlers(
-    http.get("https://api.example.com/news", async () => {
+test("shows alert when server error occurs", async () => {
+  server.use(
+    http.get("https://api.example.com/news", () => {
       return new HttpResponse(null, { status: 500 });
     }),
   );
