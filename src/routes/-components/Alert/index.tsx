@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
 import clsx from "clsx";
+import styles from "./index.module.css";
 
 export default function Alert({
   title,
@@ -8,17 +8,11 @@ export default function Alert({
   title: string;
   description: string;
 }) {
-  const [isVisible, setIsVisible] = useState(false);
-
-  useEffect(() => {
-    setTimeout(() => setIsVisible(true), 500);
-  }, []);
-
   return (
     <figure
       role="alert"
       className={clsx(
-        !isVisible && "invisible",
+        styles.alert,
         "fixed top-1/2 left-1/2 w-max max-w-3/4 -translate-1/2 rounded-lg border border-solid border-red-600 px-4 py-2 text-center text-gray-600",
       )}
     >
