@@ -18,7 +18,11 @@
 .footerDrawerCloseBtn {
   flex-grow: 1;
   background-color: transparent;
-  pointer-events: auto; /* add this to work around JSdom issue */
+  pointer-events: none; /* add this to work around JSdom issue */
+}
+
+.footerDrawerBackdrop:global(.open) .footerDrawerCloseBtn {
+  pointer-events: auto;
 }
 
 .footerDrawerContainer {
