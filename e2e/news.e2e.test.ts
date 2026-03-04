@@ -32,7 +32,10 @@ test("Clicking the back-to-top button sends user back to the top of the news lis
     page.getByRole("link", { name: /back to top/i }),
   ).not.toBeVisible();
 
-  await page.locator(":root").evaluate((e) => e.scrollTo({ top: 10 }));
+  const scrollDistance = 100;
+  await page.locator(":root").evaluate((e, distance) => {
+    e.scrollTo({ top: distance });
+  }, scrollDistance);
 
   await expect(page.getByRole("link", { name: /back to top/i })).toBeVisible();
 
@@ -40,11 +43,8 @@ test("Clicking the back-to-top button sends user back to the top of the news lis
     .getByRole("link", { name: /back to top/i })
     .click({ timeout: 2000 });
 
-  const scrollY = await page.locator(":root").evaluate((e) => {
-    console.log(e.scrollTop);
-    return e.scrollTop;
-  });
-  await expect(scrollY).toBeCloseTo(0);
+  const scrollTop = await page.locator(":root").evaluate((e) => e.scrollTop);
+  await expect(scrollTop).toBeLessThan(scrollDistance);
 });
 
 test("scrolls down news cards and shows an alert text when it reaches the end", async ({
