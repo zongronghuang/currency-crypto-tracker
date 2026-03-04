@@ -10,14 +10,12 @@ test("The back-to-top button appears when user scrolls down the news list", asyn
   await page.waitForLoadState("networkidle");
 
   await expect(
-    page.getByRole("button", { name: /back to top/i }),
+    page.getByRole("link", { name: /back to top/i }),
   ).not.toBeVisible();
 
   await page.getByLabel(/news list/i).evaluate((e) => (e.scrollTop += 1000));
 
-  await expect(
-    page.getByRole("button", { name: /back to top/i }),
-  ).toBeVisible();
+  await expect(page.getByRole("link", { name: /back to top/i })).toBeVisible();
 });
 
 test("Clicking the back-to-top button sends user back to the top of the news list", async ({
