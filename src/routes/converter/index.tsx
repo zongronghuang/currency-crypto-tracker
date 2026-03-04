@@ -66,7 +66,7 @@ export default function ConverterPage() {
   }, [amount, exchangeRate]);
 
   return (
-    <div>
+    <div className="px-5">
       <p>
         1 {fromCurrency.code} = {exchangeRate}
         {toCurrency.code}

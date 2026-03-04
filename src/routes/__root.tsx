@@ -13,7 +13,7 @@ function RootComponent() {
   return (
     <>
       <HeaderBar setIsSideMenuOpen={setIsSideMenuOpen} />
-      <main className="bg-white px-5 pb-15">
+      <main className="bg-white px-2 pt-5 pb-15">
         <Outlet />
       </main>
       <SideMenu
