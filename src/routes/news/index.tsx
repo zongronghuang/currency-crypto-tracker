@@ -1,4 +1,4 @@
-import { Activity, Suspense, useState, useRef, lazy } from "react";
+import { Activity, Suspense, useState, useRef, lazy, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
@@ -52,7 +52,7 @@ function RouteComponent() {
 
   const [filters, setFilters] = useState({ ...defaultFilters });
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
-  const [isBackButtonVisible, setIsBackButtonVisible] = useState(false);
+
   const { data, isSuccess, isPending, isError } = useQuery({
     queryKey: ["news", filters],
     queryFn: () => getNews(filters),
@@ -90,9 +90,6 @@ function RouteComponent() {
     },
   });
 
-  const scrollToTop = () =>
-    rootRef.current?.scrollTo({ top: 0, behavior: "smooth" });
-
   if (isError)
     return (
       <Alert title="Oops" description="Refresh the page or try again later." />
@@ -102,12 +99,7 @@ function RouteComponent() {
     <div
       aria-label="news list"
       ref={rootRef}
-      onScroll={(event) => {
-        const list = event.target as HTMLDivElement;
-        const isScrolling = list.scrollTop! > 0;
-        setIsBackButtonVisible(isScrolling);
-      }}
-      className={clsx(styles.list, "no-scrollbar h-dvh overflow-y-scroll pt-5")}
+      className={clsx(styles.list, "no-scrollbar")}
     >
       {isPending ? (
         <>
@@ -127,7 +119,7 @@ function RouteComponent() {
         <small>No more results</small>
       </div>
 
-      <BackToTopButton hidden={!isBackButtonVisible} onClick={scrollToTop} />
+      <BackToTopButton />
 
       <FooterBar>
         <div className="flex h-12 items-center justify-center text-center">
@@ -161,21 +153,29 @@ function RouteComponent() {
   );
 }
 
-function BackToTopButton({
-  hidden,
-  onClick,
-}: {
-  hidden: boolean;
-  onClick: () => void;
-}) {
+function BackToTopButton() {
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = (event: Event) => {
+      const target = event.currentTarget as Window;
+      const isScrolling = target.scrollY > 0;
+      setIsVisible(isScrolling);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   return (
-    <button
+    <a
+      href="#top"
       aria-label="back to top"
-      hidden={hidden}
-      onClick={onClick}
-      className="fixed right-2 bottom-15 z-15 h-10 w-10 -rotate-90 rounded-full bg-blue-500 text-3xl font-bold text-white shadow-[0_0_3px_2px_rgba(200,200,200,0.5)]"
+      hidden={!isVisible}
+      className="fixed right-2 bottom-15 z-15 flex h-10 w-10 -rotate-90 items-center justify-center rounded-full bg-blue-500 text-3xl font-bold text-white shadow-[0_0_3px_2px_rgba(200,200,200,0.5)]"
     >
       &#10132;
-    </button>
+    </a>
   );
 }
