@@ -8,80 +8,80 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from "./routes/__root";
-import { Route as TrendsIndexRouteImport } from "./routes/trends/index";
-import { Route as NewsIndexRouteImport } from "./routes/news/index";
-import { Route as ConverterIndexRouteImport } from "./routes/converter/index";
+import { Route as rootRouteImport } from './routes/__root'
+import { Route as TrendsIndexRouteImport } from './routes/trends/index'
+import { Route as NewsIndexRouteImport } from './routes/news/index'
+import { Route as ConverterIndexRouteImport } from './routes/converter/index'
 
 const TrendsIndexRoute = TrendsIndexRouteImport.update({
-  id: "/trends/",
-  path: "/trends/",
+  id: '/trends/',
+  path: '/trends/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const NewsIndexRoute = NewsIndexRouteImport.update({
-  id: "/news/",
-  path: "/news/",
+  id: '/news/',
+  path: '/news/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 const ConverterIndexRoute = ConverterIndexRouteImport.update({
-  id: "/converter/",
-  path: "/converter/",
+  id: '/converter/',
+  path: '/converter/',
   getParentRoute: () => rootRouteImport,
-} as any);
+} as any)
 
 export interface FileRoutesByFullPath {
-  "/converter": typeof ConverterIndexRoute;
-  "/news": typeof NewsIndexRoute;
-  "/trends": typeof TrendsIndexRoute;
+  '/converter': typeof ConverterIndexRoute
+  '/news': typeof NewsIndexRoute
+  '/trends': typeof TrendsIndexRoute
 }
 export interface FileRoutesByTo {
-  "/converter": typeof ConverterIndexRoute;
-  "/news": typeof NewsIndexRoute;
-  "/trends": typeof TrendsIndexRoute;
+  '/converter': typeof ConverterIndexRoute
+  '/news': typeof NewsIndexRoute
+  '/trends': typeof TrendsIndexRoute
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport;
-  "/converter/": typeof ConverterIndexRoute;
-  "/news/": typeof NewsIndexRoute;
-  "/trends/": typeof TrendsIndexRoute;
+  __root__: typeof rootRouteImport
+  '/converter/': typeof ConverterIndexRoute
+  '/news/': typeof NewsIndexRoute
+  '/trends/': typeof TrendsIndexRoute
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath;
-  fullPaths: "/converter" | "/news" | "/trends";
-  fileRoutesByTo: FileRoutesByTo;
-  to: "/converter" | "/news" | "/trends";
-  id: "__root__" | "/converter/" | "/news/" | "/trends/";
-  fileRoutesById: FileRoutesById;
+  fileRoutesByFullPath: FileRoutesByFullPath
+  fullPaths: '/converter' | '/news' | '/trends'
+  fileRoutesByTo: FileRoutesByTo
+  to: '/converter' | '/news' | '/trends'
+  id: '__root__' | '/converter/' | '/news/' | '/trends/'
+  fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  ConverterIndexRoute: typeof ConverterIndexRoute;
-  NewsIndexRoute: typeof NewsIndexRoute;
-  TrendsIndexRoute: typeof TrendsIndexRoute;
+  ConverterIndexRoute: typeof ConverterIndexRoute
+  NewsIndexRoute: typeof NewsIndexRoute
+  TrendsIndexRoute: typeof TrendsIndexRoute
 }
 
-declare module "@tanstack/react-router" {
+declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    "/trends/": {
-      id: "/trends/";
-      path: "/trends";
-      fullPath: "/trends";
-      preLoaderRoute: typeof TrendsIndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/news/": {
-      id: "/news/";
-      path: "/news";
-      fullPath: "/news";
-      preLoaderRoute: typeof NewsIndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
-    "/converter/": {
-      id: "/converter/";
-      path: "/converter";
-      fullPath: "/converter";
-      preLoaderRoute: typeof ConverterIndexRouteImport;
-      parentRoute: typeof rootRouteImport;
-    };
+    '/trends/': {
+      id: '/trends/'
+      path: '/trends'
+      fullPath: '/trends'
+      preLoaderRoute: typeof TrendsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/news/': {
+      id: '/news/'
+      path: '/news'
+      fullPath: '/news'
+      preLoaderRoute: typeof NewsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/converter/': {
+      id: '/converter/'
+      path: '/converter'
+      fullPath: '/converter'
+      preLoaderRoute: typeof ConverterIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -89,7 +89,7 @@ const rootRouteChildren: RootRouteChildren = {
   ConverterIndexRoute: ConverterIndexRoute,
   NewsIndexRoute: NewsIndexRoute,
   TrendsIndexRoute: TrendsIndexRoute,
-};
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>();
+  ._addFileTypes<FileRouteTypes>()

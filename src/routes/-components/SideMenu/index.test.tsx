@@ -63,7 +63,7 @@ test("clicking non-active page link on side menu changes router url and page con
 
   const newsLink = screen.getByRole("link", { name: /news/i });
   expect(newsLink).toHaveAttribute("data-status", "active");
-  expect(screen.getByRole("heading", { name: /news/i })).toBeInTheDocument();
+  expect(screen.getByRole("heading", { name: /^news$/i })).toBeInTheDocument();
 
   const trendsLink = screen.getByRole("link", { name: /trends/i });
   await user.click(trendsLink);
