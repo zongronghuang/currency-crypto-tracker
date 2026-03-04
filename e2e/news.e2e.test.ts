@@ -28,23 +28,24 @@ test("Clicking the back-to-top button sends user back to the top of the news lis
   await page.goto("http://localhost:5173/news");
   await page.waitForLoadState("networkidle");
 
-  await expect(
-    page.getByRole("link", { name: /back to top/i }),
-  ).not.toBeVisible();
+  const backToTop = page.getByRole("link", { name: /back to top/i });
+  await expect(backToTop).toBeHidden();
 
   const scrollDistance = 100;
-  await page.locator(":root").evaluate((e, distance) => {
-    e.scrollTo({ top: distance });
+
+  await page.evaluate((distance) => {
+    window.scrollTo({ top: distance });
   }, scrollDistance);
 
-  await expect(page.getByRole("link", { name: /back to top/i })).toBeVisible();
+  await expect(backToTop).toBeVisible();
 
-  await page
-    .getByRole("link", { name: /back to top/i })
-    .click({ timeout: 2000 });
+  await backToTop.click();
 
-  const scrollTop = await page.locator(":root").evaluate((e) => e.scrollTop);
-  await expect(scrollTop).toBeLessThan(scrollDistance);
+  await page.waitForFunction(() => window.scrollY === 0);
+
+  const scrollY = await page.evaluate(() => window.scrollY);
+
+  await expect(scrollY).toBe(0);
 });
 
 test("scrolls down news cards and shows an alert text when it reaches the end", async ({
