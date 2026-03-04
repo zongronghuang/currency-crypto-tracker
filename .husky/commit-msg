@@ -33,5 +33,5 @@ then
   exit 1
 fi
 
-echo "✅  [COMMIT MESSAGE READY]"
+echo "✅  [COMMIT MESSAGE OK]"
 echo ""

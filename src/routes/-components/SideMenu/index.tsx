@@ -75,7 +75,7 @@ export default function SideMenu({
         backdropRef.current!.style.backgroundColor = `rgb(0 0 0 / ${alpha})`;
 
         // backdrop z-index
-        backdropRef.current!.style.zIndex = "10";
+        backdropRef.current!.style.zIndex = "100";
 
         // side menu transition
         sideMenuRef.current!.style.transitionDuration = "0s";
@@ -128,7 +128,7 @@ export default function SideMenu({
         ref={sideMenuRef}
         className={clsx(isSideMenuOpen && "open", styles.sideMenu)}
       >
-        <ul>
+        <ul className="mt-45">
           {pageLinks.map((link) => (
             <li key={link.label}>
               <Link

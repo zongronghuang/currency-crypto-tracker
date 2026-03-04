@@ -10,6 +10,12 @@
   }
 }
 
+html {
+  scroll-behavior: smooth;
+  -ms-overflow-style: none; /* For Internet Explorer and Edge */
+  scrollbar-width: none; /* For Firefox */
+}
+
 #root {
   height: 100dvh;
   background-color: white;

@@ -66,7 +66,7 @@ export default function ConverterPage() {
   }, [amount, exchangeRate]);
 
   return (
-    <main>
+    <div className="px-5">
       <p>
         1 {fromCurrency.code} = {exchangeRate}
         {toCurrency.code}
@@ -106,7 +106,7 @@ export default function ConverterPage() {
           />
         </Activity>
       </Suspense>
-    </main>
+    </div>
   );
 }
 

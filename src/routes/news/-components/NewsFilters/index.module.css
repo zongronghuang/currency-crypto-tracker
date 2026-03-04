@@ -1,0 +1,3 @@
+.newsFilters:has(input:invalid) button[type="submit"] {
+  opacity: 0.5;
+}

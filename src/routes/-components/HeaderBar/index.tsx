@@ -1,16 +1,19 @@
 import { type Dispatch, type SetStateAction } from "react";
 import { useLocation } from "@tanstack/react-router";
 
-type ToolbarProps = {
+type HeaderBarProps = {
   setIsSideMenuOpen: Dispatch<SetStateAction<boolean>>;
 };
 
-export default function Toolbar({ setIsSideMenuOpen }: ToolbarProps) {
+export default function HeaderBar({ setIsSideMenuOpen }: HeaderBarProps) {
   const location = useLocation();
   const title = location.pathname.split("/")[1];
 
   return (
-    <nav className="flex items-center justify-between px-5 py-3 outline-1 outline-black">
+    <header
+      role="banner"
+      className="sticky top-0 left-0 z-10 flex w-full items-center justify-between bg-white px-5 py-3 shadow-md"
+    >
       <button
         type="button"
         className="w-1/5 text-center outline outline-black"
@@ -20,6 +23,6 @@ export default function Toolbar({ setIsSideMenuOpen }: ToolbarProps) {
       </button>
       <h1 className="text-xl font-bold uppercase">{title}</h1>
       <button className="w-1/5 text-center outline">User</button>
-    </nav>
+    </header>
   );
 }

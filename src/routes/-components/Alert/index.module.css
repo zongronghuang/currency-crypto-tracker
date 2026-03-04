@@ -1,0 +1,11 @@
+.alert {
+  animation-name: show-up;
+  animation-duration: 1s;
+}
+
+@keyframes show-up {
+  from,
+  to {
+    opacity: 0;
+  }
+}
