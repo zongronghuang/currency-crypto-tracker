@@ -1,24 +1,7 @@
 import { expect } from "@playwright/test";
 import { test } from "../playwright.setup.ts";
 
-test("The back-to-top button appears when user scrolls down the news list", async ({
-  network,
-  page,
-}) => {
-  network.use();
-  await page.goto("http://localhost:5173/news");
-  await page.waitForLoadState("networkidle");
-
-  await expect(
-    page.getByRole("link", { name: /back to top/i }),
-  ).not.toBeVisible();
-
-  await page.getByLabel(/news list/i).evaluate((e) => (e.scrollTop += 1000));
-
-  await expect(page.getByRole("link", { name: /back to top/i })).toBeVisible();
-});
-
-test("Clicking the back-to-top button sends user back to the top of the news list", async ({
+test("Scrolling down to show back-to-top button, and clicking the button sends user back to the top of the news list", async ({
   network,
   page,
 }) => {
