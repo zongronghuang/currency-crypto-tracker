@@ -81,6 +81,48 @@ export function calibrateNumeral(numeral: string, localeOption?: string) {
   return localizedNumeral;
 }
 
+// change = (目前 close 價格 - 前一日 close 價格) / 前一日 close 價格
+export function getPriceChange(
+  currentClosePrice: string,
+  prevClosePrice: string = "",
+) {
+  const plus = "+";
+  const minus = "-";
+  const neutral = "";
+  const placeholder = "--";
+
+  if (!prevClosePrice) return [neutral, placeholder];
+
+  const change =
+    Math.round(
+      ((+currentClosePrice - +prevClosePrice) / +prevClosePrice) * // 公式值
+        100 * // 進兩位以取到小數第二位
+        100, // 進兩位以呈現百分比
+    ) / 100; // 四捨五入至整數後，再退兩位
+  const sign = change === 0 ? neutral : change > 0 ? plus : minus;
+  const changeNumeral = Math.abs(change).toFixed(2);
+  const priceChange = `${changeNumeral}%`;
+
+  return [sign, priceChange];
+}
+
+// range = (當日最高價 - 當日最低價) / 當日最低價
+export function getPriceRange(
+  currentHighPrice: string,
+  currentLowPrice: string,
+) {
+  const range =
+    Math.round(
+      ((+currentHighPrice - +currentLowPrice) / +currentLowPrice) * // 公式值
+        100 * // 進兩位以取到小數第二位
+        100, // 進兩位以呈現百分比
+    ) / 100; // 四捨五入至整數後，再退兩位
+  const rangeNumeral = range.toFixed(2);
+
+  const priceRange = `${rangeNumeral}%`;
+  return priceRange;
+}
+
 export const __private_fns__ = {
   getUserLocale,
   getComputableNumeral,
