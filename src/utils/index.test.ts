@@ -1,4 +1,9 @@
-import { calibrateNumeral, __private_fns__ } from ".";
+import {
+  calibrateNumeral,
+  getPriceChange,
+  getPriceRange,
+  __private_fns__,
+} from ".";
 
 describe("calibrateNumeral()", () => {
   test("remove decimals from integers", () => {
@@ -149,6 +154,83 @@ describe("calibrateNumeral()", () => {
 
     const validNumber5 = "1000000";
     expect(calibrateNumeral(validNumber5, locale)).toBe("1.000.000");
+  });
+});
+
+describe("getPriceChange()", () => {
+  test("returns a positve sign and an unsigned number in percentage when current close price is larger than previous close price", () => {
+    const currentClose1 = "10.000";
+    const prevClose1 = "9.000";
+    const result1 = getPriceChange(currentClose1, prevClose1);
+    expect(result1).toEqual(["+", "11.11%"]);
+
+    const currentClose2 = "10.000";
+    const prevClose2 = "9.444";
+    const result2 = getPriceChange(currentClose2, prevClose2);
+    expect(result2).toEqual(["+", "5.89%"]);
+
+    const currentClose3 = "10.000";
+    const prevClose3 = "9.001";
+    const result3 = getPriceChange(currentClose3, prevClose3);
+    expect(result3).toEqual(["+", "11.10%"]);
+  });
+
+  test("returns an empty sign and an unsigned number in percentage when current close price is equal to previous close price", () => {
+    const currentClose = "123.321";
+    const prevClose = "123.321";
+    const result = getPriceChange(currentClose, prevClose);
+    expect(result).toEqual(["", "0.00%"]);
+  });
+
+  test("returns a negative sign and an unsigned number in percentage when current close price is less than previous close price", () => {
+    const currentClose1 = "9.000";
+    const prevClose1 = "10.000";
+    const result1 = getPriceChange(currentClose1, prevClose1);
+    expect(result1).toEqual(["-", "10.00%"]);
+
+    const currentClose2 = "9.444";
+    const prevClose2 = "10.000";
+    const result2 = getPriceChange(currentClose2, prevClose2);
+    expect(result2).toEqual(["-", "5.56%"]);
+
+    const currentClose3 = "9.001";
+    const prevClose3 = "10.010";
+    const result3 = getPriceChange(currentClose3, prevClose3);
+    expect(result3).toEqual(["-", "10.08%"]);
+  });
+
+  test("returns an empty sign and a placeholder when previous close price is absent", () => {
+    const currentClose = "10.000";
+    const result1 = getPriceChange(currentClose);
+    expect(result1).toEqual(["", "--"]);
+
+    const prevClose = "";
+    const result2 = getPriceChange(currentClose, prevClose);
+    expect(result2).toEqual(["", "--"]);
+  });
+});
+
+describe("getPriceRange()", () => {
+  test("returns a valid number with a percentage sign", () => {
+    const high1 = "50.000";
+    const low1 = "37.000";
+    const result1 = getPriceRange(high1, low1);
+    expect(result1).toBe("35.14%");
+
+    const high2 = "10.999";
+    const low2 = "9.123";
+    const result2 = getPriceRange(high2, low2);
+    expect(result2).toBe("20.56%");
+
+    const high3 = "1.132";
+    const low3 = "1.123";
+    const result3 = getPriceRange(high3, low3);
+    expect(result3).toBe("0.80%");
+
+    const high4 = "9.999";
+    const low4 = "9.999";
+    const result4 = getPriceRange(high4, low4);
+    expect(result4).toBe("0.00%");
   });
 });
 
