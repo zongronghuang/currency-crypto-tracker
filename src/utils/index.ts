@@ -91,7 +91,7 @@ export function getPriceChange(
   const neutral = "";
   const placeholder = "--";
 
-  if (!prevClosePrice) return [neutral, placeholder];
+  if (!prevClosePrice) return [neutral, placeholder] as [typeof sign, string];
 
   const change =
     Math.round(
@@ -103,7 +103,7 @@ export function getPriceChange(
   const changeNumeral = Math.abs(change).toFixed(2);
   const priceChange = `${changeNumeral}%`;
 
-  return [sign, priceChange];
+  return [sign, priceChange] as [typeof sign, string];
 }
 
 // range = (當日最高價 - 當日最低價) / 當日最低價
