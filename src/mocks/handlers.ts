@@ -1,5 +1,6 @@
 import { http, HttpResponse, delay } from "msw";
-import { mockNews } from "./mockData";
+import { mockNews } from "./mockNews";
+import { mockFiatTrends, mockCryptoTrends } from "./mockTrends";
 
 export const handlers = [
   http.get("https://api.example.com/user", () => {
@@ -29,5 +30,15 @@ export const handlers = [
   http.get("https://api.example.com/news", async () => {
     await delay(1000);
     return HttpResponse.json(mockNews);
+  }),
+
+  http.get("https://api.example.com/fiat_trends", async () => {
+    await delay(1000);
+    return HttpResponse.json(mockFiatTrends);
+  }),
+
+  http.get("https://api.example.com/crypto_trends", async () => {
+    await delay(1000);
+    return HttpResponse.json(mockCryptoTrends);
   }),
 ];
