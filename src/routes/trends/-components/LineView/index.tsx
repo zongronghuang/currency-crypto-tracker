@@ -16,6 +16,9 @@ export default function LineView({
 
   return (
     <div>
+      <p className="mb-2 text-sm text-gray-600">
+        Check the close prices of the base currency in the quote currency.
+      </p>
       <Chart options={chartOptions}>
         <LineSeries data={lineData} />
       </Chart>
