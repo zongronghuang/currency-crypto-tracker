@@ -4,18 +4,18 @@ import TrendsMenu from ".";
 import { CRYPTO_TRADING_PAIRS } from "@/constants/crypto-exchange-list";
 
 test("by default, base currency (USD), quote currency (EUR), data point (daily); the apply button is disabled; the cancel button is enabled", async () => {
-  const defaultApiParams = {
+  const mockTrendsApiParams = {
     base: "USD",
     quote: "EUR",
     dataPoint: "daily",
   } as const;
-  const mockStateSetter = vi.fn();
+  const mockSetTrendsApiParams = vi.fn();
   const mockOnClose = vi.fn();
 
   render(
     <TrendsMenu
-      trendsApiParams={defaultApiParams}
-      setTrendsApiParams={mockStateSetter}
+      trendsApiParams={mockTrendsApiParams}
+      setTrendsApiParams={mockSetTrendsApiParams}
       onClose={mockOnClose}
     />,
   );
@@ -39,18 +39,18 @@ test("by default, base currency (USD), quote currency (EUR), data point (daily);
 });
 
 test("A fiat currency selected as base does not appear in the quote selection menu", async () => {
-  const defaultApiParams = {
+  const mockTrendsApiParams = {
     base: "USD",
     quote: "EUR",
     dataPoint: "daily",
   } as const;
-  const mockStateSetter = vi.fn();
+  const mockSetTrendsApiParams = vi.fn();
   const mockOnClose = vi.fn();
 
   render(
     <TrendsMenu
-      trendsApiParams={defaultApiParams}
-      setTrendsApiParams={mockStateSetter}
+      trendsApiParams={mockTrendsApiParams}
+      setTrendsApiParams={mockSetTrendsApiParams}
       onClose={mockOnClose}
     />,
   );
@@ -73,18 +73,18 @@ test("A fiat currency selected as base does not appear in the quote selection me
 });
 
 test("A crypto currency selected as base has its own quote options according to the crypto exchange list", async () => {
-  const defaultApiParams = {
+  const mockTrendsApiParams = {
     base: "USD",
     quote: "EUR",
     dataPoint: "daily",
   } as const;
-  const mockStateSetter = vi.fn();
+  const mockSetTrendsApiParams = vi.fn();
   const mockOnClose = vi.fn();
 
   render(
     <TrendsMenu
-      trendsApiParams={defaultApiParams}
-      setTrendsApiParams={mockStateSetter}
+      trendsApiParams={mockTrendsApiParams}
+      setTrendsApiParams={mockSetTrendsApiParams}
       onClose={mockOnClose}
     />,
   );
@@ -106,18 +106,18 @@ test("A crypto currency selected as base has its own quote options according to 
 });
 
 test("any menu change enables the apply button", async () => {
-  const defaultApiParams = {
+  const mockTrendsApiParams = {
     base: "USD",
     quote: "EUR",
     dataPoint: "daily",
   } as const;
-  const mockStateSetter = vi.fn();
+  const mockSetTrendsApiParams = vi.fn();
   const mockOnClose = vi.fn();
 
   render(
     <TrendsMenu
-      trendsApiParams={defaultApiParams}
-      setTrendsApiParams={mockStateSetter}
+      trendsApiParams={mockTrendsApiParams}
+      setTrendsApiParams={mockSetTrendsApiParams}
       onClose={mockOnClose}
     />,
   );
@@ -132,18 +132,18 @@ test("any menu change enables the apply button", async () => {
 });
 
 test("clicking the cancel button reverts the menu to the last applied state, with the apply button disabled", async () => {
-  const defaultApiParams = {
+  const mockTrendsApiParams = {
     base: "USD",
     quote: "EUR",
     dataPoint: "daily",
   } as const;
-  const mockStateSetter = vi.fn();
+  const mockSetTrendsApiParams = vi.fn();
   const mockOnClose = vi.fn();
 
   render(
     <TrendsMenu
-      trendsApiParams={defaultApiParams}
-      setTrendsApiParams={mockStateSetter}
+      trendsApiParams={mockTrendsApiParams}
+      setTrendsApiParams={mockSetTrendsApiParams}
       onClose={mockOnClose}
     />,
   );
@@ -166,25 +166,25 @@ test("clicking the cancel button reverts the menu to the last applied state, wit
 
   const cancelButton = screen.getByRole("button", { name: /cancel/i });
   await user.click(cancelButton);
-  expect(form).toHaveFormValues(defaultApiParams);
+  expect(form).toHaveFormValues(mockTrendsApiParams);
 
   const applyButton = screen.getByRole("button", { name: /apply/i });
   expect(applyButton).toBeDisabled();
 });
 
 test("applying changes updates the state and closes the menu", async () => {
-  const defaultApiParams = {
+  const mockTrendsApiParams = {
     base: "USD",
     quote: "EUR",
     dataPoint: "daily",
   } as const;
-  const mockStateSetter = vi.fn();
+  const mockSetTrendsApiParams = vi.fn();
   const mockOnClose = vi.fn();
 
   render(
     <TrendsMenu
-      trendsApiParams={defaultApiParams}
-      setTrendsApiParams={mockStateSetter}
+      trendsApiParams={mockTrendsApiParams}
+      setTrendsApiParams={mockSetTrendsApiParams}
       onClose={mockOnClose}
     />,
   );
@@ -198,6 +198,6 @@ test("applying changes updates the state and closes the menu", async () => {
   expect(applyButton).toBeEnabled();
 
   await user.click(applyButton);
-  expect(mockStateSetter).toHaveBeenCalled();
+  expect(mockSetTrendsApiParams).toHaveBeenCalled();
   expect(mockOnClose).toHaveBeenCalled();
 });
