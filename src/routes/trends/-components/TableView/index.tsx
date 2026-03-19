@@ -21,7 +21,10 @@ export default function TableView({ series }: { series: any }) {
   const hasVolume = !!descSeries[0].volume;
 
   return (
-    <div>
+    <div className="mx-auto max-w-fit">
+      <p className="mb-2 text-sm text-gray-600">
+        Check the details of the base currency in the quote currency.
+      </p>
       <table className="relative mb-2 block border-separate snap-x snap-proximity scroll-pl-24 overflow-y-scroll rounded text-right text-nowrap">
         <colgroup>
           <col span={1} className="border-r border-white bg-white" />
@@ -138,7 +141,7 @@ function Notes() {
   return (
     <div
       aria-label="notes"
-      className="rounded border border-solid border-gray-200 bg-sky-100 p-2 text-xs leading-tight tracking-tight"
+      className="rounded-lg border-4 border-double border-sky-50 bg-sky-200 p-2 text-xs leading-tight tracking-tight"
     >
       <ul className="mx-auto w-11/12 list-disc">
         <li>
