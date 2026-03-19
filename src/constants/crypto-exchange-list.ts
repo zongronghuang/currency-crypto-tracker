@@ -1,4 +1,4 @@
-export const CRYPTO_TRADING_PAIRS = {
+const CRYPTO_TRADING_PAIRS = {
   "00": ["USD"],
   "1INCH": ["BTC", "EUR", "GBP", "USD"],
   A8: ["USD"],
@@ -355,8 +355,36 @@ export const CRYPTO_TRADING_PAIRS = {
   ZRX: ["BTC", "EUR", "USD"],
 } as const;
 
-export type TradableCrypto = keyof typeof CRYPTO_TRADING_PAIRS;
+export const TEST_CRYPTO_TRADING_PAIRS = {
+  "00": ["USD"],
+  "1INCH": ["BTC", "EUR", "GBP", "USD"],
+  A8: ["USD"],
+  AAVE: ["BTC", "EUR", "GBP", "USD"],
+  ABT: ["USD"],
+  ACH: ["USD", "USDT"],
+  ACS: ["USD"],
+  ACX: ["USD"],
+  ADA: ["BTC", "ETH", "EUR", "GBP", "USD", "USDC", "USDT"],
+  AERGO: ["USD"],
+  AERO: ["USD"],
+  AGLD: ["USD", "USDT"],
+  AIOZ: ["USD", "USDT"],
+  AKT: ["USD"],
+  ALCX: ["EUR", "USD", "USDT"],
+  ALEO: ["USD"],
+  ALEPH: ["USD"],
+  ALGO: ["BTC", "EUR", "GBP", "USD"],
+  ALICE: ["USD"],
+  ALT: ["USD"],
+};
 
-export const TRADABLE_CRYPTOS = Object.keys(
-  CRYPTO_TRADING_PAIRS,
-) as TradableCrypto[];
+const pairs =
+  process.env.NODE_ENV === "test"
+    ? TEST_CRYPTO_TRADING_PAIRS
+    : CRYPTO_TRADING_PAIRS;
+
+type TradableCrypto = keyof typeof pairs;
+
+const TRADABLE_CRYPTOS = Object.keys(pairs) as TradableCrypto[];
+
+export { pairs as CRYPTO_TRADING_PAIRS, type TradableCrypto, TRADABLE_CRYPTOS };
