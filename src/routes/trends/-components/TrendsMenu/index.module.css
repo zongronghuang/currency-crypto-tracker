@@ -1,0 +1,16 @@
+.trendsMenu:has(input:invalid) button[type="submit"] {
+  opacity: 0.5;
+}
+
+.trendsMenu option:checked {
+  position: relative;
+}
+.trendsMenu option:checked::after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  content: "\2713";
+  width: fit-content;
+  height: fit-content;
+  padding-right: 1rem;
+}
