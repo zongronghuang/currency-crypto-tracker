@@ -18,7 +18,7 @@ export default function BarView({
   }));
 
   return (
-    <div>
+    <div aria-label="bar view">
       <p className="mb-2 text-sm text-gray-600">
         Check the open, close, high, and low prices of the base currency in the
         quote currency.

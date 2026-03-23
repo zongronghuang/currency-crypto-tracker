@@ -21,7 +21,7 @@ export default function TableView({ series }: { series: any }) {
   const hasVolume = !!descSeries[0].volume;
 
   return (
-    <div className="mx-auto max-w-fit">
+    <div aria-label="table view" className="mx-auto max-w-fit">
       <p className="mb-2 text-sm text-gray-600">
         Check the details of the base currency in the quote currency.
       </p>

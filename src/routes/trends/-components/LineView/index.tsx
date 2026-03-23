@@ -15,7 +15,7 @@ export default function LineView({
   }));
 
   return (
-    <div>
+    <div aria-label="line view">
       <p className="mb-2 text-sm text-gray-600">
         Check the close prices of the base currency in the quote currency.
       </p>

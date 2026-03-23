@@ -15,7 +15,7 @@ export default function HistogramView({
   }));
 
   return (
-    <div>
+    <div aria-label="histogram view">
       <p className="mb-2 text-sm text-gray-600">
         Check the trading volumes of the base currency in the quote currency.
         Trading volume data is only available for cryptocurrencies.
