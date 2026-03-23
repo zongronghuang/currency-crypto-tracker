@@ -1,8 +1,8 @@
 export const mockFiatTrends = {
   "Meta Data": {
     "1. Information": "Forex Daily Prices (open, high, low, close)",
-    "2. From Symbol": "EUR",
-    "3. To Symbol": "USD",
+    "2. From Symbol": "USD",
+    "3. To Symbol": "EUR",
     "4. Output Size": "Compact",
     "5. Last Refreshed": "2026-03-09",
     "6. Time Zone": "UTC",
