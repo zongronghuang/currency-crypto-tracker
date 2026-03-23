@@ -376,6 +376,7 @@ export const TEST_CRYPTO_TRADING_PAIRS = {
   ALGO: ["BTC", "EUR", "GBP", "USD"],
   ALICE: ["USD"],
   ALT: ["USD"],
+  BTC: ["EUR", "GBP", "USD", "USDC", "USDT"],
 };
 
 const pairs =
