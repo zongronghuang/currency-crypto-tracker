@@ -93,17 +93,12 @@ export function getPriceChange(
 
   if (!prevClosePrice) return [neutral, placeholder] as [typeof sign, string];
 
-  const change =
-    Math.round(
-      ((+currentClosePrice - +prevClosePrice) / +prevClosePrice) * // 公式值
-        100 * // 進兩位以取到小數第二位
-        100, // 進兩位以呈現百分比
-    ) / 100; // 四捨五入至整數後，再退兩位
-  const sign = change === 0 ? neutral : change > 0 ? plus : minus;
-  const changeNumeral = Math.abs(change).toFixed(2);
-  const priceChange = `${changeNumeral}%`;
+  const rawChange = (+currentClosePrice - +prevClosePrice) / +prevClosePrice;
+  const sign = rawChange === 0 ? neutral : rawChange > 0 ? plus : minus;
+  const changeNumeral =
+    roundToDecimal(rawChange * 100, 2).string.replace("-", "") + "%";
 
-  return [sign, priceChange] as [typeof sign, string];
+  return [sign, changeNumeral] as [typeof sign, string];
 }
 
 // range = (當日最高價 - 當日最低價) / 當日最低價
@@ -111,13 +106,8 @@ export function getPriceRange(
   currentHighPrice: string,
   currentLowPrice: string,
 ) {
-  const range =
-    Math.round(
-      ((+currentHighPrice - +currentLowPrice) / +currentLowPrice) * // 公式值
-        100 * // 進兩位以取到小數第二位
-        100, // 進兩位以呈現百分比
-    ) / 100; // 四捨五入至整數後，再退兩位
-  const rangeNumeral = range.toFixed(2);
+  const rawRange = (+currentHighPrice - +currentLowPrice) / +currentLowPrice;
+  const rangeNumeral = roundToDecimal(rawRange * 100, 2).string;
 
   const priceRange = `${rangeNumeral}%`;
   return priceRange;
