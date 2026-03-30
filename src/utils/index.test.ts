@@ -2,6 +2,7 @@ import {
   calibrateNumeral,
   getPriceChange,
   getPriceRange,
+  roundToDecimal,
   __private_fns__,
 } from ".";
 
@@ -231,6 +232,221 @@ describe("getPriceRange()", () => {
     const low4 = "9.999";
     const result4 = getPriceRange(high4, low4);
     expect(result4).toBe("0.00%");
+  });
+});
+
+describe("roundToDecimal()", () => {
+  test("rounds integers to the specified decimal place", () => {
+    let number = 1;
+    expect(roundToDecimal(number, 0).number).toBe(1);
+    expect(roundToDecimal(number, 1).number).toBe(1);
+    expect(roundToDecimal(number, 2).number).toBe(1);
+    expect(roundToDecimal(number, 3).number).toBe(1);
+    expect(roundToDecimal(number, 4).number).toBe(1);
+    expect(roundToDecimal(number, 0).string).toBe("1");
+    expect(roundToDecimal(number, 1).string).toBe("1.0");
+    expect(roundToDecimal(number, 2).string).toBe("1.00");
+    expect(roundToDecimal(number, 3).string).toBe("1.000");
+    expect(roundToDecimal(number, 4).string).toBe("1.0000");
+
+    number = -1;
+    expect(roundToDecimal(number, 0).number).toBe(-1);
+    expect(roundToDecimal(number, 1).number).toBe(-1);
+    expect(roundToDecimal(number, 2).number).toBe(-1);
+    expect(roundToDecimal(number, 3).number).toBe(-1);
+    expect(roundToDecimal(number, 4).number).toBe(-1);
+    expect(roundToDecimal(number, 0).string).toBe("-1");
+    expect(roundToDecimal(number, 1).string).toBe("-1.0");
+    expect(roundToDecimal(number, 2).string).toBe("-1.00");
+    expect(roundToDecimal(number, 3).string).toBe("-1.000");
+    expect(roundToDecimal(number, 4).string).toBe("-1.0000");
+
+    number = 0;
+    expect(roundToDecimal(number, 0).number).toBe(0);
+    expect(roundToDecimal(number, 1).number).toBe(0);
+    expect(roundToDecimal(number, 2).number).toBe(0);
+    expect(roundToDecimal(number, 3).number).toBe(0);
+    expect(roundToDecimal(number, 4).number).toBe(0);
+    expect(roundToDecimal(number, 0).string).toBe("0");
+    expect(roundToDecimal(number, 1).string).toBe("0.0");
+    expect(roundToDecimal(number, 2).string).toBe("0.00");
+    expect(roundToDecimal(number, 3).string).toBe("0.000");
+    expect(roundToDecimal(number, 4).string).toBe("0.0000");
+  });
+
+  test("rounds positive and negative floating-point numbers to the specified decimal place", () => {
+    let number = 2.34567;
+    expect(roundToDecimal(number, 0).number).toBe(2);
+    expect(roundToDecimal(number, 1).number).toBe(2.3);
+    expect(roundToDecimal(number, 2).number).toBe(2.35);
+    expect(roundToDecimal(number, 3).number).toBe(2.346);
+    expect(roundToDecimal(number, 4).number).toBe(2.3457);
+    expect(roundToDecimal(number, 5).number).toBe(2.34567);
+    expect(roundToDecimal(number, 6).number).toBe(2.34567);
+    expect(roundToDecimal(number, 0).string).toBe("2");
+    expect(roundToDecimal(number, 1).string).toBe("2.3");
+    expect(roundToDecimal(number, 2).string).toBe("2.35");
+    expect(roundToDecimal(number, 3).string).toBe("2.346");
+    expect(roundToDecimal(number, 4).string).toBe("2.3457");
+    expect(roundToDecimal(number, 5).string).toBe("2.34567");
+    expect(roundToDecimal(number, 6).string).toBe("2.345670");
+
+    number = -3.45678;
+    expect(roundToDecimal(number, 0).number).toBe(-3);
+    expect(roundToDecimal(number, 1).number).toBe(-3.5);
+    expect(roundToDecimal(number, 2).number).toBe(-3.46);
+    expect(roundToDecimal(number, 3).number).toBe(-3.457);
+    expect(roundToDecimal(number, 4).number).toBe(-3.4568);
+    expect(roundToDecimal(number, 5).number).toBe(-3.45678);
+    expect(roundToDecimal(number, 6).number).toBe(-3.45678);
+    expect(roundToDecimal(number, 0).string).toBe("-3");
+    expect(roundToDecimal(number, 1).string).toBe("-3.5");
+    expect(roundToDecimal(number, 2).string).toBe("-3.46");
+    expect(roundToDecimal(number, 3).string).toBe("-3.457");
+    expect(roundToDecimal(number, 4).string).toBe("-3.4568");
+    expect(roundToDecimal(number, 5).string).toBe("-3.45678");
+    expect(roundToDecimal(number, 6).string).toBe("-3.456780");
+  });
+
+  test("rounds positive and negative floating-point numeric strings to the specified decimal place", () => {
+    let number = "2.34567";
+    expect(roundToDecimal(number, 0).number).toBe(2);
+    expect(roundToDecimal(number, 1).number).toBe(2.3);
+    expect(roundToDecimal(number, 2).number).toBe(2.35);
+    expect(roundToDecimal(number, 3).number).toBe(2.346);
+    expect(roundToDecimal(number, 4).number).toBe(2.3457);
+    expect(roundToDecimal(number, 5).number).toBe(2.34567);
+    expect(roundToDecimal(number, 6).number).toBe(2.34567);
+    expect(roundToDecimal(number, 0).string).toBe("2");
+    expect(roundToDecimal(number, 1).string).toBe("2.3");
+    expect(roundToDecimal(number, 2).string).toBe("2.35");
+    expect(roundToDecimal(number, 3).string).toBe("2.346");
+    expect(roundToDecimal(number, 4).string).toBe("2.3457");
+    expect(roundToDecimal(number, 5).string).toBe("2.34567");
+    expect(roundToDecimal(number, 6).string).toBe("2.345670");
+
+    number = "-3.45678";
+    expect(roundToDecimal(number, 0).number).toBe(-3);
+    expect(roundToDecimal(number, 1).number).toBe(-3.5);
+    expect(roundToDecimal(number, 2).number).toBe(-3.46);
+    expect(roundToDecimal(number, 3).number).toBe(-3.457);
+    expect(roundToDecimal(number, 4).number).toBe(-3.4568);
+    expect(roundToDecimal(number, 5).number).toBe(-3.45678);
+    expect(roundToDecimal(number, 6).number).toBe(-3.45678);
+    expect(roundToDecimal(number, 0).string).toBe("-3");
+    expect(roundToDecimal(number, 1).string).toBe("-3.5");
+    expect(roundToDecimal(number, 2).string).toBe("-3.46");
+    expect(roundToDecimal(number, 3).string).toBe("-3.457");
+    expect(roundToDecimal(number, 4).string).toBe("-3.4568");
+    expect(roundToDecimal(number, 5).string).toBe("-3.45678");
+    expect(roundToDecimal(number, 6).string).toBe("-3.456780");
+  });
+
+  test("rounds integer numeric strings to the specified decimal place", () => {
+    let number = "1";
+    expect(roundToDecimal(number, 0).number).toBe(1);
+    expect(roundToDecimal(number, 1).number).toBe(1);
+    expect(roundToDecimal(number, 2).number).toBe(1);
+    expect(roundToDecimal(number, 3).number).toBe(1);
+    expect(roundToDecimal(number, 4).number).toBe(1);
+    expect(roundToDecimal(number, 0).string).toBe("1");
+    expect(roundToDecimal(number, 1).string).toBe("1.0");
+    expect(roundToDecimal(number, 2).string).toBe("1.00");
+    expect(roundToDecimal(number, 3).string).toBe("1.000");
+    expect(roundToDecimal(number, 4).string).toBe("1.0000");
+
+    number = "-1";
+    expect(roundToDecimal(number, 0).number).toBe(-1);
+    expect(roundToDecimal(number, 1).number).toBe(-1);
+    expect(roundToDecimal(number, 2).number).toBe(-1);
+    expect(roundToDecimal(number, 3).number).toBe(-1);
+    expect(roundToDecimal(number, 4).number).toBe(-1);
+    expect(roundToDecimal(number, 0).string).toBe("-1");
+    expect(roundToDecimal(number, 1).string).toBe("-1.0");
+    expect(roundToDecimal(number, 2).string).toBe("-1.00");
+    expect(roundToDecimal(number, 3).string).toBe("-1.000");
+    expect(roundToDecimal(number, 4).string).toBe("-1.0000");
+
+    number = "0";
+    expect(roundToDecimal(number, 0).number).toBe(0);
+    expect(roundToDecimal(number, 1).number).toBe(0);
+    expect(roundToDecimal(number, 2).number).toBe(0);
+    expect(roundToDecimal(number, 3).number).toBe(0);
+    expect(roundToDecimal(number, 4).number).toBe(0);
+    expect(roundToDecimal(number, 0).string).toBe("0");
+    expect(roundToDecimal(number, 1).string).toBe("0.0");
+    expect(roundToDecimal(number, 2).string).toBe("0.00");
+    expect(roundToDecimal(number, 3).string).toBe("0.000");
+    expect(roundToDecimal(number, 4).string).toBe("0.0000");
+  });
+
+  test("throws out error when the number argument is a non-numeric string or NaN", () => {
+    const decimalPlace = 3;
+
+    const goodNumbers = [
+      -2.5,
+      -1,
+      0,
+      1,
+      2.5,
+      "-2.5",
+      "-1",
+      "0",
+      "1",
+      "2.5",
+      "1.5%",
+      "-1.5%",
+    ];
+    goodNumbers.forEach((n) => {
+      let result: number | string = roundToDecimal(n, decimalPlace).number;
+      expect(result).toBeTypeOf("number");
+      expect(result).not.toBeNaN();
+
+      result = roundToDecimal(n, decimalPlace).string;
+      expect(result).toBeTypeOf("string");
+      expect(result).not.toBe("");
+      expect(result).not.toBe("NaN");
+    });
+
+    const badNumbers = [NaN, "abc", "NaN"];
+    badNumbers.forEach((n) => {
+      expect(() => roundToDecimal(n, decimalPlace).number).toThrow();
+      expect(() => roundToDecimal(n, decimalPlace).string).toThrow();
+    });
+  });
+
+  test("throws out error when the decimal place argument is not zero or a positve integer", () => {
+    const number = 10.0;
+
+    const goodDecimalPlaces = [0, 1, 2, 3, 4];
+    goodDecimalPlaces.forEach((dp) => {
+      let result: number | string = roundToDecimal(number, dp).number;
+      expect(result).toBeTypeOf("number");
+      expect(result).not.toBeNaN();
+
+      result = roundToDecimal(number, dp).string;
+      expect(result).toBeTypeOf("string");
+      expect(result).not.toBe("");
+      expect(result).not.toBe("NaN");
+    });
+
+    const badDecimalPlaces = [
+      -1,
+      -1.5,
+      2.5,
+      "1",
+      "1.5",
+      "-2",
+      "-2.5",
+      "0",
+      NaN,
+    ];
+    badDecimalPlaces.forEach((dp) => {
+      // @ts-expect-error: strings are included for testing purposes
+      expect(() => roundToDecimal(number, dp).number).toThrow();
+      // @ts-expect-error: strings are included for testing purposes
+      expect(() => roundToDecimal(number, dp).string).toThrow();
+    });
   });
 });
 
