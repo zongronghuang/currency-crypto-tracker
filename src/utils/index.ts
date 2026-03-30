@@ -123,6 +123,41 @@ export function getPriceRange(
   return priceRange;
 }
 
+export function roundToDecimal(number: number | string, decimalPlace: number) {
+  const isValidNumber =
+    typeof number === "number"
+      ? !Number.isNaN(number)
+      : !Number.isNaN(parseFloat(number));
+
+  const isValidDecimalPlace =
+    !Number.isNaN(decimalPlace) &&
+    decimalPlace >= 0 &&
+    Number.isInteger(decimalPlace);
+
+  if (!isValidNumber)
+    throw new Error(
+      "[BAD INPUT]: The number must be a number (except NaN) or a numeric string",
+    );
+  if (!isValidDecimalPlace)
+    throw new Error(
+      "[BAD INPUT]: The decimal place must be zero or a positive integer",
+    );
+
+  const rawNumber = typeof number === "number" ? number : parseFloat(number);
+
+  // JavaScript 的 Math.round 處理負數進位方法和大多數語言及常識不同
+  // 先以 Math.abs 取絕對值，再用 Math.round 進位，再以 Math.sign 還原 +/- 號
+  const roundedNumber =
+    (Math.sign(rawNumber) *
+      Math.round(Math.abs(rawNumber) * Math.pow(10, decimalPlace))) /
+    Math.pow(10, decimalPlace);
+
+  return {
+    number: roundedNumber,
+    string: roundedNumber.toFixed(decimalPlace),
+  };
+}
+
 export const __private_fns__ = {
   getUserLocale,
   getComputableNumeral,
