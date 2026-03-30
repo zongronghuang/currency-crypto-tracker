@@ -22,16 +22,21 @@ import {
   type CryptoItem,
   type FiatItem,
 } from "./-types";
+import BaselineIcon from "@/assets/trends/baseline.svg";
+import BarIcon from "@/assets/trends/bar.svg";
+import HistogramIcon from "@/assets/trends/histogram.svg";
+import CandlestickIcon from "@/assets/trends/candlestick.svg";
+import TableIcon from "@/assets/trends/table.svg";
 import styles from "./index.module.css";
 
 const TrendsMenu = lazy(() => import("./-components/TrendsMenu"));
 const TableView = lazy(() => import("./-components/TableView"));
-const LineView = lazy(() => import("./-components/LineView"));
+const BaselineView = lazy(() => import("./-components/BaselineView"));
 const BarView = lazy(() => import("./-components/BarView"));
 const CandlestickView = lazy(() => import("./-components/CandlestickView"));
 const HistogramView = lazy(() => import("./-components/HistogramView"));
 
-const views = ["table", "line", "bar", "candlestick", "histogram"] as const;
+const views = ["table", "baseline", "bar", "candlestick", "histogram"] as const;
 
 const chartOptions: DeepPartial<TimeChartOptions> = {
   height: 450,
@@ -196,45 +201,25 @@ function ViewOptions({
   baseCategory: "crypto" | "fiat";
   setView: Dispatch<SetStateAction<View>>;
 }) {
-  const [isListVisible, setIsListVisible] = useState(false);
-  const remainingViews = views.filter((v) => {
-    const isActiveView = v === view;
-    return baseCategory === "fiat"
-      ? !isActiveView && v !== "histogram"
-      : !isActiveView;
-  });
+  const availableViews = views.filter((v) =>
+    baseCategory === "fiat" ? v !== "histogram" : v,
+  );
 
   const capitalize = (text: string) => text[0].toUpperCase() + text.slice(1);
 
   return (
-    <div className="relative mb-2 ml-auto flex w-fit flex-row-reverse gap-3 leading-none">
-      <button
-        title={capitalize(view)}
-        className={clsx(
-          isListVisible && "border-blue-600",
-          "w-8 rounded-sm border border-solid p-0.5 shadow-md",
-        )}
-        onClick={() => setIsListVisible((prev) => !prev)}
-      >
-        <img src={`/src/assets/trends/${view}.svg`} alt={view} />
-      </button>
-
-      {remainingViews.map((v) => (
+    <div className="mb-2 flex gap-3 overflow-x-auto px-1 py-2 leading-none">
+      {availableViews.map((v) => (
         <button
           key={v}
-          title={capitalize(v)}
           className={clsx(
-            isListVisible
-              ? "pointer-events-auto opacity-100"
-              : "pointer-events-none opacity-0",
-            "w-8 rounded-sm border border-solid p-0.5 transition-all hover:border-blue-600",
+            view === v && "bg-blue-600 fill-white stroke-white text-white",
+            "flex w-max shrink-0 items-center justify-between gap-1 rounded-xs px-1 py-0.5 transition-all",
           )}
-          onClick={() => {
-            setIsListVisible(false);
-            setView(v);
-          }}
+          onClick={() => setView(v)}
         >
-          <img src={`/src/assets/trends/${v}.svg`} alt={v} />
+          <ViewIcon view={v} className="h-auto w-6" />
+          {capitalize(v)}
         </button>
       ))}
     </div>
@@ -253,8 +238,8 @@ function DataView({
   switch (view) {
     case "table":
       return <TableView series={series} />;
-    case "line":
-      return <LineView series={series} chartOptions={chartOptions} />;
+    case "baseline":
+      return <BaselineView series={series} chartOptions={chartOptions} />;
     case "bar":
       return <BarView series={series} chartOptions={chartOptions} />;
     case "candlestick":
@@ -319,4 +304,20 @@ function extractTrendsData(trendsData: Trends) {
     startDate,
     endDate,
   };
+}
+
+function ViewIcon({
+  view,
+  className,
+}: {
+  view: (typeof views)[number];
+  className?: string;
+}) {
+  return {
+    table: <TableIcon className={className} />,
+    baseline: <BaselineIcon className={className} />,
+    bar: <BarIcon className={className} />,
+    histogram: <HistogramIcon className={className} />,
+    candlestick: <CandlestickIcon className={className} />,
+  }[view];
 }
