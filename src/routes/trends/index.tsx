@@ -14,14 +14,9 @@ import { type TrendsParams, getTrends } from "@/apis";
 import FooterBar from "../-components/FooterBar";
 import FooterDrawer from "../-components/FooterDrawer";
 import Alert from "../-components/Alert";
+import { extractTrendsData } from "./-helpers";
 import { CRYPTO_TRADING_PAIRS } from "@/constants/crypto-exchange-list";
-import {
-  type Trends,
-  type FiatPrices,
-  type CryptoPrices,
-  type CryptoItem,
-  type FiatItem,
-} from "./-types";
+import { type CryptoItem, type FiatItem } from "./-types";
 import BaselineIcon from "@/assets/trends/baseline.svg";
 import BarIcon from "@/assets/trends/bar.svg";
 import HistogramIcon from "@/assets/trends/histogram.svg";
@@ -62,7 +57,6 @@ const defaultTrendsApiParams: TrendsParams = {
 };
 
 type View = (typeof views)[number];
-type Entry = [string, FiatPrices | CryptoPrices];
 
 export const Route = createFileRoute("/trends/")({
   component: RouteComponent,
@@ -264,52 +258,4 @@ function DataView({
         <Alert title="No Matching View" description="Check your view option." />
       );
   }
-}
-
-function extractTrendsData(trendsData: Trends) {
-  if (!trendsData)
-    return {
-      metaData: {},
-      timeSeriesArray: [],
-      startDate: "",
-      endDate: "",
-    };
-
-  const entries = Object.entries(trendsData);
-
-  const metaData = entries.find(([key]) => key === "Meta Data")![1];
-
-  const timeSeries = entries.find(([key]) => key.includes("Time Series"))![1];
-
-  const dataEntries = Object.entries(timeSeries) as Entry[];
-  const timeSeriesArray = dataEntries
-    .sort((a, b) => a[0].localeCompare(b[0]))
-    .map(([time, data], i, arr) => {
-      const prevData: Entry = arr[i - 1];
-      const formattedData: { [key: string]: string } = {
-        time,
-        high: data["2. high"]!,
-        low: data["3. low"],
-        open: data["1. open"],
-        close: data["4. close"],
-        prevClose: prevData ? prevData[1]["4. close"] : "",
-      };
-
-      const hasVolume = "5. volume" in data;
-      if (hasVolume) {
-        formattedData.volume = data["5. volume"];
-      }
-
-      return formattedData as FiatItem | CryptoItem;
-    });
-
-  const endDate = timeSeriesArray.at(-1)!.time;
-  const startDate = timeSeriesArray[0].time;
-
-  return {
-    metaData,
-    timeSeriesArray,
-    startDate,
-    endDate,
-  };
 }
