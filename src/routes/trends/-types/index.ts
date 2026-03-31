@@ -76,3 +76,13 @@ export type FiatTrends = FiatMetadata & FiatDataList;
 export type CryptoTrends = CryptoMetadata & CryptoDataList;
 
 export type Trends = FiatTrends | CryptoTrends;
+
+export type CandlestickDataPoint = {
+  time: string;
+  open: number;
+  high: number;
+  low: number;
+  close: number;
+};
+
+export type BarDataPoint = CandlestickDataPoint;

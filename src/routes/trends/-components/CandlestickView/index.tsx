@@ -5,20 +5,13 @@ import {
   PriceLine,
 } from "lightweight-charts-react-components";
 import { type DeepPartial, type TimeChartOptions } from "lightweight-charts";
+import { getRates } from "../../-helpers";
 import { type FiatItem, type CryptoItem } from "../../-types";
 
 type VisibleRateLines = {
   max: boolean;
   min: boolean;
   avg: boolean;
-};
-
-type CandlestickDataPoint = {
-  time: string;
-  open: number;
-  high: number;
-  low: number;
-  close: number;
 };
 
 type Rates = Record<"min" | "max" | "avg", number | string>;
@@ -144,20 +137,6 @@ export default function CandlestickView({
       </Chart>
     </div>
   );
-}
-
-function getRates(data: CandlestickDataPoint[]) {
-  let min = Infinity;
-  let max = 0;
-  let sumOfDataPointAverage = 0;
-
-  data.forEach((d) => {
-    min = Math.min(min, d.low);
-    max = Math.max(max, d.high);
-    sumOfDataPointAverage += (d.high + d.low + d.open + d.close) / 4;
-  });
-
-  return { min, max, avg: sumOfDataPointAverage / data.length };
 }
 
 function generateRateLines(rates: Rates, visibleRateLines: VisibleRateLines) {
