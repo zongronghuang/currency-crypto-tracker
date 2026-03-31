@@ -38,6 +38,14 @@ const HistogramView = lazy(() => import("./-components/HistogramView"));
 
 const views = ["table", "baseline", "bar", "candlestick", "histogram"] as const;
 
+const viewIcon = {
+  table: <TableIcon className="h-auto w-6" />,
+  baseline: <BaselineIcon className="h-auto w-6" />,
+  bar: <BarIcon className="h-auto w-6" />,
+  histogram: <HistogramIcon className="h-auto w-6" />,
+  candlestick: <CandlestickIcon className="h-auto w-6" />,
+};
+
 const chartOptions: DeepPartial<TimeChartOptions> = {
   height: 450,
   autoSize: true,
@@ -204,7 +212,7 @@ function ViewOptions({
   const availableViews = views.filter((v) =>
     baseCategory === "fiat" ? v !== "histogram" : v,
   );
-
+  const icon = viewIcon[view];
   const capitalize = (text: string) => text[0].toUpperCase() + text.slice(1);
 
   return (
@@ -218,7 +226,7 @@ function ViewOptions({
           )}
           onClick={() => setView(v)}
         >
-          <ViewIcon view={v} className="h-auto w-6" />
+          {icon}
           {capitalize(v)}
         </button>
       ))}
@@ -304,20 +312,4 @@ function extractTrendsData(trendsData: Trends) {
     startDate,
     endDate,
   };
-}
-
-function ViewIcon({
-  view,
-  className,
-}: {
-  view: (typeof views)[number];
-  className?: string;
-}) {
-  return {
-    table: <TableIcon className={className} />,
-    baseline: <BaselineIcon className={className} />,
-    bar: <BarIcon className={className} />,
-    histogram: <HistogramIcon className={className} />,
-    candlestick: <CandlestickIcon className={className} />,
-  }[view];
 }
