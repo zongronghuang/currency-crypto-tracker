@@ -36,24 +36,25 @@ describe("default state", () => {
     renderWithFileRoutes(<div />, {
       initialLocation: "/trends",
     });
-    const user = userEvent.setup();
 
-    const tableViewButton = await screen.findByTitle(/table/i);
-    const lineViewButton = screen.getByTitle(/line/i);
-    const candlestickViewButton = screen.getByTitle(/candlestick/i);
-    const barViewButton = screen.getByTitle(/bar/i);
-    const histogramViewButton = screen.queryByTitle(/histogram/i);
+    const tableViewButton = await screen.findByRole("button", {
+      name: /table/i,
+    });
+    const baselineViewButton = screen.getByRole("button", {
+      name: /baseline/i,
+    });
+    const candlestickViewButton = screen.getByRole("button", {
+      name: /candlestick/i,
+    });
+    const barViewButton = screen.getByRole("button", { name: /bar/i });
+    const histogramViewButton = screen.queryByRole("button", {
+      name: /histogram/i,
+    });
 
     expect(tableViewButton).toBeVisible();
-    expect(lineViewButton).toHaveClass("opacity-0");
-    expect(candlestickViewButton).toHaveClass("opacity-0");
-    expect(barViewButton).toHaveClass("opacity-0");
-    expect(histogramViewButton).not.toBeInTheDocument();
-
-    await user.click(tableViewButton);
-    expect(lineViewButton).not.toHaveClass("opacity-0");
-    expect(candlestickViewButton).not.toHaveClass("opacity-0");
-    expect(barViewButton).not.toHaveClass("opacity-0");
+    expect(baselineViewButton).toBeVisible();
+    expect(candlestickViewButton).toBeVisible();
+    expect(barViewButton).toBeVisible();
     expect(histogramViewButton).not.toBeInTheDocument();
   });
 
@@ -140,29 +141,25 @@ describe("fiat base currency", () => {
     renderWithFileRoutes(<div />, {
       initialLocation: "/trends",
     });
-    const user = userEvent.setup();
-
-    const tableViewButton = await screen.findByTitle(/table/i);
-    const lineViewButton = screen.getByTitle(/line/i);
-    const barViewButton = screen.getByTitle(/bar/i);
-    const candlestickViewButton = screen.getByTitle(/candlestick/i);
-
-    const hiddenButtons = [
-      lineViewButton,
-      barViewButton,
-      candlestickViewButton,
-    ];
-
-    hiddenButtons.forEach((button) => {
-      expect(button).toHaveClass("opacity-0");
-      expect(button).toHaveClass("pointer-events-none");
+    const tableViewButton = await screen.findByRole("button", {
+      name: /table/i,
+    });
+    const baselineViewButton = screen.getByRole("button", {
+      name: /baseline/i,
+    });
+    const candlestickViewButton = screen.getByRole("button", {
+      name: /candlestick/i,
+    });
+    const barViewButton = screen.getByRole("button", { name: /bar/i });
+    const histogramViewButton = screen.queryByRole("button", {
+      name: /histogram/i,
     });
 
-    await user.click(tableViewButton);
-    hiddenButtons.forEach((button) => {
-      expect(button).toHaveClass("opacity-100");
-      expect(button).toHaveClass("pointer-events-auto");
-    });
+    expect(tableViewButton).toBeVisible();
+    expect(baselineViewButton).toBeVisible();
+    expect(candlestickViewButton).toBeVisible();
+    expect(barViewButton).toBeVisible();
+    expect(histogramViewButton).not.toBeInTheDocument();
   });
 });
 
@@ -208,31 +205,25 @@ describe("crypto base currency", () => {
   test("has 5 view buttons: table, line, bar, candlestick, and histogram buttons", async () => {
     await switchToCryptoBase();
 
-    const user = userEvent.setup();
-
-    const tableViewButton = await screen.findByTitle(/table/i);
-    const lineViewButton = screen.getByTitle(/line/i);
-    const barViewButton = screen.getByTitle(/bar/i);
-    const candlestickViewButton = screen.getByTitle(/candlestick/i);
-    const histogramViewButton = screen.getByTitle(/histogram/i);
-
-    const hiddenButtons = [
-      lineViewButton,
-      barViewButton,
-      candlestickViewButton,
-      histogramViewButton,
-    ];
-
-    hiddenButtons.forEach((button) => {
-      expect(button).toHaveClass("opacity-0");
-      expect(button).toHaveClass("pointer-events-none");
+    const tableViewButton = await screen.findByRole("button", {
+      name: /table/i,
+    });
+    const baselineViewButton = screen.getByRole("button", {
+      name: /baseline/i,
+    });
+    const candlestickViewButton = screen.getByRole("button", {
+      name: /candlestick/i,
+    });
+    const barViewButton = screen.getByRole("button", { name: /bar/i });
+    const histogramViewButton = screen.getByRole("button", {
+      name: /histogram/i,
     });
 
-    await user.click(tableViewButton);
-    hiddenButtons.forEach((button) => {
-      expect(button).toHaveClass("opacity-100");
-      expect(button).toHaveClass("pointer-events-auto");
-    });
+    expect(tableViewButton).toBeVisible();
+    expect(baselineViewButton).toBeVisible();
+    expect(candlestickViewButton).toBeVisible();
+    expect(barViewButton).toBeVisible();
+    expect(histogramViewButton).toBeVisible();
   });
 });
 
