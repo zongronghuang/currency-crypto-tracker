@@ -1,5 +1,6 @@
 import { type RefObject } from "react";
 import { type Point } from "lightweight-charts";
+import { type PriceLineProps } from "lightweight-charts-react-components";
 import {
   type CandlestickDataPoint,
   type BarDataPoint,
@@ -71,6 +72,22 @@ export function extractTrendsData(trendsData: Trends) {
     startDate,
     endDate,
   };
+}
+
+export function generateRateLines(
+  rates: Record<"min" | "max" | "avg", number | string>,
+  visibleRateLines: Record<"min" | "max" | "avg", boolean>,
+  lines: Record<"min" | "max" | "avg", PriceLineProps>,
+) {
+  const generatedLines = [];
+  if (visibleRateLines.min)
+    generatedLines.push({ ...lines.min, price: rates.min });
+  if (visibleRateLines.max)
+    generatedLines.push({ ...lines.max, price: rates.max });
+  if (visibleRateLines.avg)
+    generatedLines.push({ ...lines.avg, price: rates.avg });
+
+  return generatedLines;
 }
 
 export function getTooltipPosition(

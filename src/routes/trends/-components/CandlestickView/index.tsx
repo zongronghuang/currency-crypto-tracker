@@ -3,6 +3,7 @@ import {
   Chart,
   CandlestickSeries,
   PriceLine,
+  type PriceLineProps,
   type SeriesApiRef,
 } from "lightweight-charts-react-components";
 import {
@@ -10,32 +11,29 @@ import {
   type Time,
   type TimeChartOptions,
   type OhlcData,
+  type MouseEventParams,
 } from "lightweight-charts";
 import OhlcTooltip from "../OhlcTooltip";
-import { getRates, getTooltipPosition } from "../../-helpers";
+import {
+  getRates,
+  getTooltipPosition,
+  generateRateLines,
+} from "../../-helpers";
 import { type FiatItem, type CryptoItem } from "../../-types";
 
-type VisibleRateLines = {
-  max: boolean;
-  min: boolean;
-  avg: boolean;
-};
-
-type Rates = Record<"min" | "max" | "avg", number | string>;
-
-const maxRateLine = {
-  price: "0",
+const maxRateLine: PriceLineProps = {
+  price: 0,
   options: {
     title: "Max rate",
     color: "green",
-    lineWidth: 2,
+    lineWidth: 2 as const,
     axisLabelVisible: true,
     lineStyle: 0,
   },
-} as const;
+};
 
-const avgRateLine = {
-  price: "0",
+const avgRateLine: PriceLineProps = {
+  price: 0,
   options: {
     title: "Avg rate",
     color: "blue",
@@ -43,10 +41,10 @@ const avgRateLine = {
     axisLabelVisible: true,
     lineStyle: 0,
   },
-} as const;
+};
 
-const minRateLine = {
-  price: "0",
+const minRateLine: PriceLineProps = {
+  price: 0,
   options: {
     title: "Min rate",
     color: "orange",
@@ -54,7 +52,7 @@ const minRateLine = {
     axisLabelVisible: true,
     lineStyle: 0,
   },
-} as const;
+};
 
 export default function CandlestickView({
   series,
@@ -67,14 +65,16 @@ export default function CandlestickView({
   const tooltipRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [tooltipData, setTooltipData] = useState<OhlcData<Time>>({
-    time: "2000-01-01",
+    time: "",
     open: 0,
     high: 0,
     low: 0,
     close: 0,
   });
   const [isTooltipVisible, setIsToolTipVisible] = useState(false);
-  const [visibleRateLines, setVisibleRateLines] = useState<VisibleRateLines>({
+  const [visibleRateLines, setVisibleRateLines] = useState<
+    Record<"min" | "max" | "avg", boolean>
+  >({
     min: false,
     avg: false,
     max: false,
@@ -91,7 +91,32 @@ export default function CandlestickView({
   const enabledRateLines = generateRateLines(
     getRates(candlestickData),
     visibleRateLines,
+    { max: maxRateLine, min: minRateLine, avg: avgRateLine },
   );
+
+  const handleCrosshairMove = (params: MouseEventParams<Time>) => {
+    if (!seriesRef.current || !params.point) return;
+
+    const seriesApi = seriesRef.current.api();
+    if (!seriesApi) return;
+
+    const data = params.seriesData.get(seriesApi) as OhlcData<Time>;
+    if (!data) return;
+
+    setIsToolTipVisible(true);
+    setTooltipData(data);
+
+    // 更新 tooltip 位置
+    requestAnimationFrame(() => {
+      const { x, y } = getTooltipPosition(
+        containerRef,
+        tooltipRef,
+        params.point!,
+      );
+      tooltipRef.current!.style.left = `${x}px`;
+      tooltipRef.current!.style.top = `${y}px`;
+    });
+  };
 
   return (
     <div aria-label="candlestick view">
@@ -146,29 +171,7 @@ export default function CandlestickView({
         <Chart
           ref={containerRef}
           options={chartOptions}
-          onCrosshairMove={(params) => {
-            console.log({ point: params.point });
-            if (!seriesRef.current || !params.point) return;
-
-            const seriesApi = seriesRef.current.api();
-            if (!seriesApi) return;
-
-            const data = params.seriesData.get(seriesApi) as OhlcData<Time>;
-            if (!data) return;
-
-            setIsToolTipVisible(true);
-            setTooltipData(data);
-
-            requestAnimationFrame(() => {
-              const { x, y } = getTooltipPosition(
-                containerRef,
-                tooltipRef,
-                params.point!,
-              );
-              tooltipRef.current!.style.left = `${x}px`;
-              tooltipRef.current!.style.top = `${y}px`;
-            });
-          }}
+          onCrosshairMove={handleCrosshairMove}
         >
           <CandlestickSeries data={candlestickData} ref={seriesRef}>
             {enabledRateLines.map(({ price, options }) => (
@@ -192,13 +195,4 @@ export default function CandlestickView({
       </div>
     </div>
   );
-}
-
-function generateRateLines(rates: Rates, visibleRateLines: VisibleRateLines) {
-  const lines = [];
-  if (visibleRateLines.min) lines.push({ ...minRateLine, price: rates.min });
-  if (visibleRateLines.max) lines.push({ ...maxRateLine, price: rates.max });
-  if (visibleRateLines.avg) lines.push({ ...avgRateLine, price: rates.avg });
-
-  return lines;
 }
