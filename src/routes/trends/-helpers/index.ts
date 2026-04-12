@@ -1,3 +1,5 @@
+import { type RefObject } from "react";
+import { type Point } from "lightweight-charts";
 import {
   type CandlestickDataPoint,
   type BarDataPoint,
@@ -69,4 +71,31 @@ export function extractTrendsData(trendsData: Trends) {
     startDate,
     endDate,
   };
+}
+
+export function getTooltipPosition(
+  containerRef: RefObject<HTMLDivElement | null>,
+  tooltipRef: RefObject<HTMLDivElement | null>,
+  crosshairPosition: Point,
+) {
+  const containerWidth = containerRef.current!.clientWidth;
+  const tooltipWidth = tooltipRef.current!.clientWidth;
+  const tooltipHeight = tooltipRef.current!.clientHeight;
+
+  const defaultX = crosshairPosition.x - tooltipWidth / 2;
+  const defaultY = crosshairPosition.y - tooltipHeight * 1.2;
+
+  let x = defaultX;
+  let y = defaultY;
+
+  const isNearLeftEdge = defaultX <= 0;
+  const isNearRightEdge = defaultX + tooltipWidth >= containerWidth;
+  if (isNearLeftEdge) x = defaultX + tooltipWidth / 2;
+  if (isNearRightEdge) x = defaultX - tooltipWidth / 2;
+
+  const isNearTopEdge = defaultY <= 0;
+  const minDistanceY = 30;
+  if (isNearTopEdge) y = crosshairPosition.y + minDistanceY;
+
+  return { x, y };
 }

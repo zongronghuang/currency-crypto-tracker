@@ -1,4 +1,4 @@
-import { useState, useRef, type RefObject } from "react";
+import { useState, useRef } from "react";
 import {
   Chart,
   CandlestickSeries,
@@ -10,10 +10,9 @@ import {
   type Time,
   type TimeChartOptions,
   type OhlcData,
-  type Point,
 } from "lightweight-charts";
-import clsx from "clsx";
-import { getRates } from "../../-helpers";
+import OhlcTooltip from "../OhlcTooltip";
+import { getRates, getTooltipPosition } from "../../-helpers";
 import { type FiatItem, type CryptoItem } from "../../-types";
 
 type VisibleRateLines = {
@@ -180,7 +179,7 @@ export default function CandlestickView({
               />
             ))}
           </CandlestickSeries>
-          <Tooltip
+          <OhlcTooltip
             isVisible={isTooltipVisible}
             ref={tooltipRef}
             time={tooltipData.time}
@@ -202,83 +201,4 @@ function generateRateLines(rates: Rates, visibleRateLines: VisibleRateLines) {
   if (visibleRateLines.avg) lines.push({ ...avgRateLine, price: rates.avg });
 
   return lines;
-}
-
-function Tooltip({
-  ref,
-  isVisible,
-  time,
-  high,
-  low,
-  open,
-  close,
-}: {
-  ref: RefObject<HTMLDivElement | null>;
-  isVisible: boolean;
-  time: Time;
-  high?: number;
-  low?: number;
-  open?: number;
-  close?: number;
-}) {
-  return (
-    <div
-      ref={ref}
-      className={clsx(
-        isVisible ? "visible" : "invisible",
-        "absolute z-5 w-fit rounded-lg bg-blue-600 p-2 text-xs font-light text-white shadow-sm",
-      )}
-    >
-      <h3>{time.toString()}</h3>
-      <dl className="grid grid-cols-2">
-        {open && (
-          <>
-            <dt>Open</dt> <dd>{open}</dd>
-          </>
-        )}
-        {high && (
-          <>
-            <dt>High</dt> <dd>{high}</dd>
-          </>
-        )}
-        {low && (
-          <>
-            <dt>Low</dt> <dd>{low}</dd>
-          </>
-        )}
-        {close && (
-          <>
-            <dt>Close</dt> <dd>{close}</dd>
-          </>
-        )}
-      </dl>
-    </div>
-  );
-}
-
-function getTooltipPosition(
-  containerRef: RefObject<HTMLDivElement | null>,
-  tooltipRef: RefObject<HTMLDivElement | null>,
-  crosshairPosition: Point,
-) {
-  const containerWidth = containerRef.current!.clientWidth;
-  const tooltipWidth = tooltipRef.current!.clientWidth;
-  const tooltipHeight = tooltipRef.current!.clientHeight;
-
-  const defaultX = crosshairPosition.x - tooltipWidth / 2;
-  const defaultY = crosshairPosition.y - tooltipHeight * 1.2;
-
-  let x = defaultX;
-  let y = defaultY;
-
-  const isNearLeftEdge = defaultX <= 0;
-  const isNearRightEdge = defaultX + tooltipWidth >= containerWidth;
-  if (isNearLeftEdge) x = defaultX + tooltipWidth / 2;
-  if (isNearRightEdge) x = defaultX - tooltipWidth / 2;
-
-  const isNearTopEdge = defaultY <= 0;
-  const minDistanceY = 30;
-  if (isNearTopEdge) y = crosshairPosition.y + minDistanceY;
-
-  return { x, y };
 }
