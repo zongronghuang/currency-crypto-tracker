@@ -62,14 +62,12 @@ export default function BarView({
     avg: false,
     max: false,
   });
-  const { isTooltipVisible, tooltipData, handleTooltipUpdate } = useTooltip(
-    "histogram",
-    {
+  const { isTooltipVisible, turnOffTooltip, tooltipData, updateTooltip } =
+    useTooltip("histogram", {
       seriesRef,
       tooltipRef,
       containerRef,
-    },
-  );
+    });
 
   const high = "high" in tooltipData ? tooltipData.high : 0;
   const low = "low" in tooltipData ? tooltipData.low : 0;
@@ -139,11 +137,11 @@ export default function BarView({
         </label>
       </div>
 
-      <div className="relative">
+      <div className="relative" onMouseLeave={turnOffTooltip}>
         <Chart
           ref={containerRef}
           options={chartOptions}
-          onCrosshairMove={handleTooltipUpdate}
+          onCrosshairMove={updateTooltip}
         >
           <BarSeries ref={seriesRef} data={barData}>
             {enabledRateLines.map(({ price, options }) => (

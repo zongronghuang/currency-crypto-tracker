@@ -23,14 +23,12 @@ export default function BaselineView({
   const seriesRef = useRef<SeriesApiRef<"Baseline">>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { isTooltipVisible, tooltipData, handleTooltipUpdate } = useTooltip(
-    "histogram",
-    {
+  const { isTooltipVisible, tooltipData, updateTooltip, turnOffTooltip } =
+    useTooltip("histogram", {
       seriesRef,
       tooltipRef,
       containerRef,
-    },
-  );
+    });
 
   const close = "value" in tooltipData ? tooltipData.value : 0;
 
@@ -79,11 +77,11 @@ export default function BaselineView({
         </span>
       </div>
 
-      <div className="relative">
+      <div className="relative" onMouseLeave={turnOffTooltip}>
         <Chart
           ref={containerRef}
           options={chartOptions}
-          onCrosshairMove={handleTooltipUpdate}
+          onCrosshairMove={updateTooltip}
         >
           <BaselineSeries
             ref={seriesRef}

@@ -55,14 +55,12 @@ export default function CandlestickView({
   const seriesRef = useRef<SeriesApiRef<"Candlestick">>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const { isTooltipVisible, tooltipData, handleTooltipUpdate } = useTooltip(
-    "histogram",
-    {
+  const { isTooltipVisible, tooltipData, updateTooltip, turnOffTooltip } =
+    useTooltip("histogram", {
       seriesRef,
       tooltipRef,
       containerRef,
-    },
-  );
+    });
   const [visibleRateLines, setVisibleRateLines] = useState<
     Record<"min" | "max" | "avg", boolean>
   >({
@@ -139,11 +137,11 @@ export default function CandlestickView({
         </label>
       </div>
 
-      <div className="relative">
+      <div className="relative" onMouseLeave={turnOffTooltip}>
         <Chart
           ref={containerRef}
           options={chartOptions}
-          onCrosshairMove={handleTooltipUpdate}
+          onCrosshairMove={updateTooltip}
         >
           <CandlestickSeries data={candlestickData} ref={seriesRef}>
             {enabledRateLines.map(({ price, options }) => (
