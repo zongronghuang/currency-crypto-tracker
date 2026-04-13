@@ -1,10 +1,16 @@
-import { useState } from "react";
-import { Chart, BaselineSeries } from "lightweight-charts-react-components";
+import { useState, useRef } from "react";
+import {
+  Chart,
+  BaselineSeries,
+  type SeriesApiRef,
+} from "lightweight-charts-react-components";
 import {
   type DeepPartial,
   type TimeChartOptions,
   type BaselineStyleOptions,
 } from "lightweight-charts";
+import useTooltip from "@/hooks/useTooltip";
+import OhlcvTooltip from "../OhlcvTooltip";
 import { type FiatItem, type CryptoItem } from "../../-types";
 
 export default function BaselineView({
@@ -14,6 +20,20 @@ export default function BaselineView({
   series: (FiatItem | CryptoItem)[];
   chartOptions: DeepPartial<TimeChartOptions>;
 }) {
+  const seriesRef = useRef<SeriesApiRef<"Baseline">>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { isTooltipVisible, tooltipData, handleTooltipUpdate } = useTooltip(
+    "histogram",
+    {
+      seriesRef,
+      tooltipRef,
+      containerRef,
+    },
+  );
+
+  const close = "value" in tooltipData ? tooltipData.value : 0;
+
   const baselineData = series.map((s) => ({
     time: s.time,
     value: +s.close, // close exchange rate 之意
@@ -58,9 +78,27 @@ export default function BaselineView({
           Max <br /> {maxRate}
         </span>
       </div>
-      <Chart options={chartOptions}>
-        <BaselineSeries data={baselineData} options={baselineStyleOptions} />
-      </Chart>
+
+      <div className="relative">
+        <Chart
+          ref={containerRef}
+          options={chartOptions}
+          onCrosshairMove={handleTooltipUpdate}
+        >
+          <BaselineSeries
+            ref={seriesRef}
+            data={baselineData}
+            options={baselineStyleOptions}
+          />
+
+          <OhlcvTooltip
+            ref={tooltipRef}
+            isVisible={isTooltipVisible}
+            time={tooltipData.time}
+            close={close}
+          />
+        </Chart>
+      </div>
     </div>
   );
 }
