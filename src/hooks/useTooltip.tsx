@@ -54,7 +54,12 @@ export default function useTooltip(
   >(defaultTooltipData[seriesType]);
   const [isTooltipVisible, setIsToolTipVisible] = useState(false);
 
-  const handleTooltipUpdate = useCallback(
+  const turnOffTooltip = useCallback(
+    () => requestAnimationFrame(() => setIsToolTipVisible(false)),
+    [],
+  );
+
+  const updateTooltip = useCallback(
     (params: MouseEventParams<Time>) => {
       if (!seriesRef.current || !params.point) return;
 
@@ -85,11 +90,9 @@ export default function useTooltip(
   );
 
   return {
-    seriesRef,
-    containerRef,
-    tooltipRef,
     isTooltipVisible,
+    turnOffTooltip,
     tooltipData,
-    handleTooltipUpdate,
+    updateTooltip,
   };
 }
