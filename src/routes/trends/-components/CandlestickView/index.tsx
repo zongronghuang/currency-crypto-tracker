@@ -6,19 +6,10 @@ import {
   type PriceLineProps,
   type SeriesApiRef,
 } from "lightweight-charts-react-components";
-import {
-  type DeepPartial,
-  type Time,
-  type TimeChartOptions,
-  type OhlcData,
-  type MouseEventParams,
-} from "lightweight-charts";
-import OhlcTooltip from "../OhlcTooltip";
-import {
-  getRates,
-  getTooltipPosition,
-  generateRateLines,
-} from "../../-helpers";
+import { type DeepPartial, type TimeChartOptions } from "lightweight-charts";
+import useTooltip from "@/hooks/useTooltip";
+import OhlcvTooltip from "../OhlcvTooltip";
+import { getRates, generateRateLines } from "../../-helpers";
 import { type FiatItem, type CryptoItem } from "../../-types";
 
 const maxRateLine: PriceLineProps = {
@@ -64,14 +55,14 @@ export default function CandlestickView({
   const seriesRef = useRef<SeriesApiRef<"Candlestick">>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [tooltipData, setTooltipData] = useState<OhlcData<Time>>({
-    time: "",
-    open: 0,
-    high: 0,
-    low: 0,
-    close: 0,
-  });
-  const [isTooltipVisible, setIsToolTipVisible] = useState(false);
+  const { isTooltipVisible, tooltipData, handleTooltipUpdate } = useTooltip(
+    "histogram",
+    {
+      seriesRef,
+      tooltipRef,
+      containerRef,
+    },
+  );
   const [visibleRateLines, setVisibleRateLines] = useState<
     Record<"min" | "max" | "avg", boolean>
   >({
@@ -94,29 +85,10 @@ export default function CandlestickView({
     { max: maxRateLine, min: minRateLine, avg: avgRateLine },
   );
 
-  const handleCrosshairMove = (params: MouseEventParams<Time>) => {
-    if (!seriesRef.current || !params.point) return;
-
-    const seriesApi = seriesRef.current.api();
-    if (!seriesApi) return;
-
-    const data = params.seriesData.get(seriesApi) as OhlcData<Time>;
-    if (!data) return;
-
-    // 更新 tooltip
-    requestAnimationFrame(() => {
-      setIsToolTipVisible(true);
-      setTooltipData(data);
-
-      const { x, y } = getTooltipPosition(
-        containerRef,
-        tooltipRef,
-        params.point!,
-      );
-      tooltipRef.current!.style.left = `${x}px`;
-      tooltipRef.current!.style.top = `${y}px`;
-    });
-  };
+  const high = "high" in tooltipData ? tooltipData.high : 0;
+  const low = "low" in tooltipData ? tooltipData.low : 0;
+  const open = "open" in tooltipData ? tooltipData.open : 0;
+  const close = "close" in tooltipData ? tooltipData.close : 0;
 
   return (
     <div aria-label="candlestick view">
@@ -171,7 +143,7 @@ export default function CandlestickView({
         <Chart
           ref={containerRef}
           options={chartOptions}
-          onCrosshairMove={handleCrosshairMove}
+          onCrosshairMove={handleTooltipUpdate}
         >
           <CandlestickSeries data={candlestickData} ref={seriesRef}>
             {enabledRateLines.map(({ price, options }) => (
@@ -182,14 +154,14 @@ export default function CandlestickView({
               />
             ))}
           </CandlestickSeries>
-          <OhlcTooltip
+          <OhlcvTooltip
             isVisible={isTooltipVisible}
             ref={tooltipRef}
             time={tooltipData.time}
-            high={tooltipData.high}
-            low={tooltipData.low}
-            open={tooltipData.open}
-            close={tooltipData.close}
+            high={high}
+            low={low}
+            open={open}
+            close={close}
           />
         </Chart>
       </div>
