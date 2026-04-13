@@ -210,7 +210,7 @@ function ViewOptions({
   const capitalize = (text: string) => text[0].toUpperCase() + text.slice(1);
 
   return (
-    <div className="mb-2 flex gap-3 overflow-x-auto px-1 py-2 leading-none">
+    <div className="mb-2 flex justify-end gap-3 overflow-x-auto px-1 py-2 leading-none">
       {availableViews.map((v) => (
         <button
           key={v}
