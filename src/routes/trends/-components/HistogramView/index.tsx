@@ -1,5 +1,12 @@
-import { Chart, HistogramSeries } from "lightweight-charts-react-components";
+import { useRef } from "react";
+import {
+  Chart,
+  HistogramSeries,
+  type SeriesApiRef,
+} from "lightweight-charts-react-components";
 import { type DeepPartial, type TimeChartOptions } from "lightweight-charts";
+import useTooltip from "@/hooks/useTooltip";
+import OhlcvTooltip from "../OhlcvTooltip";
 import { type CryptoItem } from "../../-types";
 
 export default function HistogramView({
@@ -9,6 +16,19 @@ export default function HistogramView({
   series: CryptoItem[];
   chartOptions: DeepPartial<TimeChartOptions>;
 }) {
+  const seriesRef = useRef<SeriesApiRef<"Histogram">>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const { isTooltipVisible, tooltipData, handleTooltipUpdate } = useTooltip(
+    "histogram",
+    {
+      seriesRef,
+      tooltipRef,
+      containerRef,
+    },
+  );
+  const volume = "value" in tooltipData ? tooltipData.value : 0;
+
   const histogramData = series.map((s) => ({
     time: s.time,
     value: +s.volume,
@@ -20,9 +40,22 @@ export default function HistogramView({
         Check the trading volumes of the base currency in the quote currency.
         Trading volume data is only available for cryptocurrencies.
       </p>
-      <Chart options={chartOptions}>
-        <HistogramSeries data={histogramData} />
-      </Chart>
+      <div className="relative">
+        <Chart
+          ref={containerRef}
+          options={chartOptions}
+          onCrosshairMove={handleTooltipUpdate}
+        >
+          <HistogramSeries ref={seriesRef} data={histogramData} />
+
+          <OhlcvTooltip
+            ref={tooltipRef}
+            isVisible={isTooltipVisible}
+            time={tooltipData.time}
+            volume={volume}
+          />
+        </Chart>
+      </div>
     </div>
   );
 }
