@@ -2,7 +2,7 @@ import { type RefObject } from "react";
 import { type Time } from "lightweight-charts";
 import clsx from "clsx";
 
-export default function OhlcTooltip({
+export default function OhlcvTooltip({
   ref,
   isVisible,
   time,
@@ -10,6 +10,7 @@ export default function OhlcTooltip({
   low,
   open,
   close,
+  volume,
 }: {
   ref: RefObject<HTMLDivElement | null>;
   isVisible: boolean;
@@ -18,6 +19,7 @@ export default function OhlcTooltip({
   low?: number;
   open?: number;
   close?: number;
+  volume?: number;
 }) {
   return (
     <div
@@ -47,6 +49,11 @@ export default function OhlcTooltip({
         {close && (
           <>
             <dt>Close</dt> <dd>{close}</dd>
+          </>
+        )}
+        {volume && (
+          <>
+            <dt>Volume</dt> <dd>{volume}</dd>
           </>
         )}
       </dl>
