@@ -206,7 +206,6 @@ function ViewOptions({
   const availableViews = views.filter((v) =>
     baseCategory === "fiat" ? v !== "histogram" : v,
   );
-  const icon = viewIcon[view];
   const capitalize = (text: string) => text[0].toUpperCase() + text.slice(1);
 
   return (
@@ -220,7 +219,7 @@ function ViewOptions({
           )}
           onClick={() => setView(v)}
         >
-          {icon}
+          {viewIcon[v]}
           {capitalize(v)}
         </button>
       ))}
