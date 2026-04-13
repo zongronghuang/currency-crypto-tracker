@@ -1,23 +1,28 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import {
   Chart,
   BarSeries,
   PriceLine,
+  type PriceLineProps,
+  type SeriesApiRef,
 } from "lightweight-charts-react-components";
-import { type DeepPartial, type TimeChartOptions } from "lightweight-charts";
-import { getRates } from "../../-helpers";
+import {
+  type DeepPartial,
+  type Time,
+  type TimeChartOptions,
+  type OhlcData,
+  type MouseEventParams,
+} from "lightweight-charts";
+import OhlcTooltip from "../OhlcTooltip";
+import {
+  getRates,
+  getTooltipPosition,
+  generateRateLines,
+} from "../../-helpers";
 import { type FiatItem, type CryptoItem } from "../../-types";
 
-type VisibleRateLines = {
-  max: boolean;
-  min: boolean;
-  avg: boolean;
-};
-
-type Rates = Record<"min" | "max" | "avg", number | string>;
-
-const maxRateLine = {
-  price: "0",
+const maxRateLine: PriceLineProps = {
+  price: 0,
   options: {
     title: "Max rate",
     color: "green",
@@ -25,10 +30,10 @@ const maxRateLine = {
     axisLabelVisible: true,
     lineStyle: 0,
   },
-} as const;
+};
 
-const avgRateLine = {
-  price: "0",
+const avgRateLine: PriceLineProps = {
+  price: 0,
   options: {
     title: "Avg rate",
     color: "blue",
@@ -36,10 +41,10 @@ const avgRateLine = {
     axisLabelVisible: true,
     lineStyle: 0,
   },
-} as const;
+};
 
-const minRateLine = {
-  price: "0",
+const minRateLine: PriceLineProps = {
+  price: 0,
   options: {
     title: "Min rate",
     color: "orange",
@@ -47,7 +52,7 @@ const minRateLine = {
     axisLabelVisible: true,
     lineStyle: 0,
   },
-} as const;
+};
 
 export default function BarView({
   series,
@@ -56,7 +61,20 @@ export default function BarView({
   series: (FiatItem | CryptoItem)[];
   chartOptions: DeepPartial<TimeChartOptions>;
 }) {
-  const [visibleRateLines, setVisibleRateLines] = useState<VisibleRateLines>({
+  const seriesRef = useRef<SeriesApiRef<"Bar">>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const [tooltipData, setTooltipData] = useState<OhlcData<Time>>({
+    time: "",
+    open: 0,
+    high: 0,
+    low: 0,
+    close: 0,
+  });
+  const [isTooltipVisible, setIsToolTipVisible] = useState(false);
+  const [visibleRateLines, setVisibleRateLines] = useState<
+    Record<"min" | "max" | "avg", boolean>
+  >({
     min: false,
     avg: false,
     max: false,
@@ -73,7 +91,32 @@ export default function BarView({
   const enabledRateLines = generateRateLines(
     getRates(barData),
     visibleRateLines,
+    { max: maxRateLine, min: minRateLine, avg: avgRateLine },
   );
+
+  const handleCrosshairMove = (params: MouseEventParams<Time>) => {
+    if (!seriesRef.current || !params.point) return;
+
+    const seriesApi = seriesRef.current.api();
+    if (!seriesApi) return;
+
+    const data = params.seriesData.get(seriesApi) as OhlcData<Time>;
+    if (!data) return;
+
+    // 更新 tooltip
+    requestAnimationFrame(() => {
+      setIsToolTipVisible(true);
+      setTooltipData(data);
+
+      const { x, y } = getTooltipPosition(
+        containerRef,
+        tooltipRef,
+        params.point!,
+      );
+      tooltipRef.current!.style.left = `${x}px`;
+      tooltipRef.current!.style.top = `${y}px`;
+    });
+  };
 
   return (
     <div aria-label="bar view">
@@ -124,26 +167,32 @@ export default function BarView({
         </label>
       </div>
 
-      <Chart options={chartOptions}>
-        <BarSeries data={barData}>
-          {enabledRateLines.map(({ price, options }) => (
-            <PriceLine
-              key={`${options?.title}-${price}`}
-              options={options}
-              price={+price}
-            />
-          ))}
-        </BarSeries>
-      </Chart>
+      <div className="relative">
+        <Chart
+          ref={containerRef}
+          options={chartOptions}
+          onCrosshairMove={handleCrosshairMove}
+        >
+          <BarSeries ref={seriesRef} data={barData}>
+            {enabledRateLines.map(({ price, options }) => (
+              <PriceLine
+                key={`${options?.title}-${price}`}
+                options={options}
+                price={+price}
+              />
+            ))}
+          </BarSeries>
+          <OhlcTooltip
+            isVisible={isTooltipVisible}
+            ref={tooltipRef}
+            time={tooltipData.time}
+            high={tooltipData.high}
+            low={tooltipData.low}
+            open={tooltipData.open}
+            close={tooltipData.close}
+          />
+        </Chart>
+      </div>
     </div>
   );
-}
-
-function generateRateLines(rates: Rates, visibleRateLines: VisibleRateLines) {
-  const lines = [];
-  if (visibleRateLines.min) lines.push({ ...minRateLine, price: rates.min });
-  if (visibleRateLines.max) lines.push({ ...maxRateLine, price: rates.max });
-  if (visibleRateLines.avg) lines.push({ ...avgRateLine, price: rates.avg });
-
-  return lines;
 }
