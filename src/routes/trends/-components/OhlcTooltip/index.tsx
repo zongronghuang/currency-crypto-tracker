@@ -24,10 +24,10 @@ export default function OhlcTooltip({
       ref={ref}
       className={clsx(
         isVisible ? "visible" : "invisible",
-        "absolute z-5 w-fit rounded-lg bg-blue-600 p-2 text-xs font-light text-white shadow-sm",
+        "absolute z-5 w-fit rounded bg-blue-600 p-1 text-xs font-light text-white shadow-sm",
       )}
     >
-      <h3>{time.toString()}</h3>
+      <h3 className="text-center font-semibold">{time.toString()}</h3>
       <dl className="grid grid-cols-2">
         {open && (
           <>
