@@ -103,11 +103,11 @@ export default function CandlestickView({
     const data = params.seriesData.get(seriesApi) as OhlcData<Time>;
     if (!data) return;
 
-    setIsToolTipVisible(true);
-    setTooltipData(data);
-
-    // 更新 tooltip 位置
+    // 更新 tooltip
     requestAnimationFrame(() => {
+      setIsToolTipVisible(true);
+      setTooltipData(data);
+
       const { x, y } = getTooltipPosition(
         containerRef,
         tooltipRef,
