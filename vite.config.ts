@@ -4,6 +4,7 @@ import path from "path";
 import react from "@vitejs/plugin-react";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import tailwindcss from "@tailwindcss/vite";
+import svgr from "vite-plugin-svgr";
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -17,6 +18,7 @@ export default defineConfig({
     }),
     react(),
     tailwindcss({ optimize: { minify: true } }),
+    svgr({ include: "**/*.svg" }),
   ],
   test: {
     globals: true,

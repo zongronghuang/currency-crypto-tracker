@@ -2,6 +2,7 @@ import { z } from "zod";
 import { request } from "./request";
 import { FIATS, FIAT_NAMES } from "@/constants/fiat-currency-list";
 import { CRYPTOS, CRYPTO_NAMES } from "@/constants/crypto-currency-list";
+import { TRADABLE_CRYPTOS } from "@/constants/crypto-exchange-list";
 import type { FiatName, CryptoName } from "@/constants/types";
 
 // https://www.alphavantage.co/documentation/#currency-exchange
@@ -89,3 +90,44 @@ export const getNews = ({
     `https://api.example.com/news?function=NEWS_SENTIMENT&${flattenedQueries}&apikey=demo`,
   );
 };
+
+// https://www.alphavantage.co/documentation/#fx-daily
+// https://www.alphavantage.co/documentation/#fx-weekly
+// https://www.alphavantage.co/documentation/#fx-monthly
+// https://www.alphavantage.co/documentation/#currency-daily
+// https://www.alphavantage.co/documentation/#currency-weekly
+// https://www.alphavantage.co/documentation/#currency-monthly
+const FiatTrendsParamsSchema = z.object({
+  dataPoint: z.enum(["daily", "weekly", "monthly"]),
+  base: z.enum([...FIAT_NAMES]),
+  quote: z.enum([...FIAT_NAMES]),
+});
+const CryptoTrendsParamsSchema = z.object({
+  dataPoint: z.enum(["daily", "weekly", "monthly"]),
+  base: z.enum([...TRADABLE_CRYPTOS]),
+  quote: z.enum(["USD", "BTC", "EUR", "GBP", "USDT", "ETH", "USDC", "DAI"]),
+});
+const TrendsParamsSchema = z.union([
+  FiatTrendsParamsSchema,
+  CryptoTrendsParamsSchema,
+]);
+
+export type TrendsParams = z.infer<typeof TrendsParamsSchema>;
+
+export function getTrends({ dataPoint, base, quote }: TrendsParams) {
+  const result = TrendsParamsSchema.safeParse({
+    dataPoint,
+    base,
+    quote,
+  });
+  if (!result.success) return console.error(z.prettifyError(result.error));
+
+  const formattedDataPoint = dataPoint.toUpperCase();
+
+  const apiUrl =
+    base in FIATS
+      ? `https://api.example.com/fiat_trends?function=FX_${formattedDataPoint}&from_symbol=${base}&to_symbol=${quote}&apikey=demo`
+      : `https://api.example.com/crypto_trends?function=DIGITAL_CURRENCY_${formattedDataPoint}&symbol=${base}&market=${quote}&apikey=demo`;
+
+  return request.GET(apiUrl);
+}

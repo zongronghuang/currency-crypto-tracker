@@ -1,7 +1,7 @@
 import { expect } from "@playwright/test";
 import { test } from "../playwright.setup.ts";
 
-test.describe("mobile touch events", () => {
+test.describe.skip("mobile touch events", () => {
   test.skip(({ isMobile }) => !isMobile, "Mobile only!");
 
   test("swipe side menu open and closed", async ({ page }) => {

@@ -1,198 +1,186 @@
-import { screen, within, waitFor, fireEvent } from "@testing-library/react";
-import { renderWithFileRoutes } from "@/mocks/file-route-utils";
-import dayjs from "dayjs";
+import { screen, fireEvent, render } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
+import dayjs from "dayjs";
+import { type NewsFilters as NewsFiltersType } from "@/apis";
+import NewsFilters from ".";
 
-test("Initial state", async () => {
-  renderWithFileRoutes(<div />, {
-    initialLocation: "/news",
-  });
-  const user = userEvent.setup();
+test("represents the default filters in form controls", async () => {
+  const mockFilters = {
+    startDate: dayjs().format("YYYY-MM-DD"),
+    endDate: dayjs().format("YYYY-MM-DD"),
+    tickers: ["BTC", "USD"],
+    topics: [],
+    sort: "LATEST",
+    limit: 50,
+  } as NewsFiltersType;
+  const mockSetFilters = vi.fn();
+  const mockOnClose = vi.fn();
 
-  const footer = await screen.findByRole("contentinfo");
-  const footerButton = within(footer).getByRole("button");
+  render(
+    <NewsFilters
+      filters={mockFilters}
+      setFilters={mockSetFilters}
+      onClose={mockOnClose}
+    />,
+  );
 
-  await waitFor(() => expect(footerButton).toBeEnabled(), { timeout: 2000 });
-  await user.click(footerButton);
-
-  const footerDrawer = await screen.findByLabelText("footer drawer");
-  await waitFor(() => expect(footerDrawer).toHaveClass("open"));
-
-  // date range defaults to current dates
-  const currentDate = dayjs().format("YYYY-MM-DD");
-  const dates = within(footerDrawer).getAllByDisplayValue(currentDate);
-  expect(dates).toHaveLength(2);
-
-  // tickers default to BTC and USD
-  const tickers = within(footerDrawer).getAllByRole("textbox", {
-    hidden: true,
-  });
-  expect(tickers).toHaveLength(2);
-
-  // no topics selected
-  // select all checkbox is not selected
-  const topics = within(footerDrawer).getAllByRole("checkbox");
-  expect(topics).toHaveLength(16);
-
-  // sort policy defaults to latest
-  const latestSort = within(footerDrawer).getByRole("radio", {
-    name: /latest/i,
-  });
-  expect(latestSort).toBeChecked();
-
-  // limit field is hidden, not open for customization
-  const limit = within(footerDrawer).getByRole("spinbutton", {
-    hidden: true,
-  });
-  expect(limit).toHaveValue(50);
-
-  // apply button is initially disabled
-  const applyButton = within(footerDrawer).getByRole("button", {
+  const form = screen.getByRole("form");
+  const applyButton = screen.getByRole("button", {
     name: /apply/i,
   });
+  const cancelButton = screen.getByRole("button", { name: /cancel/i });
+
+  expect(form).toHaveFormValues(mockFilters);
   expect(applyButton).toBeDisabled();
+  expect(cancelButton).toBeEnabled();
 });
 
 test("Any change in news filters enables apply button", async () => {
-  renderWithFileRoutes(<div />, {
-    initialLocation: "/news",
-  });
+  const mockFilters = {
+    startDate: dayjs().format("YYYY-MM-DD"),
+    endDate: dayjs().format("YYYY-MM-DD"),
+    tickers: ["BTC", "USD"],
+    topics: [],
+    sort: "LATEST",
+    limit: 50,
+  } as NewsFiltersType;
+  const mockSetFilters = vi.fn();
+  const mockOnClose = vi.fn();
+
+  render(
+    <NewsFilters
+      filters={mockFilters}
+      setFilters={mockSetFilters}
+      onClose={mockOnClose}
+    />,
+  );
   const user = userEvent.setup();
 
-  const footer = await screen.findByRole("contentinfo");
-  const footerButton = within(footer).getByRole("button");
-
-  await waitFor(() => expect(footerButton).toBeEnabled(), {
-    timeout: 1000,
-  });
-  await user.click(footerButton);
-
-  const footerDrawer = await screen.findByLabelText("footer drawer");
-  await waitFor(() => expect(footerDrawer).toHaveClass("open"));
-
-  const applyButton = within(footerDrawer).getByRole("button", {
+  const form = screen.getByRole("form") as HTMLFormElement;
+  const applyButton = screen.getByRole("button", {
     name: /apply/i,
   });
-  expect(applyButton).toBeDisabled();
-
-  const latestSort = within(footerDrawer).getByRole("radio", {
-    name: /latest/i,
-  });
-  const relevanceSort = within(footerDrawer).getByRole("radio", {
+  const relevanceSort = screen.getByRole("radio", {
     name: /relevance/i,
   });
-  expect(latestSort).toBeChecked();
-  expect(relevanceSort).not.toBeChecked();
+
+  expect(applyButton).toBeDisabled();
 
   await user.click(relevanceSort);
-  expect(latestSort).not.toBeChecked();
-  expect(relevanceSort).toBeChecked();
+  expect(form).toHaveFormValues({
+    ...mockFilters,
+    sort: "RELEVANCE",
+  });
+  expect(form.sort).not.toBe(mockFilters.sort);
   expect(applyButton).toBeEnabled();
 });
 
 test("Unapplied changes can be reverted to previous applied state, with the apply button disabled", async () => {
-  renderWithFileRoutes(<div />, {
-    initialLocation: "/news",
-  });
+  const mockFilters = {
+    startDate: dayjs().format("YYYY-MM-DD"),
+    endDate: dayjs().format("YYYY-MM-DD"),
+    tickers: ["BTC", "USD"],
+    topics: [],
+    sort: "LATEST",
+    limit: 50,
+  } as NewsFiltersType;
+  const mockSetFilters = vi.fn();
+  const mockOnClose = vi.fn();
+
+  render(
+    <NewsFilters
+      filters={mockFilters}
+      setFilters={mockSetFilters}
+      onClose={mockOnClose}
+    />,
+  );
   const user = userEvent.setup();
 
-  const footer = await screen.findByRole("contentinfo");
-  const footerButton = within(footer).getByRole("button");
-
-  await waitFor(() => expect(footerButton).toBeEnabled(), {
-    timeout: 1000,
-  });
-  await user.click(footerButton);
-
-  const footerDrawer = await screen.findByLabelText("footer drawer");
-  await waitFor(() => expect(footerDrawer).toHaveClass("open"));
-  const applyButton = within(footerDrawer).getByRole("button", {
+  const form = screen.getByRole("form");
+  const applyButton = screen.getByRole("button", {
     name: /apply/i,
   });
-  expect(applyButton).toBeDisabled();
-
-  const latestSort = within(footerDrawer).getByRole("radio", {
-    name: /latest/i,
-  });
-  const relevanceSort = within(footerDrawer).getByRole("radio", {
+  const relevanceSort = screen.getByRole("radio", {
     name: /relevance/i,
   });
-  expect(latestSort).toBeChecked();
-  expect(relevanceSort).not.toBeChecked();
-
-  await user.click(relevanceSort);
-  expect(latestSort).not.toBeChecked();
-  expect(relevanceSort).toBeChecked();
-  expect(applyButton).toBeEnabled();
-
-  const cancelButton = within(footerDrawer).getByRole("button", {
+  const cancelButton = screen.getByRole("button", {
     name: /cancel/i,
   });
+
+  expect(applyButton).toBeDisabled();
+
+  await user.click(relevanceSort);
+  expect(form).toHaveFormValues({ ...mockFilters, sort: "RELEVANCE" });
+  expect(applyButton).toBeEnabled();
+
   await user.click(cancelButton);
-  expect(latestSort).toBeChecked();
-  expect(relevanceSort).not.toBeChecked();
+  expect(form).toHaveFormValues(mockFilters);
   expect(applyButton).toBeDisabled();
 });
 
 test("After changes are applied, the apply button is disabled", async () => {
-  renderWithFileRoutes(<div />, {
-    initialLocation: "/news",
-  });
+  const mockFilters = {
+    startDate: dayjs().format("YYYY-MM-DD"),
+    endDate: dayjs().format("YYYY-MM-DD"),
+    tickers: ["BTC", "USD"],
+    topics: [],
+    sort: "LATEST",
+    limit: 50,
+  } as NewsFiltersType;
+  const mockSetFilters = vi.fn();
+  const mockOnClose = vi.fn();
+
+  render(
+    <NewsFilters
+      filters={mockFilters}
+      setFilters={mockSetFilters}
+      onClose={mockOnClose}
+    />,
+  );
   const user = userEvent.setup();
 
-  const footer = await screen.findByRole("contentinfo");
-  const footerButton = within(footer).getByRole("button");
-
-  await waitFor(() => expect(footerButton).toBeEnabled(), {
-    timeout: 1000,
-  });
-  await user.click(footerButton);
-
-  const footerDrawer = await screen.findByLabelText("footer drawer");
-  await waitFor(() => expect(footerDrawer).toHaveClass("open"));
-  const applyButton = within(footerDrawer).getByRole("button", {
+  const applyButton = screen.getByRole("button", {
     name: /apply/i,
   });
-  expect(applyButton).toBeDisabled();
-
-  const latestSort = within(footerDrawer).getByRole("radio", {
-    name: /latest/i,
-  });
-  const relevanceSort = within(footerDrawer).getByRole("radio", {
+  const relevanceSort = screen.getByRole("radio", {
     name: /relevance/i,
   });
-  expect(latestSort).toBeChecked();
-  expect(relevanceSort).not.toBeChecked();
+
+  expect(applyButton).toBeDisabled();
 
   await user.click(relevanceSort);
-  expect(latestSort).not.toBeChecked();
   expect(relevanceSort).toBeChecked();
   expect(applyButton).toBeEnabled();
 
   await user.click(applyButton);
+  expect(mockSetFilters).toHaveBeenCalled();
+  expect(mockOnClose).toHaveBeenCalled();
   expect(applyButton).toBeDisabled();
 });
 
 describe("date range", () => {
   test("Start date cannot be later than end date, with validation alert", async () => {
-    renderWithFileRoutes(<div />, {
-      initialLocation: "/news",
-    });
-    const user = userEvent.setup();
+    const mockFilters = {
+      startDate: dayjs().format("YYYY-MM-DD"),
+      endDate: dayjs().format("YYYY-MM-DD"),
+      tickers: ["BTC", "USD"],
+      topics: [],
+      sort: "LATEST",
+      limit: 50,
+    } as NewsFiltersType;
+    const mockSetFilters = vi.fn();
+    const mockOnClose = vi.fn();
 
-    const footer = await screen.findByRole("contentinfo");
-    const footerButton = within(footer).getByRole("button");
-
-    await waitFor(() => expect(footerButton).toBeEnabled(), {
-      timeout: 1000,
-    });
-    await user.click(footerButton);
-
-    const footerDrawer = await screen.findByLabelText("footer drawer");
-    await waitFor(() => expect(footerDrawer).toHaveClass("open"));
+    render(
+      <NewsFilters
+        filters={mockFilters}
+        setFilters={mockSetFilters}
+        onClose={mockOnClose}
+      />,
+    );
 
     const currentDate = dayjs().format("YYYY-MM-DD");
-    const [startDate, endDate] = within(footerDrawer).getAllByDisplayValue(
+    const [startDate, endDate] = screen.getAllByDisplayValue(
       currentDate,
     ) as HTMLInputElement[];
 
@@ -210,24 +198,27 @@ describe("date range", () => {
   });
 
   test("end date cannot be earlier than start date, with validation alert", async () => {
-    renderWithFileRoutes(<div />, {
-      initialLocation: "/news",
-    });
-    const user = userEvent.setup();
+    const mockFilters = {
+      startDate: dayjs().format("YYYY-MM-DD"),
+      endDate: dayjs().format("YYYY-MM-DD"),
+      tickers: ["BTC", "USD"],
+      topics: [],
+      sort: "LATEST",
+      limit: 50,
+    } as NewsFiltersType;
+    const mockSetFilters = vi.fn();
+    const mockOnClose = vi.fn();
 
-    const footer = await screen.findByRole("contentinfo");
-    const footerButton = within(footer).getByRole("button");
-
-    await waitFor(() => expect(footerButton).toBeEnabled(), {
-      timeout: 1000,
-    });
-    await user.click(footerButton);
-
-    const footerDrawer = await screen.findByLabelText("footer drawer");
-    await waitFor(() => expect(footerDrawer).toHaveClass("open"));
+    render(
+      <NewsFilters
+        filters={mockFilters}
+        setFilters={mockSetFilters}
+        onClose={mockOnClose}
+      />,
+    );
 
     const currentDate = dayjs().format("YYYY-MM-DD");
-    const [startDate, endDate] = within(footerDrawer).getAllByDisplayValue(
+    const [startDate, endDate] = screen.getAllByDisplayValue(
       currentDate,
     ) as HTMLInputElement[];
 
@@ -249,133 +240,126 @@ describe("date range", () => {
 
 describe("tickers", () => {
   test("Up to 3 tickers are allowed", async () => {
-    renderWithFileRoutes(<div />, {
-      initialLocation: "/news",
-    });
+    const mockFilters = {
+      startDate: dayjs().format("YYYY-MM-DD"),
+      endDate: dayjs().format("YYYY-MM-DD"),
+      tickers: ["BTC", "USD"],
+      topics: [],
+      sort: "LATEST",
+      limit: 50,
+    } as NewsFiltersType;
+    const mockSetFilters = vi.fn();
+    const mockOnClose = vi.fn();
+
+    render(
+      <NewsFilters
+        filters={mockFilters}
+        setFilters={mockSetFilters}
+        onClose={mockOnClose}
+      />,
+    );
     const user = userEvent.setup();
 
-    const footer = await screen.findByRole("contentinfo");
-    const footerButton = within(footer).getByRole("button");
-
-    await waitFor(() => expect(footerButton).toBeEnabled(), { timeout: 2000 });
-    await user.click(footerButton);
-
-    const footerDrawer = await screen.findByLabelText("footer drawer");
-    await waitFor(() => expect(footerDrawer).toHaveClass("open"));
-
-    // tickers default to BTC and USD
-    const tickers = within(footerDrawer).getAllByRole("textbox", {
-      hidden: true,
-    });
+    let tickers = screen.getAllByRole("textbox", { hidden: true });
     expect(tickers).toHaveLength(2);
 
-    const tickerInput = within(footerDrawer).getByRole(
-      "combobox",
-    ) as HTMLInputElement;
-    const addButton = within(footerDrawer).getByRole("button", {
+    const tickerInput = screen.getByRole("combobox") as HTMLInputElement;
+    const addButton = screen.getByRole("button", {
       name: /add/i,
     });
+
     await user.type(tickerInput, "USDT");
     await user.click(addButton);
-
-    await waitFor(() =>
-      expect(
-        within(footerDrawer).getAllByRole("textbox", {
-          hidden: true,
-        }),
-      ).toHaveLength(3),
-    );
+    tickers = screen.getAllByRole("textbox", { hidden: true });
+    expect(tickers).toHaveLength(3);
 
     await user.clear(tickerInput);
     await user.type(tickerInput, "CAD");
     await user.click(addButton);
-    expect(
-      within(footerDrawer).getAllByRole("textbox", {
-        hidden: true,
-      }),
-    ).toHaveLength(3);
+    tickers = screen.getAllByRole("textbox", { hidden: true });
+    expect(tickers).toHaveLength(3);
     expect(tickerInput.validationMessage).toBe("Max 3 tickers are allowed");
   });
 
   test("No repeated tickers are allowed", async () => {
-    renderWithFileRoutes(<div />, {
-      initialLocation: "/news",
-    });
+    const mockFilters = {
+      startDate: dayjs().format("YYYY-MM-DD"),
+      endDate: dayjs().format("YYYY-MM-DD"),
+      tickers: ["BTC", "USD"],
+      topics: [],
+      sort: "LATEST",
+      limit: 50,
+    } as NewsFiltersType;
+    const mockSetFilters = vi.fn();
+    const mockOnClose = vi.fn();
+
+    render(
+      <NewsFilters
+        filters={mockFilters}
+        setFilters={mockSetFilters}
+        onClose={mockOnClose}
+      />,
+    );
     const user = userEvent.setup();
 
-    const footer = await screen.findByRole("contentinfo");
-    const footerButton = within(footer).getByRole("button");
-
-    await waitFor(() => expect(footerButton).toBeEnabled(), { timeout: 2000 });
-    await user.click(footerButton);
-
-    const footerDrawer = await screen.findByLabelText("footer drawer");
-    await waitFor(() => expect(footerDrawer).toHaveClass("open"));
-
-    // tickers default to BTC and USD
-    const tickers = within(footerDrawer).getAllByRole("textbox", {
+    let tickers = screen.getAllByRole("textbox", {
       hidden: true,
     });
     expect(tickers).toHaveLength(2);
 
-    const tickerInput = within(footerDrawer).getByRole(
-      "combobox",
-    ) as HTMLInputElement;
-    const addButton = within(footerDrawer).getByRole("button", {
+    const tickerInput = screen.getByRole("combobox") as HTMLInputElement;
+    const addButton = screen.getByRole("button", {
       name: /add/i,
     });
+
     await user.type(tickerInput, "BTC");
     await user.click(addButton);
-
-    await waitFor(() =>
-      expect(
-        within(footerDrawer).getAllByRole("textbox", {
-          hidden: true,
-        }),
-      ).toHaveLength(2),
-    );
+    tickers = screen.getAllByRole("textbox", {
+      hidden: true,
+    });
+    expect(tickers).toHaveLength(2);
     expect(tickerInput.validationMessage).toBe(
       "This ticker is already selected",
     );
   });
 
   test("Custom tickers not in the list are not allowed", async () => {
-    renderWithFileRoutes(<div />, {
-      initialLocation: "/news",
-    });
+    const mockFilters = {
+      startDate: dayjs().format("YYYY-MM-DD"),
+      endDate: dayjs().format("YYYY-MM-DD"),
+      tickers: ["BTC", "USD"],
+      topics: [],
+      sort: "LATEST",
+      limit: 50,
+    } as NewsFiltersType;
+    const mockSetFilters = vi.fn();
+    const mockOnClose = vi.fn();
+
+    render(
+      <NewsFilters
+        filters={mockFilters}
+        setFilters={mockSetFilters}
+        onClose={mockOnClose}
+      />,
+    );
     const user = userEvent.setup();
 
-    const footer = await screen.findByRole("contentinfo");
-    const footerButton = within(footer).getByRole("button");
-
-    await waitFor(() => expect(footerButton).toBeEnabled(), { timeout: 2000 });
-    await user.click(footerButton);
-
-    const footerDrawer = await screen.findByLabelText("footer drawer");
-    await waitFor(() => expect(footerDrawer).toHaveClass("open"));
-
-    // tickers default to BTC and USD
-    const tickers = within(footerDrawer).getAllByRole("textbox", {
+    let tickers = screen.getAllByRole("textbox", {
       hidden: true,
     });
     expect(tickers).toHaveLength(2);
 
-    const tickerInput = within(footerDrawer).getByRole(
-      "combobox",
-    ) as HTMLInputElement;
-    const addButton = within(footerDrawer).getByRole("button", {
+    const tickerInput = screen.getByRole("combobox") as HTMLInputElement;
+    const addButton = screen.getByRole("button", {
       name: /add/i,
     });
+
     await user.type(tickerInput, "XXXXXXX");
     await user.click(addButton);
-
-    await waitFor(() =>
-      expect(
-        within(footerDrawer).getAllByRole("textbox", {
-          hidden: true,
-        }),
-      ).toHaveLength(2),
-    );
+    tickers = screen.getAllByRole("textbox", {
+      hidden: true,
+    });
+    expect(tickers).toHaveLength(2);
     expect(tickerInput.validationMessage).toBe(
       "This is not a valid fiat or crypto ticker",
     );
@@ -384,23 +368,27 @@ describe("tickers", () => {
 
 describe("topics", () => {
   test("Clicking select-all checkbox gets all topics selected", async () => {
-    renderWithFileRoutes(<div />, {
-      initialLocation: "/news",
-    });
+    const mockFilters = {
+      startDate: dayjs().format("YYYY-MM-DD"),
+      endDate: dayjs().format("YYYY-MM-DD"),
+      tickers: ["BTC", "USD"],
+      topics: [],
+      sort: "LATEST",
+      limit: 50,
+    } as NewsFiltersType;
+    const mockSetFilters = vi.fn();
+    const mockOnClose = vi.fn();
+
+    render(
+      <NewsFilters
+        filters={mockFilters}
+        setFilters={mockSetFilters}
+        onClose={mockOnClose}
+      />,
+    );
     const user = userEvent.setup();
 
-    const footer = await screen.findByRole("contentinfo");
-    const footerButton = within(footer).getByRole("button");
-
-    await waitFor(() => expect(footerButton).toBeEnabled(), {
-      timeout: 1000,
-    });
-    await user.click(footerButton);
-
-    const footerDrawer = await screen.findByLabelText("footer drawer");
-    await waitFor(() => expect(footerDrawer).toHaveClass("open"));
-
-    const topicCheckboxes = within(footerDrawer).getAllByRole("checkbox");
+    const topicCheckboxes = screen.getAllByRole("checkbox");
     topicCheckboxes.forEach((t) => expect(t).not.toBeChecked());
 
     const selectAll = topicCheckboxes[0];
@@ -412,23 +400,27 @@ describe("topics", () => {
   });
 
   test("Selecting all topics also checks select-all checkbox", async () => {
-    renderWithFileRoutes(<div />, {
-      initialLocation: "/news",
-    });
+    const mockFilters = {
+      startDate: dayjs().format("YYYY-MM-DD"),
+      endDate: dayjs().format("YYYY-MM-DD"),
+      tickers: ["BTC", "USD"],
+      topics: [],
+      sort: "LATEST",
+      limit: 50,
+    } as NewsFiltersType;
+    const mockSetFilters = vi.fn();
+    const mockOnClose = vi.fn();
+
+    render(
+      <NewsFilters
+        filters={mockFilters}
+        setFilters={mockSetFilters}
+        onClose={mockOnClose}
+      />,
+    );
     const user = userEvent.setup();
 
-    const footer = await screen.findByRole("contentinfo");
-    const footerButton = within(footer).getByRole("button");
-
-    await waitFor(() => expect(footerButton).toBeEnabled(), {
-      timeout: 1000,
-    });
-    await user.click(footerButton);
-
-    const footerDrawer = await screen.findByLabelText("footer drawer");
-    await waitFor(() => expect(footerDrawer).toHaveClass("open"));
-
-    const topicCheckboxes = within(footerDrawer).getAllByRole("checkbox");
+    const topicCheckboxes = screen.getAllByRole("checkbox");
     topicCheckboxes.forEach((t) => expect(t).not.toBeChecked());
 
     const selectAll = topicCheckboxes[0];
@@ -441,23 +433,27 @@ describe("topics", () => {
   });
 
   test("Selecting some of the topics makes select-all checkbox partially checked", async () => {
-    renderWithFileRoutes(<div />, {
-      initialLocation: "/news",
-    });
+    const mockFilters = {
+      startDate: dayjs().format("YYYY-MM-DD"),
+      endDate: dayjs().format("YYYY-MM-DD"),
+      tickers: ["BTC", "USD"],
+      topics: [],
+      sort: "LATEST",
+      limit: 50,
+    } as NewsFiltersType;
+    const mockSetFilters = vi.fn();
+    const mockOnClose = vi.fn();
+
+    render(
+      <NewsFilters
+        filters={mockFilters}
+        setFilters={mockSetFilters}
+        onClose={mockOnClose}
+      />,
+    );
     const user = userEvent.setup();
 
-    const footer = await screen.findByRole("contentinfo");
-    const footerButton = within(footer).getByRole("button");
-
-    await waitFor(() => expect(footerButton).toBeEnabled(), {
-      timeout: 1000,
-    });
-    await user.click(footerButton);
-
-    const footerDrawer = await screen.findByLabelText("footer drawer");
-    await waitFor(() => expect(footerDrawer).toHaveClass("open"));
-
-    const topicCheckboxes = within(footerDrawer).getAllByRole("checkbox");
+    const topicCheckboxes = screen.getAllByRole("checkbox");
     topicCheckboxes.forEach((t) => expect(t).not.toBeChecked());
 
     const selectAll = topicCheckboxes[0];
@@ -470,23 +466,27 @@ describe("topics", () => {
   });
 
   test("When all topics are checked, unchecking some of the topics makes select-all checkbox partially checked", async () => {
-    renderWithFileRoutes(<div />, {
-      initialLocation: "/news",
-    });
+    const mockFilters = {
+      startDate: dayjs().format("YYYY-MM-DD"),
+      endDate: dayjs().format("YYYY-MM-DD"),
+      tickers: ["BTC", "USD"],
+      topics: [],
+      sort: "LATEST",
+      limit: 50,
+    } as NewsFiltersType;
+    const mockSetFilters = vi.fn();
+    const mockOnClose = vi.fn();
+
+    render(
+      <NewsFilters
+        filters={mockFilters}
+        setFilters={mockSetFilters}
+        onClose={mockOnClose}
+      />,
+    );
     const user = userEvent.setup();
 
-    const footer = await screen.findByRole("contentinfo");
-    const footerButton = within(footer).getByRole("button");
-
-    await waitFor(() => expect(footerButton).toBeEnabled(), {
-      timeout: 1000,
-    });
-    await user.click(footerButton);
-
-    const footerDrawer = await screen.findByLabelText("footer drawer");
-    await waitFor(() => expect(footerDrawer).toHaveClass("open"));
-
-    const topicCheckboxes = within(footerDrawer).getAllByRole("checkbox");
+    const topicCheckboxes = screen.getAllByRole("checkbox");
     const selectAll = topicCheckboxes[0];
     await user.click(selectAll);
     expect(selectAll).toBeChecked();

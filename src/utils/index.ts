@@ -81,6 +81,73 @@ export function calibrateNumeral(numeral: string, localeOption?: string) {
   return localizedNumeral;
 }
 
+// change = (目前 close 價格 - 前一日 close 價格) / 前一日 close 價格
+export function getPriceChange(
+  currentClosePrice: string,
+  prevClosePrice: string = "",
+) {
+  const plus = "+";
+  const minus = "-";
+  const neutral = "";
+  const placeholder = "--";
+
+  if (!prevClosePrice) return [neutral, placeholder] as [typeof sign, string];
+
+  const rawChange = (+currentClosePrice - +prevClosePrice) / +prevClosePrice;
+  const sign = rawChange === 0 ? neutral : rawChange > 0 ? plus : minus;
+  const changeNumeral =
+    roundToDecimal(rawChange * 100, 2).string.replace("-", "") + "%";
+
+  return [sign, changeNumeral] as [typeof sign, string];
+}
+
+// range = (當日最高價 - 當日最低價) / 當日最低價
+export function getPriceRange(
+  currentHighPrice: string,
+  currentLowPrice: string,
+) {
+  const rawRange = (+currentHighPrice - +currentLowPrice) / +currentLowPrice;
+  const rangeNumeral = roundToDecimal(rawRange * 100, 2).string;
+
+  const priceRange = `${rangeNumeral}%`;
+  return priceRange;
+}
+
+export function roundToDecimal(number: number | string, decimalPlace: number) {
+  const isValidNumber =
+    typeof number === "number"
+      ? !Number.isNaN(number)
+      : !Number.isNaN(parseFloat(number));
+
+  const isValidDecimalPlace =
+    !Number.isNaN(decimalPlace) &&
+    decimalPlace >= 0 &&
+    Number.isInteger(decimalPlace);
+
+  if (!isValidNumber)
+    throw new Error(
+      "[BAD INPUT]: The number must be a number (except NaN) or a numeric string",
+    );
+  if (!isValidDecimalPlace)
+    throw new Error(
+      "[BAD INPUT]: The decimal place must be zero or a positive integer",
+    );
+
+  const rawNumber = typeof number === "number" ? number : parseFloat(number);
+
+  // JavaScript 的 Math.round 處理負數進位方法和大多數語言及常識不同
+  // 先以 Math.abs 取絕對值，再用 Math.round 進位，再以 Math.sign 還原 +/- 號
+  const roundedNumber =
+    (Math.sign(rawNumber) *
+      Math.round(Math.abs(rawNumber) * Math.pow(10, decimalPlace))) /
+    Math.pow(10, decimalPlace);
+
+  return {
+    number: roundedNumber,
+    string: roundedNumber.toFixed(decimalPlace),
+  };
+}
+
 export const __private_fns__ = {
   getUserLocale,
   getComputableNumeral,
