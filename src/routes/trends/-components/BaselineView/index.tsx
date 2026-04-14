@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, type ChangeEvent } from "react";
 import {
   Chart,
   BaselineSeries,
@@ -47,6 +47,11 @@ export default function BaselineView({
     baseValue: { type: "price", price: baseRate },
   };
 
+  const updateBaseRate = (event: ChangeEvent<HTMLInputElement>) => {
+    const newBaseRate = +event.currentTarget.value;
+    requestAnimationFrame(() => setBaseRate(newBaseRate));
+  };
+
   return (
     <div aria-label="baseline view">
       <p className="mb-2 text-sm text-gray-600">
@@ -70,7 +75,7 @@ export default function BaselineView({
           value={baseRate}
           data-base-rate={baseRate}
           className="relative grow self-start after:absolute after:-bottom-6 after:left-1/2 after:-translate-x-1/2 after:content-[attr(data-base-rate)]"
-          onChange={(event) => setBaseRate(+event.currentTarget.value)}
+          onChange={updateBaseRate}
         />
         <span>
           Max <br /> {maxRate}
