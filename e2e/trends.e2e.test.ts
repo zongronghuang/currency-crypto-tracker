@@ -18,23 +18,21 @@ async function switchToCryptoBase(page: Page) {
   await expect(trendsMenu).not.toBeInViewport();
 }
 
-test.describe("able to switch to 4 views (table/line/bar/candlestick) when the base is a fiat currency", () => {
-  test("switch to line view", async ({ network, page }) => {
+test.describe("able to switch to 4 views (table/baseline/bar/candlestick) when the base is a fiat currency", () => {
+  test("switch to baseline view", async ({ network, page }) => {
     network.use();
     await page.goto("http://localhost:5173/trends");
     await page.waitForLoadState("networkidle");
 
-    const triggerButton = page.getByRole("button", { name: /table/i });
-    await triggerButton.click();
     const tableView = page.getByLabel("table view");
 
-    const lineViewButton = page.getByRole("button", { name: /line/i });
-    await lineViewButton.click();
+    const baselineViewButton = page.getByRole("button", { name: /baseline/i });
+    await baselineViewButton.click();
     await tableView.waitFor({ state: "detached" });
-    const lineView = page.getByLabel(/line view/i);
-    await lineView.waitFor({ state: "visible" });
+    const baselineView = page.getByLabel(/baseline view/i);
+    await baselineView.waitFor({ state: "visible" });
 
-    await expect(lineView).toBeVisible();
+    await expect(baselineView).toBeVisible();
     await expect(tableView).not.toBeVisible();
   });
 
@@ -43,8 +41,6 @@ test.describe("able to switch to 4 views (table/line/bar/candlestick) when the b
     await page.goto("http://localhost:5173/trends");
     await page.waitForLoadState("networkidle");
 
-    const triggerButton = page.getByRole("button", { name: /table/i });
-    await triggerButton.click();
     const tableView = page.getByLabel("table view");
 
     const barViewButton = page.getByRole("button", { name: /bar/i });
@@ -62,8 +58,6 @@ test.describe("able to switch to 4 views (table/line/bar/candlestick) when the b
     await page.goto("http://localhost:5173/trends");
     await page.waitForLoadState("networkidle");
 
-    const triggerButton = page.getByRole("button", { name: /table/i });
-    await triggerButton.click();
     const tableView = page.getByLabel("table view");
 
     const candlestickViewButton = page.getByRole("button", {
@@ -86,8 +80,6 @@ test.describe("able to switch to 4 views (table/line/bar/candlestick) when the b
     await page.goto("http://localhost:5173/trends");
     await page.waitForLoadState("networkidle");
 
-    const triggerButton = page.getByRole("button", { name: /table/i });
-    await triggerButton.click();
     const tableView = page.getByLabel("table view");
 
     const candlestickViewButton = page.getByRole("button", {
@@ -112,25 +104,23 @@ test.describe("able to switch to 4 views (table/line/bar/candlestick) when the b
   });
 });
 
-test.describe("able to switch to 5 views (table/line/bar/candlestick/histogram) when the base is a crypto currency", () => {
-  test("switch to line view", async ({ page, network }) => {
+test.describe("able to switch to 5 views (table/baseline/bar/candlestick/histogram) when the base is a crypto currency", () => {
+  test("switch to baseline view", async ({ page, network }) => {
     network.use();
     await page.goto("http://localhost:5173/trends");
     await page.waitForLoadState("networkidle");
 
     await switchToCryptoBase(page);
 
-    const triggerButton = page.getByRole("button", { name: /table/i });
-    await triggerButton.click();
     const tableView = page.getByLabel("table view");
 
-    const lineViewButton = page.getByRole("button", { name: /line/i });
-    await lineViewButton.click();
+    const baselineViewButton = page.getByRole("button", { name: /baseline/i });
+    await baselineViewButton.click();
     await tableView.waitFor({ state: "detached" });
-    const lineView = page.getByLabel(/line view/i);
-    await lineView.waitFor({ state: "visible" });
+    const baselineView = page.getByLabel(/baseline view/i);
+    await baselineView.waitFor({ state: "visible" });
 
-    await expect(lineView).toBeVisible();
+    await expect(baselineView).toBeVisible();
     await expect(tableView).not.toBeVisible();
   });
 
@@ -141,8 +131,6 @@ test.describe("able to switch to 5 views (table/line/bar/candlestick/histogram) 
 
     await switchToCryptoBase(page);
 
-    const triggerButton = page.getByRole("button", { name: /table/i });
-    await triggerButton.click();
     const tableView = page.getByLabel("table view");
 
     const barViewButton = page.getByRole("button", { name: /bar/i });
@@ -162,8 +150,6 @@ test.describe("able to switch to 5 views (table/line/bar/candlestick/histogram) 
 
     await switchToCryptoBase(page);
 
-    const triggerButton = page.getByRole("button", { name: /table/i });
-    await triggerButton.click();
     const tableView = page.getByLabel("table view");
 
     const candlestickViewButton = page.getByRole("button", {
@@ -185,8 +171,6 @@ test.describe("able to switch to 5 views (table/line/bar/candlestick/histogram) 
 
     await switchToCryptoBase(page);
 
-    const triggerButton = page.getByRole("button", { name: /table/i });
-    await triggerButton.click();
     const tableView = page.getByLabel("table view");
 
     const histogramViewButton = page.getByRole("button", {
@@ -211,8 +195,6 @@ test.describe("able to switch to 5 views (table/line/bar/candlestick/histogram) 
 
     await switchToCryptoBase(page);
 
-    const triggerButton = page.getByRole("button", { name: /table/i });
-    await triggerButton.click();
     const tableView = page.getByLabel("table view");
 
     const histogramViewButton = page.getByRole("button", {
@@ -226,7 +208,6 @@ test.describe("able to switch to 5 views (table/line/bar/candlestick/histogram) 
     await expect(histogramView).toBeVisible();
     await expect(tableView).not.toBeVisible();
 
-    await histogramViewButton.click();
     const tableViewButton = page.getByRole("button", { name: /table/i });
     await tableViewButton.click();
     await histogramView.waitFor({ state: "detached" });
