@@ -1,6 +1,7 @@
 /// <reference types="vitest/config" />
 import { defineConfig } from "vite";
 import path from "path";
+import fs from "fs";
 import react from "@vitejs/plugin-react";
 import { tanstackRouter } from "@tanstack/router-plugin/vite";
 import tailwindcss from "@tailwindcss/vite";
@@ -19,6 +20,17 @@ export default defineConfig({
     react(),
     tailwindcss({ optimize: { minify: true } }),
     svgr({ include: "**/*.svg" }),
+    {
+      name: "exclude-msw",
+      apply: "build", // Only run during build
+      closeBundle() {
+        const mswPath = path.resolve(__dirname, "dist/mockServiceWorker.js");
+        if (fs.existsSync(mswPath)) {
+          fs.unlinkSync(mswPath);
+          console.log("Successfully removed mockServiceWorker.js from build.");
+        }
+      },
+    },
   ],
   test: {
     globals: true,
@@ -35,6 +47,12 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.join(__dirname, "src/"),
+    },
+  },
+  build: {
+    rollupOptions: {
+      // Exclude specific files or patterns from the bundle
+      external: [/src\/mocks\/.*/],
     },
   },
 });
