@@ -8,13 +8,15 @@ import {
 } from "react";
 import clsx from "clsx";
 import { type TrendsParams } from "@/apis";
-import { FIAT_NAMES } from "@/constants/fiat-currency-list";
-import {
-  CRYPTO_TRADING_PAIRS,
-  TRADABLE_CRYPTOS,
-  type TradableCrypto,
-} from "@/constants/crypto-exchange-list";
+import { type TradableCrypto } from "@/constants/crypto-exchange-list";
 import styles from "./index.module.css";
+
+const FIAT_NAMES = await import("@/constants/fiat-currency-list").then(
+  (mod) => mod.FIAT_NAMES,
+);
+const { CRYPTO_TRADING_PAIRS, TRADABLE_CRYPTOS } = await import(
+  "@/constants/crypto-exchange-list"
+).then((mod) => mod);
 
 export default function TrendsMenu({
   trendsApiParams,

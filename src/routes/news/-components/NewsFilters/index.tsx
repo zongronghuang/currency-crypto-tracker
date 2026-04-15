@@ -9,10 +9,15 @@ import {
 } from "react";
 import dayjs from "dayjs";
 import clsx from "clsx";
-import { FIAT_NAMES, FIATS } from "@/constants/fiat-currency-list";
-import { CRYPTO_NAMES, CRYPTOS } from "@/constants/crypto-currency-list";
 import { type NewsFilters } from "@/apis";
 import styles from "./index.module.css";
+
+const { FIATS, FIAT_NAMES } = await import(
+  "@/constants/fiat-currency-list"
+).then((mod) => mod);
+const { CRYPTOS, CRYPTO_NAMES } = await import(
+  "@/constants/crypto-currency-list"
+).then((mod) => mod);
 
 const topicList = [
   "life_sciences",

@@ -17,14 +17,19 @@ import {
   isSearchMatch,
   validateComponentProps,
 } from "@/utils";
-import { FIATS } from "@/constants/fiat-currency-list";
-import { CRYPTOS } from "@/constants/crypto-currency-list";
 import type {
   Currency,
   CurrencyType,
   ActiveCurrency,
   CurrencyName,
 } from "@/constants/types";
+
+const FIATS = await import("@/constants/fiat-currency-list").then(
+  (mod) => mod.FIATS,
+);
+const CRYPTOS = await import("@/constants/crypto-currency-list").then(
+  (mod) => mod.CRYPTOS,
+);
 
 const dataSources = {
   fiat: Object.values(FIATS),

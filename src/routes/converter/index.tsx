@@ -5,11 +5,16 @@ import { z } from "zod";
 import CurrencyInput from "./-components/CurrencyInput";
 import { getExchangeRate } from "@/apis";
 import { getComputableNumeral } from "@/utils";
-import { FIATS, FIAT_NAMES } from "@/constants/fiat-currency-list";
-import { CRYPTO_NAMES, CRYPTOS } from "@/constants/crypto-currency-list";
 import type { ActiveCurrency, FiatName, CryptoName } from "@/constants/types";
 
 const CurrencyMenu = lazy(() => import("./-components/CurrencyMenu"));
+
+const { FIATS, FIAT_NAMES } = await import(
+  "@/constants/fiat-currency-list"
+).then((mod) => mod);
+const { CRYPTOS, CRYPTO_NAMES } = await import(
+  "@/constants/crypto-currency-list"
+).then((mod) => mod);
 
 const ConverterSearchSchema = z.object({
   from: z.enum([...FIAT_NAMES, ...CRYPTO_NAMES]).catch("USD"),

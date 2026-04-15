@@ -15,7 +15,6 @@ import FooterBar from "../-components/FooterBar";
 import FooterDrawer from "../-components/FooterDrawer";
 import Alert from "../-components/Alert";
 import { extractTrendsData } from "./-helpers";
-import { CRYPTO_TRADING_PAIRS } from "@/constants/crypto-exchange-list";
 import { type CryptoItem, type FiatItem } from "./-types";
 import BaselineIcon from "@/assets/trends/baseline.svg";
 import BarIcon from "@/assets/trends/bar.svg";
@@ -31,6 +30,9 @@ const BarView = lazy(() => import("./-components/BarView"));
 const CandlestickView = lazy(() => import("./-components/CandlestickView"));
 const HistogramView = lazy(() => import("./-components/HistogramView"));
 
+const CRYPTO_TRADING_PAIRS = await import(
+  "@/constants/crypto-exchange-list"
+).then((mod) => mod.CRYPTO_TRADING_PAIRS);
 const views = ["table", "baseline", "bar", "candlestick", "histogram"] as const;
 
 const viewIcon = {

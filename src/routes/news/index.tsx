@@ -10,12 +10,17 @@ import NewsCard, { type Feed } from "./-components/NewsCard";
 import FooterBar from "../-components/FooterBar";
 import FooterDrawer from "../-components/FooterDrawer";
 import Alert from "../-components/Alert";
-import { FIAT_NAMES } from "@/constants/fiat-currency-list";
-import { CRYPTO_NAMES } from "@/constants/crypto-currency-list";
 import { sliceListByPage } from "@/utils";
 import styles from "./index.module.css";
 
 const NewsFilters = lazy(() => import("./-components/NewsFilters"));
+
+const FIAT_NAMES = await import("@/constants/fiat-currency-list").then(
+  (mod) => mod.FIAT_NAMES,
+);
+const CRYPTO_NAMES = await import("@/constants/crypto-currency-list").then(
+  (mod) => mod.CRYPTO_NAMES,
+);
 
 const NewsSearchSchema = z.object({
   currency: z
