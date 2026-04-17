@@ -18,5 +18,5 @@ html {
 
 #root {
   height: 100dvh;
-  background-color: white;
+  background-color: oklch(98.4% 0.003 247.858);
 }

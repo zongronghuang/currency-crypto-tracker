@@ -120,7 +120,10 @@ function RouteComponent() {
         <Alert title="No News Found" description="Change your news filters." />
       )}
 
-      <div ref={targetRef} className="invisible mt-1 text-center opacity-50">
+      <div
+        ref={targetRef}
+        className="invisible mt-1 text-center text-lg text-slate-400"
+      >
         <small>No more results</small>
       </div>
 
@@ -132,7 +135,7 @@ function RouteComponent() {
             aria-label="open drawer button"
             aria-expanded={isDrawerOpen}
             disabled={!isSuccess}
-            className="text-4xl font-bold disabled:opacity-45"
+            className="rounded-full text-4xl font-bold text-slate-900 disabled:text-slate-400"
             onClick={(event) => {
               event.stopPropagation();
               setIsDrawerOpen(true);
@@ -178,7 +181,7 @@ function BackToTopButton() {
       href="#top"
       aria-label="back to top"
       hidden={!isVisible}
-      className="fixed right-2 bottom-15 z-15 flex h-10 w-10 -rotate-90 items-center justify-center rounded-full bg-blue-500 text-3xl font-bold text-white shadow-[0_0_3px_2px_rgba(200,200,200,0.5)]"
+      className="fixed right-2 bottom-15 z-15 flex h-10 w-10 -rotate-90 items-center justify-center rounded-full bg-blue-600 text-3xl font-bold text-white shadow-md hover:bg-blue-700"
     >
       &#10132;
     </a>
