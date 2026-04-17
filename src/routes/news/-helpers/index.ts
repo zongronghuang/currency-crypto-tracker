@@ -27,3 +27,24 @@ export function getTagBgColor(tag: string) {
       return "text-neutral-600/90";
   }
 }
+
+export function getSentimentEmoji(
+  sentiment:
+    | undefined
+    | "Bearish"
+    | "Somewhat-Bearish"
+    | "Neutral"
+    | "Somewhat-Bullish"
+    | "Bullish",
+) {
+  if (!sentiment) return "";
+
+  const sentimentMap = {
+    Bearish: String.fromCodePoint(0x1f641).repeat(2),
+    "Somewhat-Bearish": String.fromCodePoint(0x1f641),
+    Neutral: "",
+    "Somewhat-Bullish": String.fromCodePoint(0x1f60a),
+    Bullish: String.fromCodePoint(0x1f60a).repeat(2),
+  };
+  return sentimentMap[sentiment];
+}

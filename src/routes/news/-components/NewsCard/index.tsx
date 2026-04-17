@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import clsx from "clsx";
-import { getTagBgColor } from "../../-helpers";
+import { getTagBgColor, getSentimentEmoji } from "../../-helpers";
 
 export type Feed = {
   title: string;
@@ -11,6 +11,12 @@ export type Feed = {
   banner_image: string;
   source: string;
   topics: { topic: string }[];
+  overall_sentiment_label:
+    | "Bearish"
+    | "Somewhat-Bearish"
+    | "Neutral"
+    | "Somewhat-Bullish"
+    | "Bullish";
 };
 
 const skeletonStyles =
@@ -76,6 +82,9 @@ export default function NewsCard({
             {feed?.summary}
           </p>
 
+          <span className="float-left w-fit text-right">
+            {getSentimentEmoji(feed?.overall_sentiment_label)}
+          </span>
           <a
             className={clsx(
               isSkeleton && skeletonStyles,
