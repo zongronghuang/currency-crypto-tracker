@@ -1,5 +1,7 @@
 import { type Dispatch, type SetStateAction } from "react";
 import { useLocation } from "@tanstack/react-router";
+import SideMenuIcon from "@/assets/side_menu.svg";
+import UserIcon from "@/assets/user.svg";
 
 type HeaderBarProps = {
   setIsSideMenuOpen: Dispatch<SetStateAction<boolean>>;
@@ -16,13 +18,17 @@ export default function HeaderBar({ setIsSideMenuOpen }: HeaderBarProps) {
     >
       <button
         type="button"
-        className="w-1/5 text-center outline outline-black"
+        className="rounded bg-blue-600 p-1 text-center text-white hover:bg-blue-700 active:bg-blue-800"
         onClick={() => setIsSideMenuOpen(true)}
       >
-        open
+        <SideMenuIcon className="h-auto w-6" />
       </button>
-      <h1 className="text-xl font-bold uppercase">{title}</h1>
-      <button className="w-1/5 text-center outline">User</button>
+
+      <h1 className="text-xl font-bold text-slate-900 uppercase">{title}</h1>
+
+      <button className="rounded bg-blue-600 p-1 text-center text-white hover:bg-blue-700 active:bg-blue-800">
+        <UserIcon className="h-auto w-6" />
+      </button>
     </header>
   );
 }
