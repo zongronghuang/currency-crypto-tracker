@@ -10,9 +10,11 @@ test("header bar contains a side menu button, a page title, and a user profile b
   expect(headerBar).toBeVisible();
 
   const openMenuButton = within(headerBar).getByRole("button", {
-    name: /open/i,
+    name: /open side menu/i,
   });
-  const userButton = within(headerBar).getByRole("button", { name: /user/i });
+  const userButton = within(headerBar).getByRole("button", {
+    name: /open user profile/i,
+  });
   const pageTitle = within(headerBar).getByRole("heading", { name: /news/i });
   expect(headerBar).toContainElement(openMenuButton);
   expect(headerBar).toContainElement(userButton);

@@ -23,7 +23,9 @@ test("side menu button on topbar opens side menu", async () => {
   });
   const user = userEvent.setup();
 
-  const openMenuButton = await screen.findByRole("button", { name: /^open$/i });
+  const openMenuButton = await screen.findByRole("button", {
+    name: /open side menu/i,
+  });
   const sideMenu = screen.getByRole("menu");
   expect(sideMenu).not.toHaveFocus();
   expect(sideMenu).not.toHaveClass("open");
@@ -43,7 +45,9 @@ test("side menu closes with a click on the backdrop", async () => {
   const backdrop = await screen.findByRole("menu");
   expect(backdrop).not.toHaveClass("open");
 
-  const openMenuButton = screen.getByRole("button", { name: /^open$/i });
+  const openMenuButton = screen.getByRole("button", {
+    name: /open side menu/i,
+  });
   await user.click(openMenuButton);
   expect(backdrop).toHaveClass("open");
 
@@ -58,7 +62,9 @@ test("clicking non-active page link on side menu changes router url and page con
   });
   const user = userEvent.setup();
 
-  const openMenuButton = await screen.findByRole("button", { name: /^open$/i });
+  const openMenuButton = await screen.findByRole("button", {
+    name: /open side menu/i,
+  });
   await user.click(openMenuButton);
 
   const newsLink = screen.getByRole("link", { name: /news/i });
