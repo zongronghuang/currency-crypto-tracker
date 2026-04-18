@@ -18,6 +18,7 @@ export default function HeaderBar({ setIsSideMenuOpen }: HeaderBarProps) {
     >
       <button
         type="button"
+        aria-label="open side menu"
         className="rounded bg-blue-600 p-1 text-center text-white hover:bg-blue-700 active:bg-blue-800"
         onClick={() => setIsSideMenuOpen(true)}
       >
@@ -26,7 +27,10 @@ export default function HeaderBar({ setIsSideMenuOpen }: HeaderBarProps) {
 
       <h1 className="text-xl font-bold text-slate-900 uppercase">{title}</h1>
 
-      <button className="rounded bg-blue-600 p-1 text-center text-white hover:bg-blue-700 active:bg-blue-800">
+      <button
+        aria-label="open user profile"
+        className="rounded bg-blue-600 p-1 text-center text-white hover:bg-blue-700 active:bg-blue-800"
+      >
         <UserIcon className="h-auto w-6" />
       </button>
     </header>
