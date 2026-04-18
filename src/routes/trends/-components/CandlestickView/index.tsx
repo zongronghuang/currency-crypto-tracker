@@ -91,17 +91,16 @@ export default function CandlestickView({
   return (
     <div aria-label="candlestick view">
       <p className="mb-2 text-sm text-gray-600">
-        Check exchange rates of the open, close, high, and low prices of the
-        base currency to the quote currency.
+        Check the open, close, high, and low exchange rates of the base currency
+        against the quote currency.
       </p>
 
-      <div className="mb-2 flex items-center gap-2 text-sm font-semibold">
-        <label htmlFor="max-rate" className="leading-0">
+      <div className="mb-2 flex items-center gap-4 text-sm font-semibold">
+        <label htmlFor="max-rate" className="flex items-center gap-1">
           <input
             type="checkbox"
             name="rate-lines"
             id="max-rate"
-            className="mr-1"
             checked={visibleRateLines.max}
             onChange={() =>
               setVisibleRateLines((prev) => ({ ...prev, max: !prev.max }))
@@ -109,12 +108,11 @@ export default function CandlestickView({
           />
           Max rate
         </label>
-        <label htmlFor="avg-rate" className="leading-0">
+        <label htmlFor="avg-rate" className="flex items-center gap-1">
           <input
             type="checkbox"
             name="rate-lines"
             id="avg-rate"
-            className="mr-1"
             checked={visibleRateLines.avg}
             onChange={() =>
               setVisibleRateLines((prev) => ({ ...prev, avg: !prev.avg }))
@@ -122,12 +120,11 @@ export default function CandlestickView({
           />
           Avg rate
         </label>
-        <label htmlFor="min-rate" className="leading-0">
+        <label htmlFor="min-rate" className="flex items-center gap-1">
           <input
             type="checkbox"
             name="rate-lines"
             id="min-rate"
-            className="mr-1"
             checked={visibleRateLines.min}
             onChange={() =>
               setVisibleRateLines((prev) => ({ ...prev, min: !prev.min }))

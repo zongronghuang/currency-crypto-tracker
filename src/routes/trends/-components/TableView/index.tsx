@@ -5,8 +5,8 @@ import { getPriceChange, getPriceRange, sliceListByPage } from "@/utils";
 const horizontalHeaders = ["Open", "Close", "Change", "High", "Low", "Range"];
 
 const changeCellBgColor = {
-  "+": "bg-green-600",
-  "-": "bg-red-600",
+  "+": "bg-emerald-600",
+  "-": "bg-rose-600",
   "": "bg-slate-600",
 } as const;
 
@@ -22,10 +22,11 @@ export default function TableView({ series }: { series: any }) {
 
   return (
     <div aria-label="table view" className="mx-auto max-w-fit">
-      <p className="mb-2 text-sm text-gray-600">
-        Check the details of the base currency in the quote currency.
+      <p className="mb-2 text-sm text-slate-600">
+        Check the exchange rate trends of the base currency against the quote
+        currency using multiple indicators.
       </p>
-      <table className="relative mb-2 block border-separate snap-x snap-proximity scroll-pl-24 overflow-y-scroll rounded text-right text-nowrap">
+      <table className="relative mx-0 mb-2 block border-separate snap-x snap-proximity scroll-pl-24 overflow-y-scroll rounded text-right text-nowrap text-slate-900">
         <colgroup>
           <col span={1} className="border-r border-white bg-white" />
           <col span={3} className="border-x border-white bg-yellow-100/50" />
@@ -117,11 +118,11 @@ function Pagination({
         disabled={isPrevButtonDisabled}
         aria-label="go to previous page"
         onClick={handlePrevButtonClick}
-        className="w-8 text-blue-600 disabled:text-gray-400"
+        className="w-8 text-blue-600 disabled:text-slate-400"
       >
         &#10094;
       </button>
-      <span className="px-3">
+      <span className="px-3 text-slate-900">
         <span aria-label="current page number">{currentPageNo}</span> &#8260;{" "}
         <span aria-label="max page number">{maxPageNo}</span>
       </span>
@@ -129,7 +130,7 @@ function Pagination({
         disabled={isNextButtonDisabled}
         aria-label="go to next page"
         onClick={handleNextButtonClick}
-        className="w-8 text-blue-600 disabled:text-gray-400"
+        className="w-8 text-blue-600 disabled:text-slate-400"
       >
         &#10095;
       </button>
@@ -141,7 +142,7 @@ function Notes() {
   return (
     <div
       aria-label="notes"
-      className="rounded-lg border-4 border-double border-sky-50 bg-sky-200 p-2 text-xs leading-tight tracking-tight"
+      className="rounded-lg border-4 border-double border-sky-50 bg-sky-200 p-2 text-xs leading-tight tracking-tight text-slate-900"
     >
       <ul className="mx-auto w-11/12 list-disc">
         <li>

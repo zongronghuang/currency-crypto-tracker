@@ -90,12 +90,12 @@ export default function BarView({
 
   return (
     <div aria-label="bar view">
-      <p className="mb-2 text-sm text-gray-600">
-        Check the open, close, high, and low prices of the base currency in the
-        quote currency.
+      <p className="mb-2 text-sm text-slate-600">
+        Check the open, close, high, and low exchange rates of the base currency
+        against the quote currency.
       </p>
 
-      <div className="mb-2 flex items-center gap-2 text-sm font-semibold">
+      <div className="mb-2 flex items-center gap-2 text-sm font-semibold text-slate-900">
         <label htmlFor="max-rate" className="leading-0">
           <input
             type="checkbox"

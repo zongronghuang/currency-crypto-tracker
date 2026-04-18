@@ -167,7 +167,7 @@ function BulletinBoard({
   return (
     <section
       aria-label="bulletin board"
-      className="mb-2 rounded-lg border-4 border-double border-emerald-50 bg-emerald-200 p-2 text-sm"
+      className="mb-2 rounded-lg border-4 border-double border-emerald-50 bg-emerald-200 p-2 text-sm text-slate-900"
     >
       <h1 className="font-semibold">{title}</h1>
       <h2>
@@ -217,7 +217,7 @@ function ViewOptions({
           key={v}
           className={clsx(
             view === v && "bg-blue-600 fill-white stroke-white text-white",
-            "flex w-max shrink-0 items-center justify-between gap-1 rounded-xs px-1 py-0.5 transition-all",
+            "flex w-max shrink-0 items-center justify-between gap-1 rounded-xs px-1 py-0.5 text-slate-900 transition-all hover:bg-blue-700 hover:text-white",
           )}
           onClick={() => setView(v)}
         >

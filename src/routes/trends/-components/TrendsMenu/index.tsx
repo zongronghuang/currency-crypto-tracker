@@ -37,10 +37,8 @@ export default function TrendsMenu({
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("submit");
     const formData = new FormData(event.currentTarget);
     const params = Object.fromEntries(formData);
-    console.log(params);
     setTrendsApiParams(params as TrendsParams);
     setInternalParams(params as TrendsParams);
     setIsEditing(false);
@@ -62,11 +60,14 @@ export default function TrendsMenu({
   }, [trendsApiParams]);
 
   return (
-    <nav className="w-full overflow-y-scroll">
+    <nav className="w-full overflow-y-auto">
       <form
         action=""
         aria-label="trends menu"
-        className={clsx(styles.trendsMenu, "flex flex-col gap-4")}
+        className={clsx(
+          styles.trendsMenu,
+          "flex flex-col gap-4 text-slate-900",
+        )}
         onSubmit={handleSubmit}
         onChange={() => setIsEditing(true)}
       >
@@ -83,7 +84,7 @@ export default function TrendsMenu({
         <div className="flex justify-between">
           <button
             type="button"
-            className="w-4/9 rounded-lg border border-gray-600/70 bg-white py-1 text-lg text-black"
+            className="w-4/9 rounded-lg border border-slate-300 bg-slate-100 py-1 text-lg text-slate-800"
             onClick={revertForm}
           >
             Cancel
@@ -91,7 +92,7 @@ export default function TrendsMenu({
           <button
             type="submit"
             disabled={!isEditing}
-            className="w-4/9 rounded-lg bg-blue-600 py-1 text-lg text-white outline-blue-600 disabled:opacity-50"
+            className="w-4/9 rounded-lg bg-blue-600 py-1 text-lg text-white hover:bg-blue-700 disabled:opacity-50"
           >
             Apply
           </button>
@@ -125,7 +126,7 @@ function CurrenciesField({
           &nbsp; (base &#8260; quote)
         </strong>
       </legend>
-      <p className="col-span-full mb-1 text-xs text-gray-600">
+      <p className="col-span-full mb-1 text-xs text-slate-600">
         Choose a base currency and a quote currency to see their exchange
         trends.
       </p>
@@ -135,7 +136,7 @@ function CurrenciesField({
         required
         size={5}
         value={base}
-        className="col-span-2 rounded border border-solid border-gray-400"
+        className="col-span-2 rounded border border-solid border-slate-300"
         onChange={(event) =>
           setInternalParams(
             (prev) =>
@@ -146,14 +147,14 @@ function CurrenciesField({
           )
         }
       >
-        <optgroup label="-- Fiats --" className="bg-rose-50">
+        <optgroup label="-- Fiats --" className="bg-amber-100">
           {FIAT_NAMES.map((f) => (
             <option key={f} value={f}>
               {f}
             </option>
           ))}
         </optgroup>
-        <optgroup label="-- Cryptos --" className="bg-lime-50">
+        <optgroup label="-- Cryptos --" className="bg-purple-100">
           {TRADABLE_CRYPTOS.map((c) => (
             <option key={c} value={c}>
               {c}
@@ -170,7 +171,7 @@ function CurrenciesField({
         value={quote}
         required
         size={5}
-        className="col-span-2 rounded border border-solid border-gray-400"
+        className="col-span-2 rounded border border-solid border-slate-300"
         onChange={(event) =>
           setInternalParams(
             (prev) =>
@@ -205,7 +206,7 @@ function DataPointField({
       <legend className="col-span-full mb-1 text-sm font-bold uppercase">
         Data Point
       </legend>
-      <p className="col-span-full mb-1 text-xs text-gray-600">
+      <p className="col-span-full mb-1 text-xs text-slate-600">
         Choose a data point size to generalize the exchange trends.
       </p>
       {sizes.map((s) => (

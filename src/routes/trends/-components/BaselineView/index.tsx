@@ -54,14 +54,11 @@ export default function BaselineView({
 
   return (
     <div aria-label="baseline view">
-      <p className="mb-2 text-sm text-gray-600">
-        The baseline chart displays the close exchange rate of the base currency
-        to the quote currency.
+      <p className="mb-2 text-sm text-slate-600">
+        Check the close exchange rates of the base currency against the quote
+        currency. You can set a base rate to profile overall rate trends.
       </p>
-      <p className="mb-2 text-sm text-gray-600">
-        Set a base rate to profile overall rate trends.
-      </p>
-      <div className="text-semibold mb-4 flex items-center justify-between text-center text-sm">
+      <div className="text-semibold mb-4 flex items-center justify-between text-center text-sm text-slate-900">
         <span>
           Min <br />
           {minRate}

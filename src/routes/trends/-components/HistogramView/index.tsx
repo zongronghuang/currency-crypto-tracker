@@ -34,9 +34,9 @@ export default function HistogramView({
 
   return (
     <div aria-label="histogram view">
-      <p className="mb-2 text-sm text-gray-600">
-        Check the trading volumes of the base currency in the quote currency.
-        Trading volume data is only available for cryptocurrencies.
+      <p className="mb-2 text-sm text-slate-600">
+        Check traded volumes of the base currency to the quote currency. Traded
+        volume data is only available for cryptocurrencies as the base.
       </p>
       <div className="relative" onMouseLeave={turnOffTooltip}>
         <Chart
