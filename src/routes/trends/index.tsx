@@ -64,6 +64,8 @@ export const Route = createFileRoute("/trends/")({
   component: RouteComponent,
 });
 
+// <Alert title="Loading" description="Data is arriving now." />
+
 function RouteComponent() {
   const [trendsApiParams, setTrendsApiParams] = useState<TrendsParams>({
     ...defaultTrendsApiParams,
@@ -84,19 +86,17 @@ function RouteComponent() {
 
   return (
     <div className={styles.trends}>
-      {isPending && (
-        <Alert title="Loading" description="Data is arriving now." />
-      )}
+      <BulletinBoard
+        metaData={metaData}
+        startDate={startDate}
+        endDate={endDate}
+      />
 
-      {isSuccess && (
-        <>
-          <BulletinBoard
-            metaData={metaData}
-            startDate={startDate}
-            endDate={endDate}
-          />
-
-          <section className="mx-auto w-full">
+      <section className="mx-auto w-full">
+        {isPending ? (
+          <Alert title="Loading" description="Data is arriving now." />
+        ) : (
+          <>
             <ViewOptions
               view={view}
               setView={setView}
@@ -111,9 +111,9 @@ function RouteComponent() {
                 chartOptions={chartOptions}
               />
             </Suspense>
-          </section>
-        </>
-      )}
+          </>
+        )}
+      </section>
 
       <FooterBar>
         <div className="flex h-12 items-center justify-center text-center">
