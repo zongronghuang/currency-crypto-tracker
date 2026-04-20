@@ -82,7 +82,10 @@ export default function NewsCard({
             {feed?.summary}
           </p>
 
-          <span className="float-left w-fit text-right">
+          <span
+            className="float-left w-fit text-right"
+            aria-label={feed?.overall_sentiment_label}
+          >
             {getSentimentEmoji(feed?.overall_sentiment_label)}
           </span>
           <a
