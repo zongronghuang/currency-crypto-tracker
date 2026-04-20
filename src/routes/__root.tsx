@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
-import HeaderBar from "./-components/HeaderBar";
-import SideMenu from "./-components/SideMenu";
+import HeaderBar from "../components/HeaderBar";
+import SideMenu from "../components/SideMenu";
 
 export const Route = createRootRoute({
   component: RootComponent,

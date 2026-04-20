@@ -7,9 +7,9 @@ import dayjs from "dayjs";
 import { getNews, type NewsFilters } from "@/apis";
 import useIntersectionObserver from "@/hooks/useIntersectionObserver";
 import NewsCard, { type Feed } from "./-components/NewsCard";
-import FooterBar from "../-components/FooterBar";
-import FooterDrawer from "../-components/FooterDrawer";
-import Alert from "../-components/Alert";
+import FooterBar from "../../components/FooterBar";
+import FooterDrawer from "../../components/FooterDrawer";
+import Alert from "../../components/Alert";
 import { sliceListByPage } from "@/utils";
 import styles from "./index.module.css";
 
