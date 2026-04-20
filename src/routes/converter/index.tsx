@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 import CurrencyInput from "./-components/CurrencyInput";
 import { getExchangeRate } from "@/apis";
-import { getComputableNumeral } from "@/utils";
+import { getComputableNumeral, calibrateNumeral } from "@/utils";
 import type { ActiveCurrency, FiatName, CryptoName } from "@/constants/types";
 
 const CurrencyMenu = lazy(() => import("./-components/CurrencyMenu"));
@@ -71,14 +71,13 @@ export default function ConverterPage() {
   }, [amount, exchangeRate]);
 
   return (
-    <div className="px-5">
-      <p>
-        1 {fromCurrency.code} = {exchangeRate}
-        {toCurrency.code}
-      </p>
-      <p>
-        Last update: <time>{lastRefreshed}</time>
-      </p>
+    <div>
+      <BulletinBoard
+        fromCurrencyCode={fromCurrency.code}
+        toCurrencyCode={toCurrency.code}
+        exchangeRate={exchangeRate}
+        lastRefreshed={lastRefreshed}
+      />
 
       <CurrencyInput
         isBaseCurrency={true}
@@ -115,11 +114,38 @@ export default function ConverterPage() {
   );
 }
 
+function BulletinBoard({
+  fromCurrencyCode,
+  toCurrencyCode,
+  exchangeRate,
+  lastRefreshed,
+}: {
+  fromCurrencyCode: string;
+  toCurrencyCode: string;
+  exchangeRate: string;
+  lastRefreshed: string;
+}) {
+  return (
+    <section
+      aria-label="bulletin board"
+      className="mb-2 rounded-lg border-4 border-double border-emerald-50 bg-emerald-200 p-2 text-sm text-slate-900"
+    >
+      <p className="font-semibold">
+        1 {fromCurrencyCode} = {calibrateNumeral(exchangeRate)} {toCurrencyCode}
+      </p>
+      <p>
+        Last update: <time>{lastRefreshed}</time>
+      </p>
+    </section>
+  );
+}
+
 function SwitchButton({ onClick }: { onClick: () => void }) {
   return (
     <button
-      className="mx-auto my-10 block w-fit text-2xl outline"
+      className="mx-auto my-6 block h-14 w-14 rounded-full bg-linear-to-r from-blue-500 to-indigo-600 text-3xl text-white"
       title="switch"
+      aria-label="switch base and quote currencies"
       onClick={onClick}
     >
       &#8645;

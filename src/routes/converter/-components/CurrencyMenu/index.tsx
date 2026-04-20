@@ -175,23 +175,23 @@ export default function CurrencyMenu({
     <dialog
       ref={ref}
       className={clsx(
-        "inset-0 z-10 mx-auto max-h-screen w-10/12 translate-y-1/12 rounded-lg p-2 outline outline-amber-600",
+        "inset-0 top-1/2 z-10 mx-auto w-10/12 -translate-y-1/2 rounded-lg border border-slate-300 p-4 text-slate-900",
       )}
       open={open}
       closedby="any"
       aria-labelledby="currency-crypto"
       onClose={resetDialog}
     >
-      <h2 id="currency-crypto" className="mb-4 text-center text-lg">
-        Currency-crypto list
+      <h2 id="currency-crypto" className="mb-4 text-center text-xl font-bold">
+        Choose Currency
       </h2>
 
       <div>
         <form method="dialog" onSubmit={handleSubmit}>
-          <div className="mb-4 flex">
+          <div className="mb-4 flex overflow-clip rounded-lg border border-slate-300">
             <label
               htmlFor="fiat"
-              className="grow text-center text-lg leading-loose hover:bg-blue-300 hover:text-white focus:bg-indigo-400 focus:text-amber-200 has-checked:bg-blue-600 has-checked:text-white"
+              className="grow text-center text-lg leading-loose hover:bg-blue-700 has-checked:bg-blue-600 has-checked:text-white"
             >
               <span>Fiat</span>
               <input
@@ -225,7 +225,7 @@ export default function CurrencyMenu({
           </div>
 
           <input
-            className="mb-4 block h-12 w-full rounded-lg border border-solid border-gray-300 px-2 text-lg"
+            className="mb-4 block h-12 w-full rounded-lg border border-solid border-slate-300 bg-white px-2 text-lg placeholder:text-slate-400"
             type="search"
             spellCheck={false}
             value={searchMatches.term}
@@ -249,7 +249,7 @@ export default function CurrencyMenu({
 
           <button
             type="submit"
-            className="mb-0 h-10 w-full rounded-lg bg-blue-500 text-center text-xl font-semibold text-white"
+            className="mb-0 h-10 w-full rounded-lg bg-blue-600 text-center text-xl font-semibold text-white hover:bg-blue-700"
           >
             Confirm
           </button>

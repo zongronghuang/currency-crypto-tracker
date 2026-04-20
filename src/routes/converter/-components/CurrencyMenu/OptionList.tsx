@@ -59,7 +59,7 @@ export default function OptionList({
       className={clsx(
         activeCurrency?.type,
         styles.optionList,
-        "no-scrollbar mb-4 grid h-[40vh] auto-rows-min grid-cols-2 items-start overflow-y-scroll rounded-lg border border-solid border-gray-300 px-2 focus-within:outline-2 focus-within:outline-blue-500",
+        "no-scrollbar mb-4 h-[40vh] auto-rows-min items-start overflow-y-scroll rounded-lg border border-solid border-slate-300",
       )}
     >
       {data.map((op) => (
@@ -95,20 +95,24 @@ function FiatOption({ isActive, optionData, onChange }: CurrencyOptionProps) {
   return (
     <li
       className={clsx(
-        "py-4 transition-all focus-within:bg-blue-600 focus-within:text-white hover:bg-blue-300 hover:text-white has-checked:bg-blue-600 has-checked:text-white",
+        "py-3 transition-all focus-within:bg-blue-700 focus-within:text-white hover:bg-blue-700 hover:text-white has-checked:bg-blue-600 has-checked:text-white",
       )}
     >
       <label
         htmlFor={optionData.code}
-        className="flex w-full items-center justify-start gap-4 px-1 text-lg font-semibold"
+        className="flex w-full items-center justify-start px-2 text-lg font-semibold"
       >
         <FiatIcon
-          className="block w-8 rounded-full in-focus-within:border in-focus-within:border-solid in-focus-within:border-white"
+          className="mr-4 block w-8 rounded-full in-focus-within:border in-focus-within:border-solid in-focus-within:border-white"
           alt={optionData.name}
           title={optionData.name}
           code={optionData.country_codes![0]}
         />
-        {optionData.code}
+        <span className="mr-4">{optionData.code}</span>
+
+        <span className="ml-auto text-right text-sm font-normal text-wrap text-current">
+          {optionData.name}
+        </span>
         <input
           id={optionData.code}
           type="radio"
@@ -116,7 +120,7 @@ function FiatOption({ isActive, optionData, onChange }: CurrencyOptionProps) {
           name="fiat-option"
           onChange={onChange}
           checked={isActive}
-          className="opacity-0"
+          className="w-0 opacity-0"
         />
       </label>
     </li>

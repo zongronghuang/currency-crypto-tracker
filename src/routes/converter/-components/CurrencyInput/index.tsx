@@ -73,13 +73,10 @@ export default function CurrencyInput({
   });
 
   return (
-    <div className="flex flex-col items-center p-2 text-2xl outline outline-black">
-      <label
-        htmlFor={identifier}
-        className="w-full items-center gap-2 font-bold outline"
-      >
+    <div className="round flex flex-col items-center p-2 text-2xl">
+      <label htmlFor={identifier} className="w-full font-bold">
         <button
-          className="flex w-full justify-start gap-4 p-2 outline"
+          className="flex w-full items-center justify-start gap-4 p-2"
           onClick={() => {
             setActiveCurrency({
               ...currencyData,
@@ -89,18 +86,21 @@ export default function CurrencyInput({
           }}
         >
           {IconImage}
-          <span>{currencyData.code}</span>
+          <span className="text-slate-900">{currencyData.code}</span>
+          <span className="ml-auto text-base font-normal">
+            {currencyData.name}
+          </span>
         </button>
       </label>
       <input
-        className="block w-full min-w-2/3 rounded-sm p-2 outline outline-gray-400 focus:outline-2 focus:outline-blue-500"
+        className="block w-full min-w-2/3 rounded-lg border border-slate-300 p-2 text-slate-900 shadow-md shadow-slate-300"
         id={identifier}
         type="text"
         inputMode="numeric"
         value={localAmountNumeral}
-        onChange={(event: ChangeEvent<HTMLInputElement>) =>
-          setLocalAmountNumeral(getComputableNumeral(event.target.value))
-        }
+        onChange={(event: ChangeEvent<HTMLInputElement>) => {
+          setLocalAmountNumeral(getComputableNumeral(event.target.value));
+        }}
         onBlur={() => {
           const newAmount = getComputableNumeral(localAmountNumeral);
           const oppositeAmount = isBaseCurrency
