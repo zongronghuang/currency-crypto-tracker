@@ -3,12 +3,22 @@ import { createPortal } from "react-dom";
 import { Link } from "@tanstack/react-router";
 import clsx from "clsx";
 import styles from "./index.module.css";
+import ConverterIcon from "@/assets/converter.svg";
+import TrendsIcon from "@/assets/trends.svg";
+import NewsIcon from "@/assets/news.svg";
 
 const pageLinks = [
-  { to: "/converter", label: "Converter" },
-  { to: "/trends", label: "Trends" },
-  { to: "/news", label: "News" },
-  { to: "/chat", label: "Chat" },
+  {
+    to: "/converter",
+    label: "Converter",
+    icon: <ConverterIcon className="h-auto w-6" />,
+  },
+  {
+    to: "/trends",
+    label: "Trends",
+    icon: <TrendsIcon className="h-auto w-6" />,
+  },
+  { to: "/news", label: "News", icon: <NewsIcon className="h-auto w-6" /> },
 ];
 
 type SideMenuProps = {
@@ -126,18 +136,26 @@ export default function SideMenu({
     >
       <nav
         ref={sideMenuRef}
-        className={clsx(isSideMenuOpen && "open", styles.sideMenu)}
+        className={clsx(
+          isSideMenuOpen && "open",
+          styles.sideMenu,
+          "bg-slate-50",
+        )}
       >
         <ul className="mt-45">
           {pageLinks.map((link) => (
             <li key={link.label}>
               <Link
-                className="block p-3 text-2xl font-bold outline"
+                className="flex items-center gap-2 p-4 text-2xl font-bold text-slate-900"
                 to={link.to}
                 preload="intent"
-                onClick={(event) => event.stopPropagation()}
-                activeProps={{ className: "font-bold bg-blue-600" }}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  setTimeout(() => setIsSideMenuOpen(false), 700);
+                }}
+                activeProps={{ className: "font-bold bg-blue-600 text-white" }}
               >
+                {link.icon}
                 {link.label}
               </Link>
             </li>

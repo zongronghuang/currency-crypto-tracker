@@ -16,7 +16,7 @@
 }
 
 .sideMenu {
-  width: 50%;
+  width: fit-content;
   height: 100%;
   background-color: white;
   transform: translateX(-100%);
