@@ -11,14 +11,18 @@ const pageLinks = [
   {
     to: "/converter",
     label: "Converter",
-    icon: <ConverterIcon className="h-auto w-6" />,
+    icon: <ConverterIcon className="h-auto w-6 md:w-10 xl:w-6" />,
   },
   {
     to: "/trends",
     label: "Trends",
-    icon: <TrendsIcon className="h-auto w-6" />,
+    icon: <TrendsIcon className="h-auto w-6 md:w-10 xl:w-6" />,
   },
-  { to: "/news", label: "News", icon: <NewsIcon className="h-auto w-6" /> },
+  {
+    to: "/news",
+    label: "News",
+    icon: <NewsIcon className="h-auto w-6 md:w-10 xl:w-6" />,
+  },
 ];
 
 type SideMenuProps = {
@@ -132,21 +136,25 @@ export default function SideMenu({
       tabIndex={0}
       ref={backdropRef}
       role="menu"
-      className={clsx(isSideMenuOpen && "open", styles.backdrop)}
+      className={clsx(
+        isSideMenuOpen && "open",
+        styles.backdrop,
+        "bg-transparent",
+      )}
     >
       <nav
         ref={sideMenuRef}
         className={clsx(
           isSideMenuOpen && "open",
           styles.sideMenu,
-          "bg-slate-50",
+          "bg-white xl:translate-x-0",
         )}
       >
         <ul className="mt-45">
           {pageLinks.map((link) => (
             <li key={link.label}>
               <Link
-                className="flex items-center gap-2 p-4 text-2xl font-bold text-slate-900"
+                className="flex items-center p-4 text-2xl font-bold text-slate-900 hover:bg-blue-700 hover:text-white md:p-8 md:text-4xl xl:p-4 xl:text-xl"
                 to={link.to}
                 preload="intent"
                 onClick={(event) => {
@@ -156,7 +164,7 @@ export default function SideMenu({
                 activeProps={{ className: "font-bold bg-blue-600 text-white" }}
               >
                 {link.icon}
-                {link.label}
+                <span className="ml-2 md:ml-4 xl:ml-2">{link.label}</span>
               </Link>
             </li>
           ))}

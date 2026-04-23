@@ -3,7 +3,6 @@
   inset: 0;
   z-index: -1;
   display: flex;
-  background-color: transparent;
   transition:
     background-color 0.3s ease-in,
     z-index 0.3s ease-in;
@@ -18,12 +17,60 @@
 .sideMenu {
   width: fit-content;
   height: 100%;
-  background-color: white;
   transform: translateX(-100%);
   transition: transform 0.3s ease-in;
   touch-action: pan-x;
 
   &:global(.open) {
     transform: translateX(0);
+  }
+}
+
+@media screen and (width >= 80rem) {
+  .backdrop {
+    width: auto;
+    z-index: 1;
+    transition: none;
+    pointer-events: none;
+
+    &:global(.open) {
+      background-color: transparent;
+    }
+  }
+
+  .sideMenu {
+    width: 5vw;
+    transform: translateX(0);
+    pointer-events: auto;
+    transition: width 0.3s ease;
+  }
+
+  .sideMenu a {
+    display: grid;
+    grid-template-columns: min-content 0fr;
+    grid-template-rows: 1fr;
+    transition: grid-template-columns 0.3s ease;
+  }
+
+  .sideMenu span {
+    width: 1px;
+    overflow: hidden;
+    opacity: 0;
+    transition:
+      width 0.1s ease 0.1s,
+      opacity 0.1s ease 0.1s;
+  }
+
+  .sideMenu:hover {
+    width: 12vw;
+  }
+
+  .sideMenu:hover a {
+    grid-template-columns: min-content 1fr;
+  }
+
+  .sideMenu:hover span {
+    width: fit-content;
+    opacity: 1;
   }
 }
