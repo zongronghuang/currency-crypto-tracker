@@ -175,57 +175,48 @@ export default function CurrencyMenu({
     <dialog
       ref={ref}
       className={clsx(
-        "inset-0 top-1/2 z-10 mx-auto w-10/12 -translate-y-1/2 rounded-lg border border-slate-300 p-4 text-slate-900",
+        "inset-0 top-1/2 z-10 mx-auto w-2/3 -translate-y-1/2 rounded-lg border border-slate-300 p-4 text-slate-900 md:w-1/2 md:p-6 xl:w-1/3",
       )}
       open={open}
       closedby="any"
       aria-labelledby="currency-crypto"
       onClose={resetDialog}
     >
-      <h2 id="currency-crypto" className="mb-4 text-center text-xl font-bold">
+      <h2
+        id="currency-crypto"
+        className="mb-4 text-center text-xl font-bold md:mb-8 md:text-3xl xl:mb-4 xl:text-2xl"
+      >
         Choose Currency
       </h2>
 
       <div>
         <form method="dialog" onSubmit={handleSubmit}>
-          <div className="mb-4 flex overflow-clip rounded-lg border border-slate-300">
-            <label
-              htmlFor="fiat"
-              className="grow text-center text-lg leading-loose hover:bg-blue-700 has-checked:bg-blue-600 has-checked:text-white"
-            >
-              <span>Fiat</span>
-              <input
-                id="fiat"
-                type="radio"
-                value="fiat"
-                required
-                name="currency-type"
-                checked={activeCurrency?.type === "fiat"}
-                onChange={handleTypeChange}
-                className="opacity-0"
-              />
-            </label>
-
-            <label
-              htmlFor="crypto"
-              className="grow text-center text-lg leading-loose hover:bg-blue-300 hover:text-white has-checked:bg-blue-600 has-checked:text-white"
-            >
-              <span>Crypto</span>
-              <input
-                type="radio"
-                id="crypto"
-                value="crypto"
-                required
-                name="currency-type"
-                checked={activeCurrency?.type === "crypto"}
-                onChange={handleTypeChange}
-                className="opacity-0"
-              />
-            </label>
+          <div className="mb-4 flex overflow-clip rounded-lg border border-slate-300 md:mb-6 md:border-2 xl:mb-4">
+            {Object.keys(dataSources).map((category) => (
+              <label
+                key={category}
+                htmlFor={category}
+                className="grow text-center text-lg leading-loose hover:bg-blue-700 hover:text-white has-checked:bg-blue-600 has-checked:text-white md:py-2 xl:py-1"
+              >
+                <span className="uppercase md:text-2xl xl:text-xl">
+                  {category}
+                </span>
+                <input
+                  id={category}
+                  type="radio"
+                  value={category}
+                  required
+                  name="currency-type"
+                  checked={activeCurrency?.type === category}
+                  onChange={handleTypeChange}
+                  className="opacity-0"
+                />
+              </label>
+            ))}
           </div>
 
           <input
-            className="mb-4 block h-12 w-full rounded-lg border border-solid border-slate-300 bg-white px-2 text-lg placeholder:text-slate-400"
+            className="mb-4 block h-12 w-full rounded-lg border border-solid border-slate-300 bg-white px-2 text-lg placeholder:text-slate-400 md:mb-6 md:h-16 md:border-2 md:px-4 md:text-2xl xl:h-12"
             type="search"
             spellCheck={false}
             value={searchMatches.term}
@@ -249,7 +240,7 @@ export default function CurrencyMenu({
 
           <button
             type="submit"
-            className="mb-0 h-10 w-full rounded-lg bg-blue-600 text-center text-xl font-semibold text-white hover:bg-blue-700"
+            className="mb-0 w-full rounded-lg bg-blue-600 py-2 text-center text-xl font-semibold text-white hover:bg-blue-700 md:py-4 md:text-3xl xl:py-2 xl:text-2xl"
           >
             Confirm
           </button>

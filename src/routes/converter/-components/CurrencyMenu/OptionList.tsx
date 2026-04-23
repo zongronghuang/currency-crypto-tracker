@@ -59,7 +59,7 @@ export default function OptionList({
       className={clsx(
         activeCurrency?.type,
         styles.optionList,
-        "no-scrollbar mb-4 h-[40vh] auto-rows-min items-start overflow-y-scroll rounded-lg border border-solid border-slate-300",
+        "no-scrollbar relative mb-4 h-[40vh] auto-rows-min items-start overflow-y-scroll rounded-lg border border-solid border-slate-300 md:mb-6 md:border-2",
       )}
     >
       {data.map((op) => (
@@ -95,22 +95,22 @@ function FiatOption({ isActive, optionData, onChange }: CurrencyOptionProps) {
   return (
     <li
       className={clsx(
-        "py-3 transition-all focus-within:bg-blue-700 focus-within:text-white hover:bg-blue-700 hover:text-white has-checked:bg-blue-600 has-checked:text-white",
+        "py-3 transition-all focus-within:bg-blue-700 focus-within:text-white hover:bg-blue-700 hover:text-white has-checked:bg-blue-600 has-checked:text-white md:py-4 xl:py-2",
       )}
     >
       <label
         htmlFor={optionData.code}
-        className="flex w-full items-center justify-start px-2 text-lg font-semibold"
+        className="flex w-full items-center justify-start px-2 text-lg font-semibold md:px-4"
       >
         <FiatIcon
-          className="mr-4 block w-8 rounded-full in-focus-within:border in-focus-within:border-solid in-focus-within:border-white"
+          className="mr-4 block w-8 rounded-full in-focus-within:ring-2 in-focus-within:ring-white md:w-12 md:in-focus-within:ring-4 xl:w-10"
           alt={optionData.name}
           title={optionData.name}
           code={optionData.country_codes![0]}
         />
-        <span className="mr-4">{optionData.code}</span>
+        <span className="mr-4 md:text-2xl">{optionData.code}</span>
 
-        <span className="ml-auto text-right text-sm font-normal text-wrap text-current">
+        <span className="ml-auto text-right text-sm font-normal text-pretty text-current md:text-xl">
           {optionData.name}
         </span>
         <input
@@ -138,15 +138,20 @@ function CryptoOption({ isActive, optionData, onChange }: CurrencyOptionProps) {
     >
       <label
         htmlFor={optionData.code}
-        className="text-md flex w-full items-center justify-start gap-2 px-1 font-semibold text-wrap"
+        className="text-md flex w-full items-center justify-start gap-2 px-1 font-semibold text-wrap md:px-4"
       >
         <CryptoIcon
           title={optionData.name}
           alt={optionData.name}
           code={optionData.code}
-          className="block w-8 rounded-full in-focus-within:border in-focus-within:border-solid in-focus-within:border-white"
+          className="mr-4 block w-8 rounded-full in-focus-within:ring-2 in-focus-within:ring-white md:w-12 md:in-focus-within:ring-4 xl:w-10"
         />
-        {optionData.code}
+        <span className="mr-4 md:text-2xl">{optionData.code}</span>
+
+        <span className="ml-auto text-right text-sm font-normal text-pretty text-current md:text-xl">
+          {optionData.name}
+        </span>
+
         <input
           type="radio"
           id={optionData.code}
@@ -165,7 +170,7 @@ function NoMatchAlert() {
   return (
     <span
       role="alert"
-      className="col-span-2 h-[49vh] text-center leading-[49vh]"
+      className="absolute top-1/2 left-1/2 w-full -translate-x-1/2 -translate-y-1/2 text-center text-lg md:text-2xl"
     >
       No Matches Found
     </span>

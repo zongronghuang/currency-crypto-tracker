@@ -79,27 +79,29 @@ export default function ConverterPage() {
         lastRefreshed={lastRefreshed}
       />
 
-      <CurrencyInput
-        isBaseCurrency={true}
-        amountNumeral={amountNumerals[0]}
-        exchangeRate={exchangeRate}
-        dialogRef={dialogRef}
-        setActiveCurrency={setActiveCurrency}
-        currencyData={fromCurrency}
-        setAmountNumerals={setAmountNumerals}
-      />
+      <div className="lg:grid lg:grid-cols-7">
+        <CurrencyInput
+          isBaseCurrency={true}
+          amountNumeral={amountNumerals[0]}
+          exchangeRate={exchangeRate}
+          dialogRef={dialogRef}
+          setActiveCurrency={setActiveCurrency}
+          currencyData={fromCurrency}
+          setAmountNumerals={setAmountNumerals}
+        />
 
-      <SwitchButton onClick={swapCurrencies} />
+        <SwitchButton onClick={swapCurrencies} />
 
-      <CurrencyInput
-        // amountNumeral={amountNumerals[1]}
-        amountNumeral={amountNumerals[1]}
-        exchangeRate={exchangeRate}
-        dialogRef={dialogRef}
-        setActiveCurrency={setActiveCurrency}
-        currencyData={toCurrency}
-        setAmountNumerals={setAmountNumerals}
-      />
+        <CurrencyInput
+          // amountNumeral={amountNumerals[1]}
+          amountNumeral={amountNumerals[1]}
+          exchangeRate={exchangeRate}
+          dialogRef={dialogRef}
+          setActiveCurrency={setActiveCurrency}
+          currencyData={toCurrency}
+          setAmountNumerals={setAmountNumerals}
+        />
+      </div>
 
       <Suspense>
         <Activity mode="visible">
@@ -115,20 +117,20 @@ export default function ConverterPage() {
 }
 
 function BulletinBoard({
-  fromCurrencyCode,
-  toCurrencyCode,
-  exchangeRate,
-  lastRefreshed,
+  fromCurrencyCode = "",
+  toCurrencyCode = "",
+  exchangeRate = "",
+  lastRefreshed = "",
 }: {
-  fromCurrencyCode: string;
-  toCurrencyCode: string;
-  exchangeRate: string;
-  lastRefreshed: string;
+  fromCurrencyCode?: string;
+  toCurrencyCode?: string;
+  exchangeRate?: string;
+  lastRefreshed?: string;
 }) {
   return (
     <section
       aria-label="bulletin board"
-      className="mb-2 rounded-lg border-4 border-double border-emerald-50 bg-emerald-200 p-2 text-sm text-slate-900"
+      className="mb-2 rounded-lg border-4 border-double border-emerald-50 bg-emerald-200 p-2 text-sm text-slate-900 md:mb-8 md:rounded-xl md:border-6 md:p-6 md:text-2xl md:leading-10 lg:mb-20 lg:border-8 lg:text-3xl lg:leading-relaxed xl:mx-auto xl:w-fit xl:text-2xl"
     >
       <p className="font-semibold">
         1 {fromCurrencyCode} = {calibrateNumeral(exchangeRate)} {toCurrencyCode}
@@ -143,7 +145,7 @@ function BulletinBoard({
 function SwitchButton({ onClick }: { onClick: () => void }) {
   return (
     <button
-      className="mx-auto my-6 block h-14 w-14 rounded-full bg-linear-to-r from-blue-500 to-indigo-600 text-3xl text-white"
+      className="mx-auto my-6 block aspect-square w-14 rounded-full bg-linear-to-r from-blue-500 to-indigo-600 text-3xl text-white md:my-12 md:w-24 md:text-5xl lg:col-start-4 lg:col-end-5 lg:w-20 lg:rotate-90 lg:self-center lg:text-4xl xl:w-16 xl:text-3xl"
       title="switch"
       aria-label="switch base and quote currencies"
       onClick={onClick}
