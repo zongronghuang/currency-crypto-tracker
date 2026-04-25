@@ -1,7 +1,6 @@
 import { Activity, Suspense, useState, useRef, lazy, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import clsx from "clsx";
 import { z } from "zod";
 import dayjs from "dayjs";
 import { getNews, type NewsFilters } from "@/apis";
@@ -11,7 +10,6 @@ import FooterBar from "../../components/FooterBar";
 import FooterDrawer from "../../components/FooterDrawer";
 import Alert from "../../components/Alert";
 import { sliceListByPage } from "@/utils";
-import styles from "./index.module.css";
 
 const NewsFilters = lazy(() => import("./-components/NewsFilters"));
 
@@ -104,7 +102,7 @@ function RouteComponent() {
     <div
       aria-label="news list"
       ref={rootRef}
-      className={clsx(styles.list, "no-scrollbar")}
+      className="no-scrollbar grid grid-cols-1 gap-8 md:grid-cols-2 md:pb-16 lg:grid-cols-3"
     >
       {isPending ? (
         <>
@@ -122,7 +120,7 @@ function RouteComponent() {
 
       <div
         ref={targetRef}
-        className="invisible mt-1 text-center text-lg text-slate-400"
+        className="invisible mt-1 text-center text-lg text-slate-400 md:invisible"
       >
         <small>No more results</small>
       </div>
@@ -135,7 +133,7 @@ function RouteComponent() {
             aria-label="open drawer button"
             aria-expanded={isDrawerOpen}
             disabled={!isSuccess}
-            className="rounded-full text-4xl font-bold text-slate-900 disabled:text-slate-400"
+            className="cursor-pointer text-4xl font-bold text-slate-900 disabled:text-slate-400"
             onClick={(event) => {
               event.stopPropagation();
               setIsDrawerOpen(true);
@@ -181,7 +179,7 @@ function BackToTopButton() {
       href="#top"
       aria-label="back to top"
       hidden={!isVisible}
-      className="fixed right-2 bottom-15 z-15 flex h-10 w-10 -rotate-90 items-center justify-center rounded-full bg-blue-600 text-3xl font-bold text-white shadow-md hover:bg-blue-700"
+      className="fixed right-2 bottom-15 z-15 flex h-10 w-10 -rotate-90 items-center justify-center rounded-full bg-blue-600 text-3xl font-bold text-white shadow-md hover:bg-blue-700 lg:bottom-28 lg:h-12 lg:w-12"
     >
       &#10132;
     </a>

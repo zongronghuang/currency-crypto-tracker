@@ -80,17 +80,21 @@ export default function NewsFilters({
   }, [filters]);
 
   return (
-    <nav className="w-full overflow-y-scroll">
+    <nav className="w-full overflow-y-auto">
       <form
         action=""
         aria-label="news filters"
         className={clsx(
           styles.newsFilters,
-          "flex flex-col gap-4 text-slate-800",
+          "flex flex-col gap-4 text-slate-800 md:mx-auto md:w-3/4 lg:grid lg:grid-cols-2 lg:grid-rows-[min-content_min-content_min-content_min-content_1fr] lg:gap-x-8",
         )}
         onSubmit={handleSubmit}
         onChange={() => setIsEditing(true)}
       >
+        <h2 className="row-start-1 row-end-2 text-center text-lg font-semibold lg:col-span-full lg:text-2xl">
+          Set News Filters
+        </h2>
+
         <DateRangeField
           dateRange={[internalFilters.startDate, internalFilters.endDate]}
           setInternalFilters={setInternalFilters}
@@ -109,10 +113,10 @@ export default function NewsFilters({
         />
         <LimitField limit={internalFilters.limit} />
 
-        <div className="flex justify-between">
+        <div className="col-span-full flex justify-between">
           <button
             type="button"
-            className="w-4/9 rounded-lg border border-slate-300 bg-slate-100 py-1 text-lg text-slate-800"
+            className="w-4/9 rounded-lg border border-slate-300 bg-slate-100 py-1 text-lg text-slate-800 lg:py-2 lg:text-2xl"
             onClick={revertForm}
           >
             Cancel
@@ -121,7 +125,7 @@ export default function NewsFilters({
           <button
             disabled={!isEditing}
             type="submit"
-            className="w-4/9 rounded-lg bg-blue-600 py-1 text-lg text-white hover:bg-blue-700 disabled:opacity-50"
+            className="w-4/9 rounded-lg bg-blue-600 py-1 text-lg text-white hover:bg-blue-700 disabled:opacity-50 lg:py-2 lg:text-2xl"
           >
             Apply
           </button>
@@ -143,8 +147,8 @@ function DateRangeField({
   const endDateRef = useRef<HTMLInputElement>(null);
 
   return (
-    <fieldset className="grid auto-rows-auto grid-cols-5 capitalize">
-      <legend className="col-span-full mb-1 text-sm font-bold text-slate-900 uppercase">
+    <fieldset className="col-start-1 col-end-2 row-start-2 row-end-3 grid auto-rows-auto grid-cols-[1fr_min-content_1fr] self-start capitalize lg:text-lg">
+      <legend className="col-span-full mb-1 text-sm font-bold text-slate-900 uppercase lg:mb-2 lg:text-xl">
         Date Range
       </legend>
       <input
@@ -153,7 +157,7 @@ function DateRangeField({
         name="startDate"
         max={today}
         value={dateRange[0]}
-        className="col-span-2 rounded-sm border border-solid border-slate-300 p-1"
+        className="rounded-sm border border-solid border-slate-300 p-1 lg:text-lg"
         onChange={(event) => {
           startDateRef.current?.setCustomValidity("");
           endDateRef.current?.setCustomValidity("");
@@ -174,14 +178,14 @@ function DateRangeField({
           }));
         }}
       />
-      <span className="col-span-1 place-self-center">&#8594;</span>
+      <span className="mx-2 place-self-center">&#8594;</span>
       <input
         ref={endDateRef}
         type="date"
         name="endDate"
         max={today}
         value={dateRange[1]}
-        className="col-span-2 rounded-sm border border-solid border-slate-300 p-1"
+        className="rounded-sm border border-solid border-slate-300 p-1"
         onChange={(event) => {
           startDateRef.current?.setCustomValidity("");
           endDateRef.current?.setCustomValidity("");
@@ -249,25 +253,25 @@ function TickersField({
     }));
 
   return (
-    <fieldset>
-      <legend className="col-span-full mb-1 text-sm font-bold text-slate-900 uppercase">
+    <fieldset className="col-start-1 col-end-2 row-start-3 row-end-4 lg:text-lg">
+      <legend className="col-span-full mb-1 text-sm font-bold text-slate-900 uppercase lg:mb-2 lg:text-xl">
         Tickers
-        <strong className="text-xs font-normal normal-case">
+        <strong className="text-xs font-normal normal-case lg:text-base">
           &nbsp; (max {maxNumOfTickers} tickers)
         </strong>
       </legend>
 
-      <p className="mb-1 text-xs text-slate-600">
-        Find news matching all selected tickers at the same time.
+      <p className="mb-1 text-sm text-slate-600 lg:mb-2 lg:text-base">
+        Find news matching all the selected tickers.
       </p>
 
-      <div className="mb-2 flex items-center justify-between leading-loose">
+      <div className="mb-2 flex items-center justify-between leading-loose lg:mb-2">
         <input
           ref={inputRef}
           list="currency-list"
           type="text"
           placeholder="Select or enter currency name"
-          className="w-5/6 rounded-tl-sm rounded-bl-sm border border-slate-300 pl-1 uppercase placeholder:text-sm placeholder:text-slate-400 placeholder:normal-case"
+          className="w-5/6 rounded-tl-sm rounded-bl-sm border border-slate-300 pl-1 uppercase placeholder:text-sm placeholder:text-slate-400 placeholder:normal-case lg:placeholder:text-lg"
         />
         <datalist id="currency-list">
           {FIAT_NAMES.map((f) => (
@@ -349,13 +353,13 @@ function TopicsField({
   }, [topics.length]);
 
   return (
-    <fieldset className="grid auto-rows-auto grid-cols-2 capitalize">
-      <legend className="col-span-full mb-1 text-sm font-bold text-slate-900 uppercase">
+    <fieldset className="row-span-3 grid auto-rows-auto grid-cols-2 capitalize lg:text-lg">
+      <legend className="col-span-full mb-1 text-sm font-bold text-slate-900 uppercase lg:mb-4 lg:text-xl">
         Topics
       </legend>
 
-      <p className="col-span-full mb-1 text-xs text-slate-600 normal-case">
-        Find news matching all selected topics at the same time.
+      <p className="col-span-full mb-1 text-sm text-slate-600 normal-case lg:text-base">
+        Find news matching all the selected topics.
       </p>
 
       <label
@@ -372,12 +376,12 @@ function TopicsField({
         Select all
       </label>
 
-      <ul className="col-span-full max-h-32 overflow-scroll rounded-sm border border-slate-300">
+      <ul className="col-span-full max-h-32 overflow-y-auto rounded-sm border border-slate-300 lg:flex lg:h-auto lg:max-h-none lg:flex-wrap">
         {topicList.map((t) => (
-          <li key={t}>
+          <li key={t} className="text-wrap lg:w-1/2">
             <label
               htmlFor={t}
-              className="flex items-center justify-between p-1 checked:bg-blue-600 checked:text-white hover:bg-blue-200"
+              className="flex items-center justify-between gap-2 p-1 checked:bg-blue-600 checked:text-white hover:bg-blue-200 lg:justify-start"
             >
               {t.replace(/_/g, " ")}
               <input
@@ -385,6 +389,7 @@ function TopicsField({
                 type="checkbox"
                 value={t}
                 name="topics"
+                className="lg:-order-1"
                 checked={topics.includes(t)}
                 onChange={handleTopicSelection}
               />
@@ -404,8 +409,8 @@ function SortByField({
   setInternalFilters: Dispatch<SetStateAction<NewsFilters>>;
 }) {
   return (
-    <fieldset className="grid auto-rows-auto grid-cols-3 gap-2 capitalize">
-      <legend className="col-span-full mb-1 text-sm font-bold text-slate-900 uppercase">
+    <fieldset className="col-start-1 col-end-2 row-start-4 row-end-5 grid auto-rows-auto grid-cols-3 gap-2 capitalize lg:text-lg">
+      <legend className="col-span-full mb-1 text-sm font-bold text-slate-900 uppercase lg:mb-2 lg:text-xl">
         Sort by
       </legend>
       {sortingStrategies.map((s) => (

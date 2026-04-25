@@ -32,7 +32,7 @@ export default function NewsCard({
   feed?: Feed;
 }) {
   return (
-    <article className="overflow-clip rounded-lg border border-solid border-slate-200 bg-white shadow-md shadow-slate-100">
+    <article className="flex flex-col overflow-clip rounded-lg border border-solid border-slate-200 bg-white shadow-md shadow-slate-100 transition-transform focus-within:scale-105 focus-within:shadow-slate-300 hover:scale-105 hover:shadow-slate-300">
       <figure className="flex w-full flex-col">
         <div className={clsx(isSkeleton && skeletonStyles, "relative h-40")}>
           <img
@@ -51,11 +51,11 @@ export default function NewsCard({
             ))}
           </aside>
         </div>
-        <figcaption className="grow p-2">
+        <figcaption className="max-h-48 grow overflow-hidden mask-b-from-50% p-2">
           <div
             className={clsx(
               isSkeleton && skeletonStyles,
-              "text-xs font-semibold text-gray-500",
+              "text-sm font-semibold text-gray-500",
             )}
           >
             <time dateTime={feed?.time_published}>
@@ -76,32 +76,34 @@ export default function NewsCard({
           <p
             className={clsx(
               isSkeleton && skeletonStyles,
-              "mb-2 max-h-24 min-h-12 overflow-hidden mask-b-from-50% text-sm leading-snug text-slate-600",
+              "mb-2 leading-snug text-slate-600",
             )}
           >
             {feed?.summary}
           </p>
-
-          <span
-            className="float-left w-fit text-right"
-            aria-label={feed?.overall_sentiment_label}
-          >
-            {getSentimentEmoji(feed?.overall_sentiment_label)}
-          </span>
-          <a
-            className={clsx(
-              isSkeleton && skeletonStyles,
-              "ml-auto flex w-fit items-center gap-1 text-sm text-blue-600 visited:text-indigo-600 hover:text-blue-700 active:text-blue-800",
-            )}
-            href={feed?.url}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Read More
-            <span className="text-lg">&#10162;</span>
-          </a>
         </figcaption>
       </figure>
+
+      <div className="mt-auto p-2">
+        <span
+          className="float-left w-fit text-right text-2xl md:text-xl"
+          aria-label={feed?.overall_sentiment_label}
+        >
+          {getSentimentEmoji(feed?.overall_sentiment_label)}
+        </span>
+        <a
+          className={clsx(
+            isSkeleton && skeletonStyles,
+            "ml-auto flex w-fit items-center gap-1 text-lg text-blue-600 visited:text-indigo-600 hover:text-blue-700 active:text-blue-800",
+          )}
+          href={feed?.url}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Read More
+          <span className="text-2xl">&#10162;</span>
+        </a>
+      </div>
     </article>
   );
 }
@@ -114,7 +116,7 @@ function TopicTag({ text }: { text: string }) {
     <span
       className={clsx(
         bgColor,
-        "rounded-xs p-0.5 text-xs text-white capitalize",
+        "rounded-xs p-0.5 text-sm text-white capitalize",
       )}
     >
       {formattedText}
