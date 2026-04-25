@@ -27,9 +27,9 @@
 
 .footerDrawerContainer {
   width: 100%;
-  max-height: 90dvh;
-  padding: 1.25rem;
-  overflow-y: scroll;
+  max-height: 93dvh;
+  padding: 1rem;
+  overflow-y: auto;
   background-color: white;
   transform: translateY(100%);
   --mui-feel-motion: cubic-bezier(0.22, 1, 0.36, 1);
