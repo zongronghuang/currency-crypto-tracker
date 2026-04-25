@@ -20,8 +20,8 @@ export default function Alert({
         <span>&#8264;</span>
       </div>
       <figcaption>
-        <h1 className="text-lg font-semibold">{title}</h1>
-        <p className="text-left text-sm">{description}</p>
+        <h1 className="text-lg font-semibold lg:text-2xl">{title}</h1>
+        <p className="text-left text-sm lg:text-xl">{description}</p>
       </figcaption>
     </figure>
   );
