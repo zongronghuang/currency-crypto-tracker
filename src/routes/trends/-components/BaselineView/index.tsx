@@ -54,11 +54,11 @@ export default function BaselineView({
 
   return (
     <div aria-label="baseline view">
-      <p className="mb-2 text-sm text-slate-600">
+      <p className="mb-2 text-sm text-slate-600 md:mb-4 md:text-lg lg:mb-6 lg:text-2xl xl:mb-10 xl:text-2xl">
         Check the close exchange rates of the base currency against the quote
         currency. You can set a base rate to profile overall rate trends.
       </p>
-      <div className="text-semibold mb-4 flex items-center justify-between text-center text-sm text-slate-900">
+      <div className="relative mx-auto mb-4 flex items-center justify-between text-center text-sm font-semibold text-slate-900 md:mb-6 md:w-1/2 md:text-lg lg:text-xl">
         <span>
           Min <br />
           {minRate}
@@ -71,7 +71,7 @@ export default function BaselineView({
           step="0.0001"
           value={baseRate}
           data-base-rate={baseRate}
-          className="relative grow self-start after:absolute after:-bottom-6 after:left-1/2 after:-translate-x-1/2 after:content-[attr(data-base-rate)]"
+          className="grow self-start after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:content-[attr(data-base-rate)]"
           onChange={updateBaseRate}
         />
         <span>
@@ -91,12 +91,17 @@ export default function BaselineView({
             options={baselineStyleOptions}
           />
 
-          <OhlcvTooltip
-            ref={tooltipRef}
-            isVisible={isTooltipVisible}
-            time={tooltipData.time}
-            close={close}
-          />
+          <OhlcvTooltip ref={tooltipRef} isVisible={isTooltipVisible}>
+            <time
+              dateTime={tooltipData.time.toString()}
+              className="block text-center font-semibold"
+            >
+              {tooltipData.time.toString()}
+            </time>
+            <dl className="grid grid-cols-2 gap-2">
+              <dt>Close</dt> <dd>{close}</dd>
+            </dl>
+          </OhlcvTooltip>
         </Chart>
       </div>
     </div>

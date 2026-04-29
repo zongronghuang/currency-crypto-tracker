@@ -34,7 +34,7 @@ export default function HistogramView({
 
   return (
     <div aria-label="histogram view">
-      <p className="mb-2 text-sm text-slate-600">
+      <p className="mb-2 text-sm text-slate-600 md:mb-4 md:text-lg lg:mb-6 lg:text-2xl xl:mb-10 xl:text-2xl">
         Check traded volumes of the base currency to the quote currency. Traded
         volume data is only available for cryptocurrencies as the base.
       </p>
@@ -46,12 +46,17 @@ export default function HistogramView({
         >
           <HistogramSeries ref={seriesRef} data={histogramData} />
 
-          <OhlcvTooltip
-            ref={tooltipRef}
-            isVisible={isTooltipVisible}
-            time={tooltipData.time}
-            volume={volume}
-          />
+          <OhlcvTooltip isVisible={isTooltipVisible} ref={tooltipRef}>
+            <time
+              dateTime={tooltipData.time.toString()}
+              className="block text-center font-semibold"
+            >
+              {tooltipData.time.toString()}
+            </time>
+            <dl className="gap grid grid-cols-2">
+              <dt>Volume</dt> <dd>{volume}</dd>
+            </dl>
+          </OhlcvTooltip>
         </Chart>
       </div>
     </div>
