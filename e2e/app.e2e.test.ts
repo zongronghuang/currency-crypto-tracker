@@ -1,6 +1,34 @@
 import { expect } from "@playwright/test";
 import { test } from "../playwright.setup.ts";
 
+test.describe("SideMenu", () => {
+  test("[Desktop] the side menu shows its full content when it is hovered, and shows only the page icons when it is not hovered", async ({
+    network,
+    page,
+    isMobile,
+  }) => {
+    if (isMobile) return;
+
+    network.use();
+    await page.goto("http://localhost:5173/news");
+    await page.waitForLoadState("networkidle");
+
+    const sideMenu = page.getByRole("menu");
+    const nav = sideMenu.getByRole("navigation");
+    const menuWidthBeforeHover = await nav.evaluate(
+      (element) => element.clientWidth,
+    );
+
+    await nav.hover();
+    await page.waitForTimeout(500);
+    const menuWidthOnHover = await nav.evaluate(
+      (element) => element.clientWidth,
+    );
+
+    await expect(menuWidthBeforeHover).toBeLessThan(menuWidthOnHover);
+  });
+});
+
 test.describe.skip("mobile touch events", () => {
   test.skip(({ isMobile }) => !isMobile, "Mobile only!");
 
