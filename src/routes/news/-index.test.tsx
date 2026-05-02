@@ -9,7 +9,7 @@ test("while loading news data, the app has three skeleton cards and the footer b
   });
 
   const links = await screen.findAllByText(/read more/i);
-  expect(links).toHaveLength(3);
+  expect(links).toHaveLength(6);
   links.forEach((link) => expect(link).toHaveClass("animate-pulse"));
   links.forEach((link) => expect(link).not.toHaveAttribute("href"));
 
@@ -24,7 +24,7 @@ test("when data is fully loaded and rendered into cards, no skeleton cards are p
   });
 
   const links = await screen.findAllByText(/read more/i);
-  expect(links).toHaveLength(3);
+  expect(links).toHaveLength(6);
 
   const footer = screen.getByRole("contentinfo");
   const footerButton = within(footer).getByRole("button");
