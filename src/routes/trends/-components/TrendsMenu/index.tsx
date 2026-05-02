@@ -66,11 +66,15 @@ export default function TrendsMenu({
         aria-label="trends menu"
         className={clsx(
           styles.trendsMenu,
-          "flex flex-col gap-4 text-slate-900",
+          "flex flex-col gap-4 text-slate-900 md:mx-auto md:w-3/4 lg:gap-8",
         )}
         onSubmit={handleSubmit}
         onChange={() => setIsEditing(true)}
       >
+        <h2 className="row-start-1 row-end-2 text-center text-lg font-semibold lg:col-span-full lg:text-2xl">
+          Set Trends Settings
+        </h2>
+
         <CurrenciesField
           base={internalParams.base}
           quote={internalParams.quote}
@@ -84,7 +88,7 @@ export default function TrendsMenu({
         <div className="flex justify-between">
           <button
             type="button"
-            className="w-4/9 rounded-lg border border-slate-300 bg-slate-100 py-1 text-lg text-slate-800"
+            className="w-4/9 rounded-lg border border-slate-300 bg-slate-100 py-1 text-lg text-slate-800 lg:py-2 lg:text-2xl"
             onClick={revertForm}
           >
             Cancel
@@ -92,7 +96,7 @@ export default function TrendsMenu({
           <button
             type="submit"
             disabled={!isEditing}
-            className="w-4/9 rounded-lg bg-blue-600 py-1 text-lg text-white hover:bg-blue-700 disabled:opacity-50"
+            className="w-4/9 rounded-lg bg-blue-600 py-1 text-lg text-white hover:bg-blue-700 disabled:opacity-50 lg:py-2 lg:text-2xl"
           >
             Apply
           </button>
@@ -119,14 +123,14 @@ function CurrenciesField({
       : FIAT_NAMES.filter((f) => f !== base);
 
   return (
-    <fieldset className="grid auto-rows-auto grid-cols-5">
-      <legend className="col-span-full mb-1 text-sm font-bold uppercase">
+    <fieldset className="grid auto-rows-auto grid-cols-5 lg:text-lg">
+      <legend className="col-span-full mb-1 text-sm font-bold uppercase lg:mb-2 lg:text-xl">
         Currencies
-        <strong className="text-xs font-normal normal-case">
+        <strong className="text-xs font-normal normal-case lg:text-base">
           &nbsp; (base &#8260; quote)
         </strong>
       </legend>
-      <p className="col-span-full mb-1 text-xs text-slate-600">
+      <p className="col-span-full mb-1 text-sm text-slate-600 lg:mb-2 lg:text-base">
         Choose a base currency and a quote currency to see their exchange
         trends.
       </p>
@@ -183,7 +187,7 @@ function CurrenciesField({
         }
       >
         {quotes.map((q) => (
-          <option key={q} value={q}>
+          <option key={q} value={q} className="p-1">
             {q}
           </option>
         ))}
@@ -202,11 +206,11 @@ function DataPointField({
   const sizes = ["daily", "weekly", "monthly"];
 
   return (
-    <fieldset className="grid auto-rows-auto grid-cols-3">
-      <legend className="col-span-full mb-1 text-sm font-bold uppercase">
+    <fieldset className="grid auto-rows-auto grid-cols-3 lg:text-lg">
+      <legend className="col-span-full mb-1 text-sm font-bold uppercase lg:mb-2 lg:text-xl">
         Data Point
       </legend>
-      <p className="col-span-full mb-1 text-xs text-slate-600">
+      <p className="col-span-full mb-1 text-sm text-slate-600 lg:mb-2 lg:text-base">
         Choose a data point size to generalize the exchange trends.
       </p>
       {sizes.map((s) => (
