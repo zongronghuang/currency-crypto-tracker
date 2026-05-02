@@ -39,6 +39,17 @@ export const Route = createFileRoute("/news/")({
   validateSearch: NewsSearchSchema,
 });
 
+const skeletonCards = (
+  <>
+    <NewsCard isSkeleton={true} />
+    <NewsCard isSkeleton={true} />
+    <NewsCard isSkeleton={true} />
+    <NewsCard isSkeleton={true} />
+    <NewsCard isSkeleton={true} />
+    <NewsCard isSkeleton={true} />
+  </>
+);
+
 function RouteComponent() {
   const { currency } = Route.useSearch();
 
@@ -105,11 +116,7 @@ function RouteComponent() {
       className="no-scrollbar grid grid-cols-1 gap-8 md:grid-cols-2 md:pb-16 lg:grid-cols-3"
     >
       {isPending ? (
-        <>
-          <NewsCard isSkeleton={true} />
-          <NewsCard isSkeleton={true} />
-          <NewsCard isSkeleton={true} />
-        </>
+        skeletonCards
       ) : newsCollection.news.length ? (
         newsCollection.news.map((f: Feed) => (
           <NewsCard key={f.title} feed={f} />
