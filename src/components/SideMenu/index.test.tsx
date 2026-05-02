@@ -17,7 +17,7 @@ test("side menu contains multiple page links and highlights matched link", async
   expect(matchedLink).toHaveAttribute("data-status", "active");
 });
 
-test("side menu button on topbar opens side menu", async () => {
+test("Clicking the side menu button on the header bar opens the side menu", async () => {
   renderWithFileRoutes(<div />, {
     initialLocation: "/news",
   });
