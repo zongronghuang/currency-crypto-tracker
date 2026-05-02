@@ -154,7 +154,7 @@ export default function SideMenu({
           {pageLinks.map((link) => (
             <li key={link.label}>
               <Link
-                className="flex items-center p-4 text-2xl font-bold text-slate-900 hover:bg-blue-700 hover:text-white md:p-8 md:text-4xl xl:p-4 xl:text-xl"
+                className="flex items-center p-4 text-2xl font-bold text-slate-900 hover:bg-blue-700 hover:text-white md:p-8 md:text-4xl xl:p-6 xl:text-xl"
                 to={link.to}
                 preload="intent"
                 onClick={(event) => {
