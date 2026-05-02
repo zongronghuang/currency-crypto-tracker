@@ -36,11 +36,13 @@ const CRYPTO_TRADING_PAIRS = await import(
 const views = ["table", "baseline", "bar", "candlestick", "histogram"] as const;
 
 const viewIcon = {
-  table: <TableIcon className="h-auto w-6" />,
-  baseline: <BaselineIcon className="h-auto w-6" />,
-  bar: <BarIcon className="h-auto w-6" />,
-  histogram: <HistogramIcon className="h-auto w-6" />,
-  candlestick: <CandlestickIcon className="h-auto w-6" />,
+  table: <TableIcon className="h-auto w-6 md:mr-1 md:w-8 lg:w-10" />,
+  baseline: <BaselineIcon className="h-auto w-6 md:mr-1 md:w-8 lg:w-10" />,
+  bar: <BarIcon className="h-auto w-6 md:mr-1 md:w-8 lg:w-10" />,
+  histogram: <HistogramIcon className="h-auto w-6 md:mr-1 md:w-8 lg:w-10" />,
+  candlestick: (
+    <CandlestickIcon className="h-auto w-6 md:mr-1 md:w-8 lg:w-10" />
+  ),
 };
 
 const chartOptions: DeepPartial<TimeChartOptions> = {
@@ -64,8 +66,6 @@ export const Route = createFileRoute("/trends/")({
   component: RouteComponent,
 });
 
-// <Alert title="Loading" description="Data is arriving now." />
-
 function RouteComponent() {
   const [trendsApiParams, setTrendsApiParams] = useState<TrendsParams>({
     ...defaultTrendsApiParams,
@@ -85,7 +85,7 @@ function RouteComponent() {
     extractTrendsData(data);
 
   return (
-    <div className={styles.trends}>
+    <div className={clsx(styles.trends, "md:pt-6 md:pb-16 xl:pt-0")}>
       <BulletinBoard
         metaData={metaData}
         startDate={startDate}
@@ -167,7 +167,7 @@ function BulletinBoard({
   return (
     <section
       aria-label="bulletin board"
-      className="mb-2 rounded-lg border-4 border-double border-emerald-50 bg-emerald-200 p-2 text-sm text-slate-900"
+      className="mb-2 rounded-lg border-4 border-double border-emerald-50 bg-emerald-200 p-2 text-sm text-slate-900 md:mb-8 md:rounded-xl md:border-6 md:p-2 md:text-lg md:leading-8 lg:border-6 lg:text-2xl lg:leading-relaxed xl:mx-auto xl:w-2/3 xl:border-8 xl:text-2xl"
     >
       <h1 className="font-semibold">{title}</h1>
       <h2>
@@ -211,13 +211,13 @@ function ViewOptions({
   const capitalize = (text: string) => text[0].toUpperCase() + text.slice(1);
 
   return (
-    <div className="mb-2 flex gap-3 overflow-x-auto px-1 py-2 leading-none sm:justify-end">
+    <div className="mb-2 flex gap-3 overflow-x-auto px-1 py-2 leading-none sm:justify-end md:text-xl lg:gap-5 lg:text-2xl xl:mb-4 xl:gap-7 xl:text-2xl">
       {availableViews.map((v) => (
         <button
           key={v}
           className={clsx(
             view === v && "bg-blue-600 fill-white stroke-white text-white",
-            "flex w-max shrink-0 items-center justify-between gap-1 rounded-xs px-1 py-0.5 text-slate-900 transition-all hover:bg-blue-700 hover:text-white",
+            "flex w-max shrink-0 items-center justify-between gap-1 rounded-sm px-1 py-0.5 text-slate-900 transition-all hover:bg-blue-700 hover:text-white md:px-1.5 md:py-1 lg:gap-2 lg:rounded lg:p-2 xl:gap-3",
           )}
           onClick={() => setView(v)}
         >
