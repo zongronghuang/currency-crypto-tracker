@@ -71,7 +71,7 @@ export default function ConverterPage() {
   }, [amount, exchangeRate]);
 
   return (
-    <div>
+    <div className="md:pt-16">
       <BulletinBoard
         fromCurrencyCode={fromCurrency.code}
         toCurrencyCode={toCurrency.code}
