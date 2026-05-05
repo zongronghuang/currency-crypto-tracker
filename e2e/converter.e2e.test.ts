@@ -106,13 +106,12 @@ test("typing in search input returns partial fiat matches by country name or fia
   await page.goto("http://localhost:5173/converter");
   await page.waitForLoadState("networkidle");
 
-  await page.getByRole("button", { name: /usd/i }).click();
+  const usdButton = page.getByRole("button", { name: /united states dollar/i });
+  await usdButton.waitFor();
+  await usdButton.click();
 
   const dialog = page.getByRole("dialog");
-  await expect(dialog).not.toBeVisible();
-
-  await page.getByRole("button", { name: /usd/i }).click();
-  await dialog.waitFor({ state: "visible" });
+  await dialog.waitFor();
   await expect(dialog).toBeVisible();
 
   await dialog.getByRole("searchbox").fill("us");
