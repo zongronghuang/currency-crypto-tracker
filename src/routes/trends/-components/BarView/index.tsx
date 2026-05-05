@@ -90,18 +90,18 @@ export default function BarView({
 
   return (
     <div aria-label="bar view">
-      <p className="mb-2 text-sm text-gray-600">
-        Check the open, close, high, and low prices of the base currency in the
-        quote currency.
+      <p className="mb-2 text-sm text-slate-600 md:mb-4 md:text-lg lg:mb-6 lg:text-2xl xl:mb-10 xl:text-2xl">
+        Check the open, close, high, and low exchange rates of the base currency
+        against the quote currency.
       </p>
 
-      <div className="mb-2 flex items-center gap-2 text-sm font-semibold">
+      <div className="mb-2 flex gap-2 text-sm font-semibold text-slate-900 md:mb-6 md:gap-4 md:text-lg lg:gap-6 lg:text-xl">
         <label htmlFor="max-rate" className="leading-0">
           <input
             type="checkbox"
             name="rate-lines"
             id="max-rate"
-            className="mr-1"
+            className="mr-1 md:mr-2"
             checked={visibleRateLines.max}
             onChange={() =>
               setVisibleRateLines((prev) => ({ ...prev, max: !prev.max }))
@@ -114,7 +114,7 @@ export default function BarView({
             type="checkbox"
             name="rate-lines"
             id="avg-rate"
-            className="mr-1"
+            className="mr-1 md:mr-2"
             checked={visibleRateLines.avg}
             onChange={() =>
               setVisibleRateLines((prev) => ({ ...prev, avg: !prev.avg }))
@@ -127,7 +127,7 @@ export default function BarView({
             type="checkbox"
             name="rate-lines"
             id="min-rate"
-            className="mr-1"
+            className="mr-1 md:mr-2"
             checked={visibleRateLines.min}
             onChange={() =>
               setVisibleRateLines((prev) => ({ ...prev, min: !prev.min }))
@@ -152,15 +152,20 @@ export default function BarView({
               />
             ))}
           </BarSeries>
-          <OhlcvTooltip
-            isVisible={isTooltipVisible}
-            ref={tooltipRef}
-            time={tooltipData.time}
-            high={high}
-            low={low}
-            open={open}
-            close={close}
-          />
+          <OhlcvTooltip isVisible={isTooltipVisible} ref={tooltipRef}>
+            <time
+              dateTime={tooltipData.time.toString()}
+              className="block text-center font-semibold"
+            >
+              {tooltipData.time.toString()}
+            </time>
+            <dl className="gap grid grid-cols-2">
+              <dt>High</dt> <dd>{high}</dd>
+              <dt>Low</dt> <dd>{low}</dd>
+              <dt>Open</dt> <dd>{open}</dd>
+              <dt>Close</dt> <dd>{close}</dd>
+            </dl>
+          </OhlcvTooltip>
         </Chart>
       </div>
     </div>

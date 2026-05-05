@@ -32,6 +32,7 @@ test("Scrolling down to show back-to-top button, and clicking the button sends u
 test("scrolls down news cards and shows an alert text when it reaches the end", async ({
   network,
   page,
+  isMobile,
 }) => {
   network.use();
   await page.goto("http://localhost:5173/news");
@@ -49,5 +50,10 @@ test("scrolls down news cards and shows an alert text when it reaches the end", 
   }
 
   await expect(cards).toHaveCount(50);
-  await expect(page.getByText(/no more results/i)).toBeVisible();
+
+  if (isMobile) {
+    await expect(page.getByText(/no more results/i)).toBeVisible();
+  } else {
+    await expect(page.getByText(/no more results/i)).not.toBeVisible();
+  }
 });

@@ -87,11 +87,11 @@ test("updated amount in second currency gets converted in the other currency", a
   const eurInput = currencyInputs[1] as HTMLInputElement;
   await user.type(eurInput, "0");
   await user.tab(); // triggers input blur to update opposite currency
-  const eurValue = (+exchangeRate * 1000).toString();
+  const eurValue = (+getComputableNumeral(exchangeRate) * 1000).toString();
   expect(eurInput).toHaveValue(calibrateNumeral(eurValue));
 
   const usdInput = currencyInputs[0] as HTMLInputElement;
   const usdValue = +getComputableNumeral(usdInput.value);
-  const expectedAmount = +eurValue / +exchangeRate;
+  const expectedAmount = +eurValue / +getComputableNumeral(exchangeRate);
   expect(usdValue).toBeCloseTo(expectedAmount);
 });

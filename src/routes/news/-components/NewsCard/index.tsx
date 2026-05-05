@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import clsx from "clsx";
+import { getTagBgColor, getSentimentEmoji } from "../../-helpers";
 
 export type Feed = {
   title: string;
@@ -10,6 +11,12 @@ export type Feed = {
   banner_image: string;
   source: string;
   topics: { topic: string }[];
+  overall_sentiment_label:
+    | "Bearish"
+    | "Somewhat-Bearish"
+    | "Neutral"
+    | "Somewhat-Bullish"
+    | "Bullish";
 };
 
 const skeletonStyles =
@@ -25,7 +32,7 @@ export default function NewsCard({
   feed?: Feed;
 }) {
   return (
-    <article className="mx-auto w-11/12 overflow-clip rounded-lg shadow-md shadow-gray-400">
+    <article className="flex flex-col overflow-clip rounded-lg border border-solid border-slate-200 bg-white shadow-md shadow-slate-100 transition-transform focus-within:scale-105 focus-within:shadow-slate-300 hover:scale-105 hover:shadow-slate-300">
       <figure className="flex w-full flex-col">
         <div className={clsx(isSkeleton && skeletonStyles, "relative h-40")}>
           <img
@@ -44,11 +51,11 @@ export default function NewsCard({
             ))}
           </aside>
         </div>
-        <figcaption className="grow p-2">
+        <figcaption className="max-h-48 grow overflow-hidden mask-b-from-50% p-2">
           <div
             className={clsx(
               isSkeleton && skeletonStyles,
-              "text-xs font-bold text-gray-500",
+              "text-sm font-semibold text-gray-500",
             )}
           >
             <time dateTime={feed?.time_published}>
@@ -60,7 +67,7 @@ export default function NewsCard({
           <h1
             className={clsx(
               isSkeleton && skeletonStyles,
-              "mb-2 text-lg leading-snug font-semibold",
+              "mb-2 text-lg leading-snug font-semibold text-slate-900",
             )}
           >
             {feed?.title}
@@ -69,58 +76,36 @@ export default function NewsCard({
           <p
             className={clsx(
               isSkeleton && skeletonStyles,
-              "relative max-h-24 min-h-12 overflow-hidden mask-b-from-50% text-sm leading-snug",
+              "mb-2 leading-snug text-slate-600",
             )}
           >
             {feed?.summary}
           </p>
-
-          <a
-            className={clsx(
-              isSkeleton && skeletonStyles,
-              "ml-auto flex w-fit items-center gap-1 text-sm text-blue-500",
-            )}
-            href={feed?.url}
-            rel="noopener noreferrer"
-            target="_blank"
-          >
-            Read More
-            <span className="text-lg">&#10162;</span>
-          </a>
         </figcaption>
       </figure>
+
+      <div className="mt-auto p-2">
+        <span
+          className="float-left w-fit text-right text-2xl md:text-xl"
+          aria-label={feed?.overall_sentiment_label}
+        >
+          {getSentimentEmoji(feed?.overall_sentiment_label)}
+        </span>
+        <a
+          className={clsx(
+            isSkeleton && skeletonStyles,
+            "ml-auto flex w-fit items-center gap-1 text-lg text-blue-600 visited:text-indigo-600 hover:text-blue-700 active:text-blue-800",
+          )}
+          href={feed?.url}
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Read More
+          <span className="text-2xl">&#10162;</span>
+        </a>
+      </div>
     </article>
   );
-}
-
-function getTagBgColor(tag: string) {
-  switch (tag) {
-    case "life_sciences":
-    case "energy_transportation":
-    case "technology":
-      return "bg-green-600/90";
-
-    case "financial_markets":
-    case "economy_fiscal":
-    case "economy_monetary":
-    case "economy_macro":
-    case "finance":
-      return "bg-blue-600/90";
-
-    case "mergers_and_acquisitions":
-    case "manufacturing":
-    case "retail_wholesale":
-    case "real_estate":
-      return "bg-stone-600/90";
-
-    case "earnings":
-    case "ipo":
-    case "blockchain":
-      return "bg-yellow-600/90";
-
-    default:
-      return "text-neutral-600/90";
-  }
 }
 
 function TopicTag({ text }: { text: string }) {
@@ -131,7 +116,7 @@ function TopicTag({ text }: { text: string }) {
     <span
       className={clsx(
         bgColor,
-        "rounded-xs p-0.5 text-xs text-white capitalize",
+        "rounded-xs p-0.5 text-sm text-white capitalize",
       )}
     >
       {formattedText}

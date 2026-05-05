@@ -195,7 +195,9 @@ describe("crypto base currency", () => {
     const currencyPair = within(bulletinBoard).getByRole("heading", {
       level: 2,
     });
-    expect(currencyPair).toHaveTextContent("Base/quote: BTC ⁄ EUR");
+    await waitFor(() =>
+      expect(currencyPair).toHaveTextContent("Base/quote: BTC ⁄ EUR"),
+    );
 
     const table = await screen.findByRole("table");
     const headers = within(table).getAllByRole("columnheader");

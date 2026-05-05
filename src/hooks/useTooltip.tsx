@@ -69,7 +69,6 @@ export default function useTooltip(
       const data = params.seriesData.get(
         seriesApi,
       ) as TooltipData[typeof seriesType];
-      console.log(data);
       if (!data) return;
 
       // 瀏覽器重繪時更新 tooltip

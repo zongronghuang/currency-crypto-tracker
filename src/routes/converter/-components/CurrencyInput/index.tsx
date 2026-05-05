@@ -48,14 +48,14 @@ export default function CurrencyInput({
   const IconImage =
     currencyData.type === "fiat" ? (
       <FiatIcon
-        className="w-8"
+        className="w-8 md:w-20 lg:row-span-full lg:w-20 lg:self-center xl:w-16"
         alt={currencyData.name}
         title={currencyData.name}
         code={currencyData.country_codes![0]}
       />
     ) : (
       <CryptoIcon
-        className="w-8"
+        className="w-8 md:w-20 lg:row-span-full lg:w-14 lg:self-center xl:w-16"
         alt={currencyData.name}
         title={currencyData.name}
         code={currencyData.code}
@@ -73,13 +73,13 @@ export default function CurrencyInput({
   });
 
   return (
-    <div className="flex flex-col items-center p-2 text-2xl outline outline-black">
+    <div className="round flex flex-col items-center p-2 text-2xl lg:col-span-3">
       <label
         htmlFor={identifier}
-        className="w-full items-center gap-2 font-bold outline"
+        className="w-full font-bold md:mb-4 lg:mb-8 xl:mb-2"
       >
         <button
-          className="flex w-full justify-start gap-4 p-2 outline"
+          className="flex w-full items-center justify-start gap-4 p-2 hover:cursor-pointer md:gap-8 lg:grid lg:grid-cols-[fit-content_1fr] lg:grid-rows-2 lg:gap-2 lg:p-0 xl:gap-x-5"
           onClick={() => {
             setActiveCurrency({
               ...currencyData,
@@ -89,18 +89,23 @@ export default function CurrencyInput({
           }}
         >
           {IconImage}
-          <span>{currencyData.code}</span>
+          <span className="text-left text-slate-900 md:text-4xl xl:text-3xl">
+            {currencyData.code}
+          </span>
+          <span className="ml-auto text-base font-normal text-pretty md:text-2xl lg:col-start-2 lg:col-end-3 lg:h-12 lg:w-full lg:text-left lg:text-3xl xl:text-xl">
+            {currencyData.name}
+          </span>
         </button>
       </label>
       <input
-        className="block w-full min-w-2/3 rounded-sm p-2 outline outline-gray-400 focus:outline-2 focus:outline-blue-500"
+        className="block w-full min-w-2/3 rounded-lg border border-slate-300 p-2 text-slate-900 shadow-md shadow-slate-300 md:h-20 md:border-2 md:p-6 md:text-4xl md:shadow-lg xl:h-16 xl:p-4 xl:text-3xl"
         id={identifier}
         type="text"
         inputMode="numeric"
         value={localAmountNumeral}
-        onChange={(event: ChangeEvent<HTMLInputElement>) =>
-          setLocalAmountNumeral(getComputableNumeral(event.target.value))
-        }
+        onChange={(event: ChangeEvent<HTMLInputElement>) => {
+          setLocalAmountNumeral(getComputableNumeral(event.target.value));
+        }}
         onBlur={() => {
           const newAmount = getComputableNumeral(localAmountNumeral);
           const oppositeAmount = isBaseCurrency

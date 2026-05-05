@@ -30,7 +30,7 @@ test("opens and closes currency menu dialog via buttons", async ({
   await page.goto("http://localhost:5173/converter");
   await page.waitForLoadState("networkidle");
 
-  const dialog = await page.getByRole("dialog");
+  const dialog = page.getByRole("dialog");
   await expect(dialog).not.toBeVisible();
 
   await page.getByRole("button", { name: /usd/i }).click();
@@ -48,14 +48,12 @@ test("change currency with another fiat currency from the menu", async ({
   await page.goto("http://localhost:5173/converter");
   await page.waitForLoadState("networkidle");
 
+  const dialog = page.getByRole("dialog");
+  await expect(dialog).not.toBeVisible();
+
   await page.getByRole("button", { name: /usd/i }).click();
-
-  const dialog = page.getByRole("dialog", {
-    name: /currency-crypto/i,
-    includeHidden: true,
-  });
-
-  await expect(dialog).toBeVisible({ visible: true });
+  await dialog.waitFor({ state: "visible" });
+  await expect(dialog).toBeVisible();
 
   await dialog.getByRole("list").evaluate((e) => (e.scrollTop += 500));
 
@@ -78,14 +76,12 @@ test("change currency with another crypto currency from the menu", async ({
   await page.goto("http://localhost:5173/converter");
   await page.waitForLoadState("networkidle");
 
+  const dialog = page.getByRole("dialog");
+  await expect(dialog).not.toBeVisible();
+
   await page.getByRole("button", { name: /usd/i }).click();
-
-  const dialog = page.getByRole("dialog", {
-    name: /currency-crypto/i,
-    includeHidden: true,
-  });
-
-  await expect(dialog).toBeVisible({ visible: true });
+  await dialog.waitFor({ state: "visible" });
+  await expect(dialog).toBeVisible();
 
   await dialog.getByRole("radio", { name: /crypto/i }).click();
 
@@ -110,14 +106,13 @@ test("typing in search input returns partial fiat matches by country name or fia
   await page.goto("http://localhost:5173/converter");
   await page.waitForLoadState("networkidle");
 
-  await page.getByRole("button", { name: /usd/i }).click();
+  const usdButton = page.getByRole("button", { name: /united states dollar/i });
+  await usdButton.waitFor();
+  await usdButton.click();
 
-  const dialog = page.getByRole("dialog", {
-    name: /currency-crypto/i,
-    includeHidden: true,
-  });
-
-  await expect(dialog).toBeVisible({ visible: true });
+  const dialog = page.getByRole("dialog");
+  await dialog.waitFor();
+  await expect(dialog).toBeVisible();
 
   await dialog.getByRole("searchbox").fill("us");
 
@@ -140,14 +135,12 @@ test("typing in search input returns partial crypto matches by country name or c
   await page.goto("http://localhost:5173/converter");
   await page.waitForLoadState("networkidle");
 
+  const dialog = page.getByRole("dialog");
+  await expect(dialog).not.toBeVisible();
+
   await page.getByRole("button", { name: /usd/i }).click();
-
-  const dialog = page.getByRole("dialog", {
-    name: /currency-crypto/i,
-    includeHidden: true,
-  });
-
-  await expect(dialog).toBeVisible({ visible: true });
+  await dialog.waitFor({ state: "visible" });
+  await expect(dialog).toBeVisible();
 
   await dialog.getByRole("radio", { name: /crypto/i }).click();
 
@@ -172,14 +165,12 @@ test("show full list of fiat options when search input gets cleared", async ({
   await page.goto("http://localhost:5173/converter");
   await page.waitForLoadState("networkidle");
 
+  const dialog = page.getByRole("dialog");
+  await expect(dialog).not.toBeVisible();
+
   await page.getByRole("button", { name: /usd/i }).click();
-
-  const dialog = page.getByRole("dialog", {
-    name: /currency-crypto/i,
-    includeHidden: true,
-  });
-
-  await expect(dialog).toBeVisible({ visible: true });
+  await dialog.waitFor({ state: "visible" });
+  await expect(dialog).toBeVisible();
 
   const nonexistentFiat = "xxxxx";
   await dialog.getByRole("searchbox").fill(nonexistentFiat);
@@ -201,14 +192,12 @@ test("show full list of crypto options when search input gets cleared", async ({
   await page.goto("http://localhost:5173/converter");
   await page.waitForLoadState("networkidle");
 
+  const dialog = page.getByRole("dialog");
+  await expect(dialog).not.toBeVisible();
+
   await page.getByRole("button", { name: /usd/i }).click();
-
-  const dialog = page.getByRole("dialog", {
-    name: /currency-crypto/i,
-    includeHidden: true,
-  });
-
-  await expect(dialog).toBeVisible({ visible: true });
+  await dialog.waitFor({ state: "visible" });
+  await expect(dialog).toBeVisible();
 
   await dialog.getByRole("radio", { name: /crypto/i }).click();
 
@@ -230,13 +219,11 @@ test.describe("keyboard navigation among radio inputs", () => {
     await page.goto("http://localhost:5173/converter");
     await page.waitForLoadState("networkidle");
 
+    const dialog = page.getByRole("dialog");
+    await expect(dialog).not.toBeVisible();
+
     await page.getByRole("button", { name: /usd/i }).click();
-
-    const dialog = page.getByRole("dialog", {
-      name: /currency-crypto/i,
-      includeHidden: true,
-    });
-
+    await dialog.waitFor({ state: "visible" });
     await expect(dialog).toBeVisible();
 
     await dialog.click();
@@ -282,14 +269,13 @@ test.describe("keyboard navigation among radio inputs", () => {
     await page.goto("http://localhost:5173/converter");
     await page.waitForLoadState("networkidle");
 
+    const dialog = page.getByRole("dialog");
+    await expect(dialog).not.toBeVisible();
+
     await page.getByRole("button", { name: /usd/i }).click();
-
-    const dialog = page.getByRole("dialog", {
-      name: /currency-crypto/i,
-      includeHidden: true,
-    });
-
+    await dialog.waitFor({ state: "visible" });
     await expect(dialog).toBeVisible();
+
     await page.getByRole("radio", { name: /crypto/i }).check({ force: true });
 
     await dialog.click();

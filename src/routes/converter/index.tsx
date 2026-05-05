@@ -4,12 +4,17 @@ import { useQuery } from "@tanstack/react-query";
 import { z } from "zod";
 import CurrencyInput from "./-components/CurrencyInput";
 import { getExchangeRate } from "@/apis";
-import { getComputableNumeral } from "@/utils";
-import { FIATS, FIAT_NAMES } from "@/constants/fiat-currency-list";
-import { CRYPTO_NAMES, CRYPTOS } from "@/constants/crypto-currency-list";
+import { getComputableNumeral, calibrateNumeral } from "@/utils";
 import type { ActiveCurrency, FiatName, CryptoName } from "@/constants/types";
 
 const CurrencyMenu = lazy(() => import("./-components/CurrencyMenu"));
+
+const { FIATS, FIAT_NAMES } = await import(
+  "@/constants/fiat-currency-list"
+).then((mod) => mod);
+const { CRYPTOS, CRYPTO_NAMES } = await import(
+  "@/constants/crypto-currency-list"
+).then((mod) => mod);
 
 const ConverterSearchSchema = z.object({
   from: z.enum([...FIAT_NAMES, ...CRYPTO_NAMES]).catch("USD"),
@@ -66,36 +71,37 @@ export default function ConverterPage() {
   }, [amount, exchangeRate]);
 
   return (
-    <div className="px-5">
-      <p>
-        1 {fromCurrency.code} = {exchangeRate}
-        {toCurrency.code}
-      </p>
-      <p>
-        Last update: <time>{lastRefreshed}</time>
-      </p>
-
-      <CurrencyInput
-        isBaseCurrency={true}
-        amountNumeral={amountNumerals[0]}
+    <div className="md:pt-16">
+      <BulletinBoard
+        fromCurrencyCode={fromCurrency.code}
+        toCurrencyCode={toCurrency.code}
         exchangeRate={exchangeRate}
-        dialogRef={dialogRef}
-        setActiveCurrency={setActiveCurrency}
-        currencyData={fromCurrency}
-        setAmountNumerals={setAmountNumerals}
+        lastRefreshed={lastRefreshed}
       />
 
-      <SwitchButton onClick={swapCurrencies} />
+      <div className="lg:grid lg:grid-cols-7">
+        <CurrencyInput
+          isBaseCurrency={true}
+          amountNumeral={amountNumerals[0]}
+          exchangeRate={exchangeRate}
+          dialogRef={dialogRef}
+          setActiveCurrency={setActiveCurrency}
+          currencyData={fromCurrency}
+          setAmountNumerals={setAmountNumerals}
+        />
 
-      <CurrencyInput
-        // amountNumeral={amountNumerals[1]}
-        amountNumeral={amountNumerals[1]}
-        exchangeRate={exchangeRate}
-        dialogRef={dialogRef}
-        setActiveCurrency={setActiveCurrency}
-        currencyData={toCurrency}
-        setAmountNumerals={setAmountNumerals}
-      />
+        <SwitchButton onClick={swapCurrencies} />
+
+        <CurrencyInput
+          // amountNumeral={amountNumerals[1]}
+          amountNumeral={amountNumerals[1]}
+          exchangeRate={exchangeRate}
+          dialogRef={dialogRef}
+          setActiveCurrency={setActiveCurrency}
+          currencyData={toCurrency}
+          setAmountNumerals={setAmountNumerals}
+        />
+      </div>
 
       <Suspense>
         <Activity mode="visible">
@@ -110,11 +116,38 @@ export default function ConverterPage() {
   );
 }
 
+function BulletinBoard({
+  fromCurrencyCode = "",
+  toCurrencyCode = "",
+  exchangeRate = "",
+  lastRefreshed = "",
+}: {
+  fromCurrencyCode?: string;
+  toCurrencyCode?: string;
+  exchangeRate?: string;
+  lastRefreshed?: string;
+}) {
+  return (
+    <section
+      aria-label="bulletin board"
+      className="mb-2 rounded-lg border-4 border-double border-emerald-50 bg-emerald-200 p-2 text-sm text-slate-900 md:mb-8 md:rounded-xl md:border-6 md:p-6 md:text-2xl md:leading-10 lg:mb-20 lg:border-8 lg:text-3xl lg:leading-relaxed xl:mx-auto xl:w-fit xl:text-2xl"
+    >
+      <p className="font-semibold">
+        1 {fromCurrencyCode} = {calibrateNumeral(exchangeRate)} {toCurrencyCode}
+      </p>
+      <p>
+        Last update: <time>{lastRefreshed}</time>
+      </p>
+    </section>
+  );
+}
+
 function SwitchButton({ onClick }: { onClick: () => void }) {
   return (
     <button
-      className="mx-auto my-10 block w-fit text-2xl outline"
+      className="mx-auto my-6 block aspect-square w-14 rounded-full bg-linear-to-r from-blue-500 to-indigo-600 text-3xl text-white md:my-12 md:w-24 md:text-5xl lg:col-start-4 lg:col-end-5 lg:w-20 lg:rotate-90 lg:self-center lg:text-4xl xl:w-16 xl:text-3xl"
       title="switch"
+      aria-label="switch base and quote currencies"
       onClick={onClick}
     >
       &#8645;

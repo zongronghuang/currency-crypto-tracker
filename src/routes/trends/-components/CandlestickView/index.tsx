@@ -90,45 +90,45 @@ export default function CandlestickView({
 
   return (
     <div aria-label="candlestick view">
-      <p className="mb-2 text-sm text-gray-600">
-        Check exchange rates of the open, close, high, and low prices of the
-        base currency to the quote currency.
+      <p className="mb-2 text-sm text-slate-600 md:mb-4 md:text-lg lg:mb-6 lg:text-2xl xl:mb-10 xl:text-2xl">
+        Check the open, close, high, and low exchange rates of the base currency
+        against the quote currency.
       </p>
 
-      <div className="mb-2 flex items-center gap-2 text-sm font-semibold">
-        <label htmlFor="max-rate" className="leading-0">
+      <div className="mb-2 flex gap-2 text-sm font-semibold text-slate-900 md:mb-6 md:gap-4 md:text-lg lg:gap-6 lg:text-xl">
+        <label htmlFor="max-rate" className="flex items-center gap-1">
           <input
             type="checkbox"
             name="rate-lines"
             id="max-rate"
-            className="mr-1"
             checked={visibleRateLines.max}
+            className="mr-1 md:mr-2"
             onChange={() =>
               setVisibleRateLines((prev) => ({ ...prev, max: !prev.max }))
             }
           />
           Max rate
         </label>
-        <label htmlFor="avg-rate" className="leading-0">
+        <label htmlFor="avg-rate" className="flex items-center gap-1">
           <input
             type="checkbox"
             name="rate-lines"
             id="avg-rate"
-            className="mr-1"
             checked={visibleRateLines.avg}
+            className="mr-1 md:mr-2"
             onChange={() =>
               setVisibleRateLines((prev) => ({ ...prev, avg: !prev.avg }))
             }
           />
           Avg rate
         </label>
-        <label htmlFor="min-rate" className="leading-0">
+        <label htmlFor="min-rate" className="flex items-center gap-1">
           <input
             type="checkbox"
             name="rate-lines"
             id="min-rate"
-            className="mr-1"
             checked={visibleRateLines.min}
+            className="mr-1 md:mr-2"
             onChange={() =>
               setVisibleRateLines((prev) => ({ ...prev, min: !prev.min }))
             }
@@ -152,15 +152,20 @@ export default function CandlestickView({
               />
             ))}
           </CandlestickSeries>
-          <OhlcvTooltip
-            isVisible={isTooltipVisible}
-            ref={tooltipRef}
-            time={tooltipData.time}
-            high={high}
-            low={low}
-            open={open}
-            close={close}
-          />
+          <OhlcvTooltip isVisible={isTooltipVisible} ref={tooltipRef}>
+            <time
+              dateTime={tooltipData.time.toString()}
+              className="block text-center font-semibold"
+            >
+              {tooltipData.time.toString()}
+            </time>
+            <dl className="gap grid grid-cols-2">
+              <dt>High</dt> <dd>{high}</dd>
+              <dt>Low</dt> <dd>{low}</dd>
+              <dt>Open</dt> <dd>{open}</dd>
+              <dt>Close</dt> <dd>{close}</dd>
+            </dl>
+          </OhlcvTooltip>
         </Chart>
       </div>
     </div>

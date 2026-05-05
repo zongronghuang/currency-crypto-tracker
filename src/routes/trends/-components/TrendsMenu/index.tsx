@@ -8,13 +8,15 @@ import {
 } from "react";
 import clsx from "clsx";
 import { type TrendsParams } from "@/apis";
-import { FIAT_NAMES } from "@/constants/fiat-currency-list";
-import {
-  CRYPTO_TRADING_PAIRS,
-  TRADABLE_CRYPTOS,
-  type TradableCrypto,
-} from "@/constants/crypto-exchange-list";
+import { type TradableCrypto } from "@/constants/crypto-exchange-list";
 import styles from "./index.module.css";
+
+const FIAT_NAMES = await import("@/constants/fiat-currency-list").then(
+  (mod) => mod.FIAT_NAMES,
+);
+const { CRYPTO_TRADING_PAIRS, TRADABLE_CRYPTOS } = await import(
+  "@/constants/crypto-exchange-list"
+).then((mod) => mod);
 
 export default function TrendsMenu({
   trendsApiParams,
@@ -35,10 +37,8 @@ export default function TrendsMenu({
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("submit");
     const formData = new FormData(event.currentTarget);
     const params = Object.fromEntries(formData);
-    console.log(params);
     setTrendsApiParams(params as TrendsParams);
     setInternalParams(params as TrendsParams);
     setIsEditing(false);
@@ -60,14 +60,21 @@ export default function TrendsMenu({
   }, [trendsApiParams]);
 
   return (
-    <nav className="w-full overflow-y-scroll">
+    <nav className="w-full overflow-y-auto">
       <form
         action=""
         aria-label="trends menu"
-        className={clsx(styles.trendsMenu, "flex flex-col gap-4")}
+        className={clsx(
+          styles.trendsMenu,
+          "flex flex-col gap-4 text-slate-900 md:mx-auto md:w-3/4 lg:gap-8",
+        )}
         onSubmit={handleSubmit}
         onChange={() => setIsEditing(true)}
       >
+        <h2 className="row-start-1 row-end-2 text-center text-lg font-semibold lg:col-span-full lg:text-2xl">
+          Set Trends Settings
+        </h2>
+
         <CurrenciesField
           base={internalParams.base}
           quote={internalParams.quote}
@@ -81,7 +88,7 @@ export default function TrendsMenu({
         <div className="flex justify-between">
           <button
             type="button"
-            className="w-4/9 rounded-lg border border-gray-600/70 bg-white py-1 text-lg text-black"
+            className="w-4/9 rounded-lg border border-slate-300 bg-slate-100 py-1 text-lg text-slate-800 lg:py-2 lg:text-2xl"
             onClick={revertForm}
           >
             Cancel
@@ -89,7 +96,7 @@ export default function TrendsMenu({
           <button
             type="submit"
             disabled={!isEditing}
-            className="w-4/9 rounded-lg bg-blue-600 py-1 text-lg text-white outline-blue-600 disabled:opacity-50"
+            className="w-4/9 rounded-lg bg-blue-600 py-1 text-lg text-white hover:bg-blue-700 disabled:opacity-50 lg:py-2 lg:text-2xl"
           >
             Apply
           </button>
@@ -116,14 +123,14 @@ function CurrenciesField({
       : FIAT_NAMES.filter((f) => f !== base);
 
   return (
-    <fieldset className="grid auto-rows-auto grid-cols-5">
-      <legend className="col-span-full mb-1 text-sm font-bold uppercase">
+    <fieldset className="grid auto-rows-auto grid-cols-5 lg:text-lg">
+      <legend className="col-span-full mb-1 text-sm font-bold uppercase lg:mb-2 lg:text-xl">
         Currencies
-        <strong className="text-xs font-normal normal-case">
+        <strong className="text-xs font-normal normal-case lg:text-base">
           &nbsp; (base &#8260; quote)
         </strong>
       </legend>
-      <p className="col-span-full mb-1 text-xs text-gray-600">
+      <p className="col-span-full mb-1 text-sm text-slate-600 lg:mb-2 lg:text-base">
         Choose a base currency and a quote currency to see their exchange
         trends.
       </p>
@@ -133,7 +140,7 @@ function CurrenciesField({
         required
         size={5}
         value={base}
-        className="col-span-2 rounded border border-solid border-gray-400"
+        className="col-span-2 rounded border border-solid border-slate-300"
         onChange={(event) =>
           setInternalParams(
             (prev) =>
@@ -144,14 +151,14 @@ function CurrenciesField({
           )
         }
       >
-        <optgroup label="-- Fiats --" className="bg-rose-50">
+        <optgroup label="-- Fiats --" className="bg-amber-100">
           {FIAT_NAMES.map((f) => (
             <option key={f} value={f}>
               {f}
             </option>
           ))}
         </optgroup>
-        <optgroup label="-- Cryptos --" className="bg-lime-50">
+        <optgroup label="-- Cryptos --" className="bg-purple-100">
           {TRADABLE_CRYPTOS.map((c) => (
             <option key={c} value={c}>
               {c}
@@ -168,7 +175,7 @@ function CurrenciesField({
         value={quote}
         required
         size={5}
-        className="col-span-2 rounded border border-solid border-gray-400"
+        className="col-span-2 rounded border border-solid border-slate-300"
         onChange={(event) =>
           setInternalParams(
             (prev) =>
@@ -180,7 +187,7 @@ function CurrenciesField({
         }
       >
         {quotes.map((q) => (
-          <option key={q} value={q}>
+          <option key={q} value={q} className="p-1">
             {q}
           </option>
         ))}
@@ -199,11 +206,11 @@ function DataPointField({
   const sizes = ["daily", "weekly", "monthly"];
 
   return (
-    <fieldset className="grid auto-rows-auto grid-cols-3">
-      <legend className="col-span-full mb-1 text-sm font-bold uppercase">
+    <fieldset className="grid auto-rows-auto grid-cols-3 lg:text-lg">
+      <legend className="col-span-full mb-1 text-sm font-bold uppercase lg:mb-2 lg:text-xl">
         Data Point
       </legend>
-      <p className="col-span-full mb-1 text-xs text-gray-600">
+      <p className="col-span-full mb-1 text-sm text-slate-600 lg:mb-2 lg:text-base">
         Choose a data point size to generalize the exchange trends.
       </p>
       {sizes.map((s) => (

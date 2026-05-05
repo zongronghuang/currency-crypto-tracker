@@ -1,21 +1,24 @@
 import { Activity, Suspense, useState, useRef, lazy, useEffect } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import clsx from "clsx";
 import { z } from "zod";
 import dayjs from "dayjs";
 import { getNews, type NewsFilters } from "@/apis";
 import useIntersectionObserver from "@/hooks/useIntersectionObserver";
 import NewsCard, { type Feed } from "./-components/NewsCard";
-import FooterBar from "../-components/FooterBar";
-import FooterDrawer from "../-components/FooterDrawer";
-import Alert from "../-components/Alert";
-import { FIAT_NAMES } from "@/constants/fiat-currency-list";
-import { CRYPTO_NAMES } from "@/constants/crypto-currency-list";
+import FooterBar from "../../components/FooterBar";
+import FooterDrawer from "../../components/FooterDrawer";
+import Alert from "../../components/Alert";
 import { sliceListByPage } from "@/utils";
-import styles from "./index.module.css";
 
 const NewsFilters = lazy(() => import("./-components/NewsFilters"));
+
+const FIAT_NAMES = await import("@/constants/fiat-currency-list").then(
+  (mod) => mod.FIAT_NAMES,
+);
+const CRYPTO_NAMES = await import("@/constants/crypto-currency-list").then(
+  (mod) => mod.CRYPTO_NAMES,
+);
 
 const NewsSearchSchema = z.object({
   currency: z
@@ -35,6 +38,17 @@ export const Route = createFileRoute("/news/")({
   component: RouteComponent,
   validateSearch: NewsSearchSchema,
 });
+
+const skeletonCards = (
+  <>
+    <NewsCard isSkeleton={true} />
+    <NewsCard isSkeleton={true} />
+    <NewsCard isSkeleton={true} />
+    <NewsCard isSkeleton={true} />
+    <NewsCard isSkeleton={true} />
+    <NewsCard isSkeleton={true} />
+  </>
+);
 
 function RouteComponent() {
   const { currency } = Route.useSearch();
@@ -99,14 +113,10 @@ function RouteComponent() {
     <div
       aria-label="news list"
       ref={rootRef}
-      className={clsx(styles.list, "no-scrollbar")}
+      className="no-scrollbar grid grid-cols-1 gap-8 md:grid-cols-2 md:pb-16 lg:grid-cols-3"
     >
       {isPending ? (
-        <>
-          <NewsCard isSkeleton={true} />
-          <NewsCard isSkeleton={true} />
-          <NewsCard isSkeleton={true} />
-        </>
+        skeletonCards
       ) : newsCollection.news.length ? (
         newsCollection.news.map((f: Feed) => (
           <NewsCard key={f.title} feed={f} />
@@ -115,7 +125,10 @@ function RouteComponent() {
         <Alert title="No News Found" description="Change your news filters." />
       )}
 
-      <div ref={targetRef} className="invisible mt-1 text-center opacity-50">
+      <div
+        ref={targetRef}
+        className="invisible mt-1 text-center text-lg text-slate-400 md:invisible"
+      >
         <small>No more results</small>
       </div>
 
@@ -127,7 +140,7 @@ function RouteComponent() {
             aria-label="open drawer button"
             aria-expanded={isDrawerOpen}
             disabled={!isSuccess}
-            className="text-4xl font-bold disabled:opacity-45"
+            className="cursor-pointer text-4xl font-bold text-slate-900 disabled:text-slate-400"
             onClick={(event) => {
               event.stopPropagation();
               setIsDrawerOpen(true);
@@ -173,7 +186,7 @@ function BackToTopButton() {
       href="#top"
       aria-label="back to top"
       hidden={!isVisible}
-      className="fixed right-2 bottom-15 z-15 flex h-10 w-10 -rotate-90 items-center justify-center rounded-full bg-blue-500 text-3xl font-bold text-white shadow-[0_0_3px_2px_rgba(200,200,200,0.5)]"
+      className="fixed right-2 bottom-15 z-15 flex h-10 w-10 -rotate-90 items-center justify-center rounded-full bg-blue-600 text-3xl font-bold text-white shadow-md hover:bg-blue-700 lg:bottom-28 lg:h-12 lg:w-12"
     >
       &#10132;
     </a>
